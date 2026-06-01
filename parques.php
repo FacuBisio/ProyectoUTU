@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Parques</title>
 
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/style-secciones.css">
     <link rel="stylesheet" href="assets/css/var.css">
+    <!-- <link rel="stylesheet" href="assets/css/slider.css"> -->
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -122,139 +123,7 @@
 
 </section>
 
-<!-- SECCION PRINCIPAL -->
-<section id="seccion-principal">
 
-    <div class="contenido-principal">
-
-        <h1>DESCUBRE SALTO</h1>
-
-        <p>
-            Vení a conocer Salto, una ciudad donde la naturaleza,
-            las termas y la tranquilidad te esperan para vivir
-            momentos únicos e inolvidables.
-        </p>
-
-        <a href="#" class="btn-principal">
-            LEER MAS →
-        </a>
-
-    </div>
-
-</section>
-
-<!-- SEGUNDA SECCION -->
-<section id="segunda-seccion">
-
-    <div class="titulo-seccion">
-        <h2>Explora Salto</h2>
-    </div>
-
-    <div class="cards-container">
-
-        <div class="card">
-
-            <img src="assets/img/termas.jpeg" alt="Termas">
-
-            <h3>Termas</h3>
-
-            <p>
-                Relajate en las mejores aguas termales y disfrutá momentos únicos.
-            </p>
-
-            <a href="#" class="card-btn">
-                Ver más →
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="assets/img/fuente-naturaleza.jpeg" alt="Naturaleza">
-
-            <h3>Naturaleza</h3>
-
-            <p>
-                Descubrí paisajes increíbles, parques y actividades al aire libre.
-            </p>
-
-            <a href="#" class="card-btn">
-                Ver más →
-            </a>
-
-        </div>
-
-        <div class="card">
-
-            <img src="assets/img/trouville.jpeg" alt="Gastronomía">
-
-            <h3>Gastronomía</h3>
-
-            <p>
-                Probá sabores locales y experiencias gastronómicas inolvidables.
-            </p>
-
-            <a href="#" class="card-btn">
-                Ver más →
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- SECCION COMENTARIOS -->
-<section id="comentarios">
-
-    <div class="titulo-seccion">
-        <h2>Lo que dicen los visitantes</h2>
-    </div>
-
-    <div class="comentarios-container">
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “Las termas fueron una experiencia increíble, súper recomendable.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Lucía Fernández</h4>
-                <span>Argentina</span>
-            </div>
-
-        </div>
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “Muy linda ciudad, tranquila y con lugares hermosos para recorrer.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Martín Silva</h4>
-                <span>Uruguay</span>
-            </div>
-
-        </div>
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “La gastronomía me sorprendió muchísimo, volvería sin dudas.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Camila Rodríguez</h4>
-                <span>Chile</span>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
 
 <!-- FOOTER -->
 <footer id="footer">
