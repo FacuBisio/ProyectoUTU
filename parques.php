@@ -7,12 +7,11 @@
 
     <link rel="stylesheet" href="assets/css/style-secciones.css">
     <link rel="stylesheet" href="assets/css/var.css">
-    <!-- <link rel="stylesheet" href="assets/css/slider.css"> -->
+    <link rel="stylesheet" href="assets/css/slider.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
-
 <body>
 
 <!-- NAVBAR -->
@@ -123,7 +122,60 @@
 
 </section>
 
+<!-- SLIDER -->
+<section class="slider-container">
 
+    <button class="slider-btn prev">&#10094;</button>
+
+    <div class="slide active">
+
+        <img src="assets/img/parqueharriague.jpg" alt="Parque 1">
+
+        <div class="slide-info">
+            <h2>Parque Harriague</h2>
+            <p>
+                Uno de los espacios verdes más importantes de Salto.
+                Ideal para caminatas, deporte y actividades familiares.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="assets/img/parquesolari.png" alt="Parque 2">
+
+        <div class="slide-info">
+            <h2>Parque Solari</h2>
+            <p>
+                Un amplio espacio verde ideal para disfrutar de la naturaleza, realizar actividades recreativas y compartir momentos en familia en un entorno tranquilo y agradable.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="assets/img/parqueindigena.jpg" alt="Parque 3">
+
+        <div class="slide-info">
+            <h2>Parque Indígena “Vaymaka Pirú”</h2>
+            <p>
+                Un espacio verde que combina naturaleza, recreación y homenaje a la cultura indígena, ideal para pasear, hacer deporte y disfrutar del aire libre.
+            </p>
+        </div>
+
+    </div>
+
+    <button class="slider-btn next">&#10095;</button>
+
+    <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
 
 <!-- FOOTER -->
 <footer id="footer">
@@ -188,6 +240,66 @@
 </div>
 
 <script src="assets/js/script.js"></script>
+<script>
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
 
+let current = 0;
+
+function showSlide(index){
+
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    slides[index].classList.add("active");
+    dots[index].classList.add("active");
+
+    current = index;
+}
+
+document.querySelector(".next").addEventListener("click", () => {
+
+    current++;
+
+    if(current >= slides.length){
+        current = 0;
+    }
+
+    showSlide(current);
+});
+
+document.querySelector(".prev").addEventListener("click", () => {
+
+    current--;
+
+    if(current < 0){
+        current = slides.length - 1;
+    }
+
+    showSlide(current);
+});
+
+dots.forEach((dot,index)=>{
+
+    dot.addEventListener("click",()=>{
+
+        showSlide(index);
+
+    });
+
+});
+
+setInterval(()=>{
+
+    current++;
+
+    if(current >= slides.length){
+        current = 0;
+    }
+
+    showSlide(current);
+
+},5000);
+</script>
 </body>
 </html>
