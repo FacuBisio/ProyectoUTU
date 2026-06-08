@@ -18,7 +18,7 @@
 <section id="navbar">
 
     <div class="navbar-container">
-
+ 
         <div class="logo">
             <h1>GoSalto</h1>
         </div>
