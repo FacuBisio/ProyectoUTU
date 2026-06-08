@@ -263,7 +263,7 @@
 
         <div class="footer-logo">
 
-            <h2>GoSalto</h2>
+            <h2>S.I.G.T.U.R</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.
