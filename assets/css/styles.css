@@ -488,7 +488,7 @@
     height: 65px;
     border: none;
     border-radius: 50%;
-    background: rgba(255,255,255,0.12);
+    background: rgba(112, 77, 77, 0.12);
     backdrop-filter: blur(10px);
     color: white;
     font-size: 24px;

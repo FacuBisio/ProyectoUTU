@@ -18,14 +18,14 @@
 <section id="navbar">
 
     <div class="navbar-container">
- 
+
         <div class="logo">
-            <h1>GoSalto</h1>
+            <h1>S.I.G.TUR</h1>
         </div>
 
         <div class="nav-links">
 
-                <a class="link-btn" href="index.php">
+                <a class="link-btn" href="../../index.php">
                 Inicio
                 </a>
 
@@ -38,32 +38,32 @@
                 <div class="menu-desplegable">
 
                     <div>
-                        <h3>Explorar</h3>
+                        <h3>Naturaleza</h3>
 
-                        <a href="parques.php">Parques</a>
-                        <a href="#">Naturaleza</a>
+                        <a href="assets/php/parques.php">Parques</a>
+                        <a href="assets/php/paisajes.php">Paisajes y Espacios Naturales</a>
                     </div>
 
                     <div>
-                        <h3>Cultura</h3>
+                        <h3>Historia y Cultura</h3>
 
-                        <a href="#">Museos</a>
-                        <a href="#">Historia</a>
+                        <a href="assets/php/patrimonio.php">Patrimonio Histórico</a>
+                        <a href="assets/php/museos.php">Museos y Arte</a>
                     </div>
 
                     <div>
-                        <h3>Experiencias</h3>
+                        <h3>Turismo y Experiencias</h3>
 
-                        <a href="#">Automovilismo</a>
-                        <a href="#">Relax</a>
-                        <a href="#">Termas</a>
+                        <a href="assets/php/termas.php">Termas y Bienestar</a>
+                        <a href="assets/php/ocio.php">Ocio y Vida Nocturna</a>
+
                     </div>
 
                 </div>
 
             </div>
 
-            <a class="link-btn" href="eventos.php">
+            <a class="link-btn" href="assets/php/eventos.php">
                 Eventos
             </a>
 
@@ -263,7 +263,7 @@
 
         <div class="footer-logo">
 
-            <h2>S.I.G.T.U.R</h2>
+            <h2>S.I.G.TUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parques</title>
 
-    <link rel="stylesheet" href="assets/css/style-secciones.css">
-    <link rel="stylesheet" href="assets/css/var.css">
-    <link rel="stylesheet" href="assets/css/slider.css">
+    <link rel="stylesheet" href="../css/style-secciones.css">
+    <link rel="stylesheet" href="../css/var.css">
+    <link rel="stylesheet" href="../css/slider.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -20,12 +20,12 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>GoSalto</h1>
+            <h1>S.I.G.TUR</h1>
         </div>
 
         <div class="nav-links">
 
-                <a class="link-btn" href="index.php">
+                <a class="link-btn" href="../../index.php">
                 Inicio
                 </a>
 
@@ -38,25 +38,25 @@
                 <div class="menu-desplegable">
 
                     <div>
-                        <h3>Explorar</h3>
+                        <h3>Naturaleza</h3>
 
                         <a href="parques.php">Parques</a>
-                        <a href="#">Naturaleza</a>
+                        <a href="paisajes.php">Paisajes y Espacios Naturales</a>
                     </div>
 
                     <div>
-                        <h3>Cultura</h3>
+                        <h3>Historia y Cultura</h3>
 
-                        <a href="#">Museos</a>
-                        <a href="#">Historia</a>
+                        <a href="patrimonio.php">Patrimonio Histórico</a>
+                        <a href="museos.php">Museos y Arte</a>
                     </div>
 
                     <div>
-                        <h3>Experiencias</h3>
+                        <h3>Turismo y Experiencias</h3>
 
-                        <a href="#">Automovilismo</a>
-                        <a href="#">Relax</a>
-                        <a href="#">Termas</a>
+                        <a href="termas.php">Termas y Bienestar</a>
+                        <a href="ocio.php">Ocio y Vida Nocturna</a>
+
                     </div>
 
                 </div>
@@ -129,7 +129,7 @@
 
     <div class="slide active">
 
-        <img src="assets/img/parqueharriague.jpg" alt="Parque 1">
+        <img src="../img/parqueharriague.jpg" alt="Parque 1">
 
         <div class="slide-info">
             <h2>Parque Harriague</h2>
@@ -143,7 +143,7 @@
 
     <div class="slide">
 
-        <img src="assets/img/parquesolari.png" alt="Parque 2">
+        <img src="../img/parquesolari.png" alt="Parque 2">
 
         <div class="slide-info">
             <h2>Parque Solari</h2>
@@ -156,7 +156,7 @@
 
     <div class="slide">
 
-        <img src="assets/img/parqueindigena.jpg" alt="Parque 3">
+        <img src="../img/parqueindigena.jpg" alt="Parque 3">
 
         <div class="slide-info">
             <h2>Parque Indígena “Vaymaka Pirú”</h2>
@@ -177,6 +177,139 @@
 
 </section>
 
+<!-- INFO-MAP -->
+    <section class="info-map">
+
+    <!-- IZQUIERDA -->
+    <div class="info-card">
+
+        <h2>Parque Harriague</h2>
+
+        <p class="descripcion-lugar">
+            El Parque Harriague es uno de los espacios verdes más emblemáticos de Salto.
+            Cuenta con amplias áreas para caminatas, juegos infantiles, actividades deportivas
+            y zonas de descanso rodeadas de naturaleza.
+        </p>
+
+        <div class="info-grid">
+
+            <div>
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>Ubicación</h4>
+                    <p>Av. Harriague s/n</p>
+                </div>
+            </div>
+
+            <div>
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                    <h4>Horario</h4>
+                    <p>Abierto las 24 horas</p>
+                </div>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-ticket"></i>
+                <div>
+                    <h4>Entrada</h4>
+                    <p>Gratuita</p>
+                </div>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-square-parking"></i>
+                <div>
+                    <h4>Estacionamiento</h4>
+                    <p>Disponible</p>
+                </div>
+            </div>
+
+        </div>
+
+        <h3>Opiniones de visitantes</h3>
+
+        <div class="review">
+
+            <img src="https://i.pravatar.cc/45?img=12">
+
+            <div>
+
+                <div class="review-top">
+
+                    <strong>María Gómez</strong>
+
+                    <span>★★★★★</span>
+
+                </div>
+
+                <p>Hermoso parque para disfrutar en familia. Muy cuidado.</p>
+
+            </div>
+
+        </div>
+
+        <div class="review">
+
+            <img src="https://i.pravatar.cc/45?img=20">
+
+            <div>
+
+                <div class="review-top">
+
+                    <strong>Juan Pérez</strong>
+
+                    <span>★★★★☆</span>
+
+                </div>
+
+                <p>Ideal para caminar y hacer ejercicio.</p>
+
+            </div>
+
+        </div>
+
+        <div class="review">
+
+            <img src="https://i.pravatar.cc/45?img=8">
+
+            <div>
+
+                <div class="review-top">
+
+                    <strong>Lucía Fernández</strong>
+
+                    <span>★★★★★</span>
+
+                </div>
+
+                <p>Muy recomendable para pasar la tarde.</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DERECHA -->
+
+    <div class="map-card">
+
+        <iframe
+            src="https://www.google.com/maps?q=Parque+Harriague+Salto+Uruguay&output=embed">
+        </iframe>
+
+        <a href="https://maps.google.com/?q=Parque+Harriague+Salto+Uruguay"
+        target="_blank">
+
+            Abrir en Google Maps
+
+        </a>
+
+    </div>
+
+</section>  
+
 <!-- FOOTER -->
 <footer id="footer">
 
@@ -184,7 +317,7 @@
 
         <div class="footer-logo">
 
-            <h2>GoSalto</h2>
+            <h2>S.I.G.TUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.
@@ -239,67 +372,7 @@
 
 </div>
 
-<script src="assets/js/script.js"></script>
-<script>
-const slides = document.querySelectorAll(".slide");
-const dots = document.querySelectorAll(".dot");
+<script src="../js/script.js"></script>
 
-let current = 0;
-
-function showSlide(index){
-
-    slides.forEach(slide => slide.classList.remove("active"));
-    dots.forEach(dot => dot.classList.remove("active"));
-
-    slides[index].classList.add("active");
-    dots[index].classList.add("active");
-
-    current = index;
-}
-
-document.querySelector(".next").addEventListener("click", () => {
-
-    current++;
-
-    if(current >= slides.length){
-        current = 0;
-    }
-
-    showSlide(current);
-});
-
-document.querySelector(".prev").addEventListener("click", () => {
-
-    current--;
-
-    if(current < 0){
-        current = slides.length - 1;
-    }
-
-    showSlide(current);
-});
-
-dots.forEach((dot,index)=>{
-
-    dot.addEventListener("click",()=>{
-
-        showSlide(index);
-
-    });
-
-});
-
-setInterval(()=>{
-
-    current++;
-
-    if(current >= slides.length){
-        current = 0;
-    }
-
-    showSlide(current);
-
-},5000);
-</script>
 </body>
 </html>
