@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parques</title>
+    <title>Patrimonio Histórico</title>
 
     <link rel="stylesheet" href="../css/style-secciones.css">
     <link rel="stylesheet" href="../css/var.css">
@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>S.I.G.TUR</h1>
+            <h1>SIGTUR</h1>
         </div>
 
         <div class="nav-links">
@@ -56,6 +56,7 @@
 
                         <a href="termas.php">Termas y Bienestar</a>
                         <a href="ocio.php">Ocio y Vida Nocturna</a>
+                        <a href="alojamientos.php">Alojamientos</a>
 
                     </div>
 
@@ -129,13 +130,12 @@
 
     <div class="slide active">
 
-        <img src="../img/parqueharriague.jpg" alt="Parque 1">
+        <img src="../img/teatro.jpeg" alt="Patrimonio 1">
 
         <div class="slide-info">
-            <h2>Parque Harriague</h2>
+            <h2>Teatro Larrañaga</h2>
             <p>
-                Uno de los espacios verdes más importantes de Salto.
-                Ideal para caminatas, deporte y actividades familiares.
+                El teatro más importante de Salto, reconocido por su arquitectura histórica y su destacada programación artística y cultural.
             </p>
         </div>
 
@@ -143,12 +143,23 @@
 
     <div class="slide">
 
-        <img src="../img/parquesolari.png" alt="Parque 2">
+        <img src="../img/palacio.jpg" alt="Patrimonio 2">
 
         <div class="slide-info">
-            <h2>Parque Solari</h2>
+            <h2>Palacio Córdoba</h2>
             <p>
-                Un amplio espacio verde ideal para disfrutar de la naturaleza, realizar actividades recreativas y compartir momentos en familia en un entorno tranquilo y agradable.
+                Un edificio histórico que alberga la sede del Gobierno Departamental y representa parte del patrimonio arquitectónico de la ciudad.
+            </p>
+    </div>
+
+    <div class="slide">
+
+        <img src="../img/granhotel.jpg" alt="Patrimonio 3">
+
+        <div class="slide-info">
+            <h2>Gran Hotel Concordia</h2>
+            <p>
+                Historia, encanto y el confort ideal en pleno centro de la ciudad. Gran Hotel Concordia te invita a hospedarte en el hotel más antiguo del país, un rincón cargado de magia donde se alojó el mismísimo Carlos Gardel. Con habitaciones totalmente renovadas, patios interiores coloniales llenos de paz y un desayuno exquisito, combina a la perfección el pasado salteño con la comodidad moderna. Es el punto de partida perfecto para explorar la movida gastronómica local y descansar tras un día de termas. ¡Hospedate en una leyenda viva de Salto!
             </p>
         </div>
 
@@ -156,12 +167,12 @@
 
     <div class="slide">
 
-        <img src="../img/parqueindigena.jpg" alt="Parque 3">
+        <img src="../img/catedral.jpg" alt="Patrimonio 4">
 
         <div class="slide-info">
-            <h2>Parque Indígena “Vaymaka Pirú”</h2>
+            <h2>Catedral San Juan Bautista</h2>
             <p>
-                Un espacio verde que combina naturaleza, recreación y homenaje a la cultura indígena, ideal para pasear, hacer deporte y disfrutar del aire libre.
+                El principal templo religioso de Salto, destacado por su arquitectura y su importancia histórica y cultural.
             </p>
         </div>
 
@@ -171,6 +182,7 @@
 
     <div class="slider-dots">
         <span class="dot active"></span>
+        <span class="dot"></span>
         <span class="dot"></span>
         <span class="dot"></span>
     </div>
@@ -317,7 +329,7 @@
 
         <div class="footer-logo">
 
-            <h2>S.I.G.TUR</h2>
+            <h2>SIGTUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.
@@ -372,7 +384,7 @@
 
 </div>
 
-<script src="../js/script.js"></script>
+<script src="../js/slider.js"></script>
 
 </body>
 </html>

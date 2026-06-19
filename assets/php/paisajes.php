@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>S.I.G.TUR</h1>
+            <h1>SIGTUR</h1>
         </div>
 
         <div class="nav-links">
@@ -56,7 +56,7 @@
 
                         <a href="termas.php">Termas y Bienestar</a>
                         <a href="ocio.php">Ocio y Vida Nocturna</a>
-
+                        <a href="alojamientos.php">Alojamientos</a>
                     </div>
 
                 </div>
@@ -129,13 +129,12 @@
 
     <div class="slide active">
 
-        <img src="../img/parqueharriague.jpg" alt="Parque 1">
+        <img src="../img/costaneranorte.jpeg" alt="Paisaje 1">
 
         <div class="slide-info">
-            <h2>Parque Harriague</h2>
+            <h2>Costanera Norte</h2>
             <p>
-                Uno de los espacios verdes más importantes de Salto.
-                Ideal para caminatas, deporte y actividades familiares.
+                Un hermoso paseo junto al río Uruguay, perfecto para caminar, hacer ejercicio y contemplar espectaculares atardeceres.
             </p>
         </div>
 
@@ -143,12 +142,12 @@
 
     <div class="slide">
 
-        <img src="../img/parquesolari.png" alt="Parque 2">
+        <img src="../img/costanerasur.png" alt="Paisaje 2">
 
         <div class="slide-info">
-            <h2>Parque Solari</h2>
+            <h2>Costanera Sur</h2>
             <p>
-                Un amplio espacio verde ideal para disfrutar de la naturaleza, realizar actividades recreativas y compartir momentos en familia en un entorno tranquilo y agradable.
+                Un espacio costero tranquilo con amplias áreas verdes, ideal para disfrutar del paisaje y compartir momentos de descanso.
             </p>
         </div>
 
@@ -156,12 +155,51 @@
 
     <div class="slide">
 
-        <img src="../img/parqueindigena.jpg" alt="Parque 3">
+        <img src="../img/saltogrande.jpg" alt="Paisaje 3">
 
         <div class="slide-info">
-            <h2>Parque Indígena “Vaymaka Pirú”</h2>
+            <h2>Represa de Salto Grande</h2>
             <p>
-                Un espacio verde que combina naturaleza, recreación y homenaje a la cultura indígena, ideal para pasear, hacer deporte y disfrutar del aire libre.
+                Una de las obras de ingeniería más importantes del país, donde se combinan historia, energía y vistas panorámicas únicas.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../img/cuevas.png" alt="Paisaje 4">
+
+        <div class="slide-info">
+            <h2>Cuevas de San Antonio</h2>
+            <p>
+            Un atractivo natural rodeado de historia y paisajes, perfecto para quienes buscan aventura y contacto con la naturaleza.            
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../img/artigas.png" alt="Paisaje 5">
+
+        <div class="slide-info">
+            <h2>Plaza Artigas</h2>
+            <p>
+            La Plaza Artigas es uno de los espacios más emblemáticos de Salto, ideal para pasear, descansar y disfrutar del ambiente urbano de la ciudad. Rodeada de historia, cultura y comercios, ofrece a turistas y visitantes un lugar perfecto para compartir momentos al aire libre y conocer el corazón de Salto.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../img/roosevelt.png" alt="Paisaje 6">
+
+        <div class="slide-info">
+            <h2>Plaza Roosevelt</h2>
+            <p>
+            La Plaza Roosevelt es un espacio verde ideal para disfrutar de la tranquilidad y el aire libre en Salto. Con amplias áreas recreativas y un ambiente familiar, se convierte en un lugar perfecto para relajarse, caminar y compartir momentos durante la visita a la ciudad.
             </p>
         </div>
 
@@ -171,6 +209,9 @@
 
     <div class="slider-dots">
         <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
         <span class="dot"></span>
         <span class="dot"></span>
     </div>
@@ -372,7 +413,7 @@
 
 </div>
 
-<script src="../js/script.js"></script>
+<script src="../js/slider.js"></script>
 
 </body>
 </html>

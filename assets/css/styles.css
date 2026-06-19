@@ -488,7 +488,7 @@
     height: 65px;
     border: none;
     border-radius: 50%;
-    background: rgba(112, 77, 77, 0.12);
+    background: rgba(0, 0, 0, 0.269);
     backdrop-filter: blur(10px);
     color: white;
     font-size: 24px;
@@ -654,3 +654,81 @@
         font-size: 22px;
     }
 }
+
+/* =========================
+   GO SALTO
+========================= */
+
+#empresa{
+    padding:90px 20px;
+    background:#f7f9fc;
+}
+
+.empresa-container{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.empresa-subtitulo{
+    color:#2563eb;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+
+.empresa-texto h2{
+    font-size:48px;
+    color:#111827;
+    margin:15px 0 25px;
+}
+
+.empresa-texto p{
+    color:#555;
+    line-height:1.8;
+    font-size:17px;
+    margin-bottom:18px;
+}
+
+.empresa-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 30px;
+    background:#111827;
+    color:#fff;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.empresa-btn:hover{
+    background:#2563eb;
+    transform:translateY(-3px);
+}
+
+.empresa-img{
+    text-align:center;
+}
+
+.empresa-img img{
+    width:100%;
+    max-width:500px;
+}
+
+@media (max-width:900px){
+
+.empresa-container{
+    grid-template-columns:1fr;
+    text-align:center;
+}
+
+.empresa-texto h2{
+    font-size:40px;
+}
+
+}
+

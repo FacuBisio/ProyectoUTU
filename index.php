@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>S.I.G.TUR</h1>
+            <h1>SIGTUR</h1>
         </div>
 
         <div class="nav-links">
@@ -78,22 +78,22 @@
                     <div>
                         <h3>Comer</h3>
 
-                        <a href="#">Restaurantes</a>
-                        <a href="#">Comida Rápida</a>
+                        <a href="assets/php/restaurantes.php">Restaurantes</a>
+                        <a href="assets/php/comida-rapida.php">Comida Rápida</a>
                     </div>
 
                     <div>
                         <h3>Postres</h3>
 
-                        <a href="#">Heladerías</a>
-                        <a href="#">Cafeterías</a>
+                        <a href="assets/php/heladerias.php">Heladerías</a>
+                        <a href="assets/php/cafeterias.php">Cafeterías</a>
                     </div>
 
                     <div>
                         <h3>Destacados</h3>
 
-                        <a href="#">Locales Top</a>
-                        <a href="#">Recomendados</a>
+                        <a href="assets/php/locales-top.php">Locales Top</a>
+                        <a href="assets/php/recomendados.php">Recomendados</a>
                     </div>
 
                 </div>
@@ -112,9 +112,9 @@
 
             </div>
 
-            <div class="user">
-                <span><i class="fa-regular fa-user"></i></span>
-            </div>
+            <a href="assets/php/login.php" class="user">
+    <i class="fa-regular fa-user"></i>
+</a>
 
         </div>
 
@@ -256,6 +256,46 @@
 
 </section>
 
+<!-- =========================
+        SOBRE GOSALTO
+========================= -->
+
+<section id="empresa">
+
+    <div class="empresa-container">
+
+        <div class="empresa-texto">
+
+            <span class="empresa-subtitulo">
+                ¿Quiénes somos?
+            </span>
+
+            <h2>GoSalto</h2>
+
+            <p>
+                GoSalto es una plataforma turística creada para conectar a visitantes y residentes con los principales atractivos de la ciudad de Salto. Reunimos en un solo lugar información sobre destinos, gastronomía, eventos y experiencias para que descubrir la ciudad sea más fácil y agradable.
+            </p>
+
+            <p>
+                Nuestro objetivo es impulsar el turismo local mediante una plataforma moderna, intuitiva y accesible, ofreciendo recomendaciones, información útil y recursos que ayuden a planificar cada visita de la mejor manera.
+            </p>
+
+            <a href="#lugares" class="empresa-btn">
+                Descubrir Salto
+            </a>
+
+        </div>
+
+        <div class="empresa-img">
+
+            <img src="assets/img/LogoGoSalto.png" alt="GoSalto">
+
+        </div>
+
+    </div>
+
+</section>
+
 <!-- FOOTER -->
 <footer id="footer">
 
@@ -263,7 +303,7 @@
 
         <div class="footer-logo">
 
-            <h2>S.I.G.TUR</h2>
+            <h2>SIGTUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.

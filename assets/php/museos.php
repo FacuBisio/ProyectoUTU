@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parques</title>
+    <title>Museos y Arte</title>
 
     <link rel="stylesheet" href="../css/style-secciones.css">
     <link rel="stylesheet" href="../css/var.css">
@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>S.I.G.TUR</h1>
+            <h1>SIGTUR</h1>
         </div>
 
         <div class="nav-links">
@@ -56,6 +56,7 @@
 
                         <a href="termas.php">Termas y Bienestar</a>
                         <a href="ocio.php">Ocio y Vida Nocturna</a>
+                        <a href="alojamientos.php">Alojamientos</a>
 
                     </div>
 
@@ -129,13 +130,12 @@
 
     <div class="slide active">
 
-        <img src="../img/parqueharriague.jpg" alt="Parque 1">
+        <img src="../img/mdelhombre.jpg" alt="Museo 1">
 
         <div class="slide-info">
-            <h2>Parque Harriague</h2>
+            <h2>Museo del Hombre y la Tecnología</h2>
             <p>
-                Uno de los espacios verdes más importantes de Salto.
-                Ideal para caminatas, deporte y actividades familiares.
+                Un espacio que invita a conocer la evolución tecnológica y el desarrollo de la región a través de exposiciones interactivas.
             </p>
         </div>
 
@@ -143,12 +143,12 @@
 
     <div class="slide">
 
-        <img src="../img/parquesolari.png" alt="Parque 2">
+        <img src="../img/gallino.jpg" alt="Museo 2">
 
         <div class="slide-info">
-            <h2>Parque Solari</h2>
+            <h2>Museo de Bellas Artes</h2>
             <p>
-                Un amplio espacio verde ideal para disfrutar de la naturaleza, realizar actividades recreativas y compartir momentos en familia en un entorno tranquilo y agradable.
+                Un museo que reúne importantes obras de artistas nacionales y locales, promoviendo el arte y la cultura salteña.
             </p>
         </div>
 
@@ -156,12 +156,12 @@
 
     <div class="slide">
 
-        <img src="../img/parqueindigena.jpg" alt="Parque 3">
+        <img src="../img/horacio.jpg" alt="Museo 3">
 
         <div class="slide-info">
-            <h2>Parque Indígena “Vaymaka Pirú”</h2>
+            <h2>Museo Horacio Quiroga</h2>
             <p>
-                Un espacio verde que combina naturaleza, recreación y homenaje a la cultura indígena, ideal para pasear, hacer deporte y disfrutar del aire libre.
+                La antigua residencia del reconocido escritor, donde se conserva parte de su legado literario y personal.
             </p>
         </div>
 
@@ -317,7 +317,7 @@
 
         <div class="footer-logo">
 
-            <h2>S.I.G.TUR</h2>
+            <h2>SIGTUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.
@@ -372,7 +372,7 @@
 
 </div>
 
-<script src="../js/script.js"></script>
+<script src="../js/slider.js"></script>
 
 </body>
 </html>

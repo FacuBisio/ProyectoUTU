@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parques</title>
+    <title>Alojamientos</title>
 
     <link rel="stylesheet" href="../css/style-secciones.css">
     <link rel="stylesheet" href="../css/var.css">
@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>SIGTUR</h1>
+            <h1>S.I.G.TUR</h1>
         </div>
 
         <div class="nav-links">
@@ -57,8 +57,6 @@
                         <a href="termas.php">Termas y Bienestar</a>
                         <a href="ocio.php">Ocio y Vida Nocturna</a>
                         <a href="alojamientos.php">Alojamientos</a>
-
-
                     </div>
 
                 </div>
@@ -168,7 +166,7 @@
         </div>
 
     </div>
- 
+
     <button class="slider-btn next">&#10095;</button>
 
     <div class="slider-dots">
@@ -319,7 +317,7 @@
 
         <div class="footer-logo">
 
-            <h2>SIGTUR</h2>
+            <h2>S.I.G.TUR</h2>
 
             <p>
                 Descubrí los mejores lugares, experiencias y sabores de Salto.

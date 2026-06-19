@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parques</title>
+    <title>Termas y Bienestar</title>
 
     <link rel="stylesheet" href="../css/style-secciones.css">
     <link rel="stylesheet" href="../css/var.css">
@@ -20,7 +20,7 @@
     <div class="navbar-container">
 
         <div class="logo">
-            <h1>S.I.G.TUR</h1>
+            <h1>SIGTUR</h1>
         </div>
 
         <div class="nav-links">
@@ -56,6 +56,7 @@
 
                         <a href="termas.php">Termas y Bienestar</a>
                         <a href="ocio.php">Ocio y Vida Nocturna</a>
+                        <a href="alojamientos.php">Alojamientos</a>
 
                     </div>
 
@@ -129,13 +130,12 @@
 
     <div class="slide active">
 
-        <img src="../img/parqueharriague.jpg" alt="Parque 1">
+        <img src="../img/arapey.jpg" alt="Termas 1">
 
         <div class="slide-info">
-            <h2>Parque Harriague</h2>
+            <h2>Termas del Arapey</h2>
             <p>
-                Uno de los espacios verdes más importantes de Salto.
-                Ideal para caminatas, deporte y actividades familiares.
+                Un destino ideal para el descanso y el bienestar, rodeado de naturaleza y reconocido por la calidad de sus aguas termales.
             </p>
         </div>
 
@@ -143,25 +143,12 @@
 
     <div class="slide">
 
-        <img src="../img/parquesolari.png" alt="Parque 2">
+        <img src="../img/dayman.jpeg" alt="Termas 2">
 
         <div class="slide-info">
-            <h2>Parque Solari</h2>
+            <h2>Termas del Dayman</h2>
             <p>
-                Un amplio espacio verde ideal para disfrutar de la naturaleza, realizar actividades recreativas y compartir momentos en familia en un entorno tranquilo y agradable.
-            </p>
-        </div>
-
-    </div>
-
-    <div class="slide">
-
-        <img src="../img/parqueindigena.jpg" alt="Parque 3">
-
-        <div class="slide-info">
-            <h2>Parque Indígena “Vaymaka Pirú”</h2>
-            <p>
-                Un espacio verde que combina naturaleza, recreación y homenaje a la cultura indígena, ideal para pasear, hacer deporte y disfrutar del aire libre.
+El complejo termal más visitado del país, famoso por sus aguas cálidas, propiedades terapéuticas y variadas propuestas recreativas.
             </p>
         </div>
 
@@ -171,7 +158,6 @@
 
     <div class="slider-dots">
         <span class="dot active"></span>
-        <span class="dot"></span>
         <span class="dot"></span>
     </div>
 
@@ -372,7 +358,7 @@
 
 </div>
 
-<script src="../js/script.js"></script>
+<script src="../js/slider.js"></script>
 
 </body>
 </html>
