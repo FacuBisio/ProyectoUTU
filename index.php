@@ -129,15 +129,18 @@
 
         <h1>DESCUBRE SALTO</h1>
 
-        <p>
+        <p class="texto-salto">
             Vení a conocer Salto, una ciudad donde la naturaleza,
             las termas y la tranquilidad te esperan para vivir
             momentos únicos e inolvidables.
+            <span id="textoExtra">
+                Entre ellos se encuentran las termas, el Parque del Lago, el Museo del Hombre y la Tecnología y diversos eventos culturales durante todo el año.
+            </span>
         </p>
 
-        <a href="#" class="btn-principal">
-            LEER MAS →
-        </a>
+    <button id="btnMostrar" class="btn-mostrar">
+        Mostrar más
+    </button>
 
     </div>
 
@@ -162,7 +165,7 @@
                 Relajate en las mejores aguas termales y disfrutá momentos únicos.
             </p>
 
-            <a href="#" class="card-btn">
+            <a href="assets/php/termas.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -178,7 +181,7 @@
                 Descubrí paisajes increíbles, parques y actividades al aire libre.
             </p>
 
-            <a href="#" class="card-btn">
+            <a href="assets/php/paisajes.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -194,7 +197,7 @@
                 Probá sabores locales y experiencias gastronómicas inolvidables.
             </p>
 
-            <a href="#" class="card-btn">
+            <a href="assets/php/locales-top.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -280,7 +283,7 @@
                 Nuestro objetivo es impulsar el turismo local mediante una plataforma moderna, intuitiva y accesible, ofreciendo recomendaciones, información útil y recursos que ayuden a planificar cada visita de la mejor manera.
             </p>
 
-            <a href="#lugares" class="empresa-btn">
+            <a href="#seccion-principal" class="empresa-btn">
                 Descubrir Salto
             </a>
 
@@ -317,10 +320,10 @@
 
                 <h3>Navegación</h3>
 
-                <a href="#">Inicio</a>
-                <a href="#">Lugares</a>
-                <a href="#">Eventos</a>
-                <a href="#">Gastronomía</a>
+                <a href="index.php">Inicio</a>
+                <a href="assets/php/.php">Lugares</a>
+                <a href="assets/php/eventos.php">Eventos</a>
+                <a href="assets/php/locales-top.php">Gastronomía</a>
 
             </div>
 
@@ -328,10 +331,10 @@
 
                 <h3>Explorar</h3>
 
-                <a href="#">Termas</a>
-                <a href="#">Naturaleza</a>
-                <a href="#">Cultura</a>
-                <a href="#">Parques</a>
+                <a href="assets/php/termas.php">Termas</a>
+                <a href="assets/php/paisajes.php">Naturaleza</a>
+                <a href="assets/php/patrimonio.php">Cultura</a>
+                <a href="assets/php/parques.php">Parques</a>
 
             </div>
 

@@ -732,3 +732,27 @@
 
 }
 
+#textoExtra{
+    display:none;
+}
+
+.btn-mostrar{
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-top: 15px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.btn-mostrar:hover{
+    background: white;
+    color: black;
+}
+
+html{
+    scroll-behavior: smooth;
+}
