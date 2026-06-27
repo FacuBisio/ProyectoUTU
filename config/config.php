@@ -1,6 +1,6 @@
 <?php
 
-define("BASE_URL", "/ProyectoUTU-main/");
+define("BASE_URL", "/ProyectoUTU/ProyectoUTU/");
 
 
 function url($ruta){
