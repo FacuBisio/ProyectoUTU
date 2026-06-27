@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
 
+    <link rel="stylesheet" href="assets/css/componentes.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/style-secciones.css">
     <link rel="stylesheet" href="assets/css/var.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
@@ -15,112 +17,7 @@
 <body>
 
 <!-- NAVBAR -->
-<section id="navbar">
-
-    <div class="navbar-container">
-
-        <div class="logo">
-            <h1>SIGTUR</h1>
-        </div>
-
-        <div class="nav-links">
-
-                <a class="link-btn" href="../../index.php">
-                Inicio
-                </a>
-
-            <div class="dropdown">
-
-                <button class="link-btn">
-                    Lugares ▾
-                </button>
-
-                <div class="menu-desplegable">
-
-                    <div>
-                        <h3>Naturaleza</h3>
-
-                        <a href="assets/php/parques.php">Parques</a>
-                        <a href="assets/php/paisajes.php">Paisajes y Espacios Naturales</a>
-                    </div>
-
-                    <div>
-                        <h3>Historia y Cultura</h3>
-
-                        <a href="assets/php/patrimonio.php">Patrimonio Histórico</a>
-                        <a href="assets/php/museos.php">Museos y Arte</a>
-                    </div>
-
-                    <div>
-                        <h3>Turismo y Experiencias</h3>
-
-                        <a href="assets/php/termas.php">Termas y Bienestar</a>
-                        <a href="assets/php/ocio.php">Ocio y Vida Nocturna</a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <a class="link-btn" href="assets/php/eventos.php">
-                Eventos
-            </a>
-
-            <div class="dropdown">
-
-                <button class="link-btn">
-                    Gastronomía ▾
-                </button>
-
-                <div class="menu-desplegable">
-
-                    <div>
-                        <h3>Comer</h3>
-
-                        <a href="assets/php/restaurantes.php">Restaurantes</a>
-                        <a href="assets/php/comida-rapida.php">Comida Rápida</a>
-                    </div>
-
-                    <div>
-                        <h3>Postres</h3>
-
-                        <a href="assets/php/heladerias.php">Heladerías</a>
-                        <a href="assets/php/cafeterias.php">Cafeterías</a>
-                    </div>
-
-                    <div>
-                        <h3>Destacados</h3>
-
-                        <a href="assets/php/locales-top.php">Locales Top</a>
-                        <a href="assets/php/recomendados.php">Recomendados</a>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="nav-extra">
-
-            <div class="buscador">
-
-                <input type="text" placeholder="Buscar...">
-
-                <button>⌕</button>
-
-            </div>
-
-            <a href="assets/php/login.php" class="user">
-    <i class="fa-regular fa-user"></i>
-</a>
-
-        </div>
-
-    </div>
-
-</section>
+<?php include("includes/navbar.php"); ?> <style> #navbar { background: transparent; } </style>
 
 <!-- SECCION PRINCIPAL -->
 <section id="seccion-principal">
@@ -165,7 +62,7 @@
                 Relajate en las mejores aguas termales y disfrutá momentos únicos.
             </p>
 
-            <a href="assets/php/termas.php" class="card-btn">
+            <a href="pages/lugares/termas.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -181,7 +78,7 @@
                 Descubrí paisajes increíbles, parques y actividades al aire libre.
             </p>
 
-            <a href="assets/php/paisajes.php" class="card-btn">
+            <a href="pages/lugares/paisajes.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -197,7 +94,7 @@
                 Probá sabores locales y experiencias gastronómicas inolvidables.
             </p>
 
-            <a href="assets/php/locales-top.php" class="card-btn">
+            <a href="pages/gastronomia/locales-top.php" class="card-btn">
                 Ver más →
             </a>
 
@@ -207,61 +104,7 @@
 
 </section>
 
-<!-- SECCION COMENTARIOS -->
-<section id="comentarios">
-
-    <div class="titulo-seccion">
-        <h2>Lo que dicen los visitantes</h2>
-    </div>
-
-    <div class="comentarios-container">
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “Las termas fueron una experiencia increíble, súper recomendable.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Lucía Fernández</h4>
-                <span>Argentina</span>
-            </div>
-
-        </div>
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “Muy linda ciudad, tranquila y con lugares hermosos para recorrer.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Martín Silva</h4>
-                <span>Uruguay</span>
-            </div>
-
-        </div>
-
-        <div class="comentario-card">
-
-            <p class="comentario-texto">
-                “La gastronomía me sorprendió muchísimo, volvería sin dudas.”
-            </p>
-
-            <div class="comentario-user">
-                <h4>Camila Rodríguez</h4>
-                <span>Chile</span>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================
-        SOBRE GOSALTO
-========================= -->
+<!-- SOBRE GOSALTO -->
 
 <section id="empresa">
 
@@ -299,67 +142,14 @@
 
 </section>
 
+<!-- SECCION COMENTARIOS -->
+<?php include("includes/comments.php"); ?>
+
 <!-- FOOTER -->
-<footer id="footer">
-
-    <div class="footer-container">
-
-        <div class="footer-logo">
-
-            <h2>SIGTUR</h2>
-
-            <p>
-                Descubrí los mejores lugares, experiencias y sabores de Salto.
-            </p>
-
-        </div>
-
-        <div class="footer-links">
-
-            <div>
-
-                <h3>Navegación</h3>
-
-                <a href="index.php">Inicio</a>
-                <a href="assets/php/.php">Lugares</a>
-                <a href="assets/php/eventos.php">Eventos</a>
-                <a href="assets/php/locales-top.php">Gastronomía</a>
-
-            </div>
-
-            <div>
-
-                <h3>Explorar</h3>
-
-                <a href="assets/php/termas.php">Termas</a>
-                <a href="assets/php/paisajes.php">Naturaleza</a>
-                <a href="assets/php/patrimonio.php">Cultura</a>
-                <a href="assets/php/parques.php">Parques</a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="footer-copy">
-        <p>© 2026 GoSalto — Todos los derechos reservados.</p>
-    </div>
-
-</footer>
+<?php include("includes/footer.php"); ?>
 
 <!-- CHAT PERSONAS -->
-<div class="chat-widget">
-
-    <button class="chat-btn">
-
-        <i class="fa-regular fa-message"></i>
-
-        <div class="chat-notification"></div>
-
-    </button>
-
-</div>
+<?php include("includes/chat-widget.php"); ?>
 
 <script src="assets/js/script.js"></script>
 
