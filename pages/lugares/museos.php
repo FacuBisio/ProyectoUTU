@@ -48,7 +48,7 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/mbellasartes.jpg" alt="Museo Bellas Artes">
+        <img src="../../assets/img/mbellasartes" alt="Museo Bellas Artes">
 
         <div class="slide-info">
             <h2>Museo Bellas Artes</h2>
