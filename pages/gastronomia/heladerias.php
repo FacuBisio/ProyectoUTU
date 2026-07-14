@@ -34,13 +34,14 @@
 
     <div class="slide active">
 
-        <img src="../../assets/img/mdelhombre.jpg" alt="Museo del Hombre y la Tecnología">
+        <img src="../../assets/img/mdelhombre.jpg" alt="Chelato">
 
         <div class="slide-info">
-            <h2>Museo del Hombre y la Tecnología</h2>
+            <h2>Chelato</h2>
             <p>
-                Un espacio dedicado a la preservación y exhibición del patrimonio cultural y 
-                tecnológico de la región.
+                Chelato es una heladería que ofrece una amplia variedad de sabores de helado, 
+                elaborados con ingredientes frescos y de alta calidad, brindando una experiencia 
+                única para los amantes del helado.
             </p>
         </div>
 
@@ -48,14 +49,14 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/mbellasartes.jpg" alt="Museo Bellas Artes">
+        <img src="../../assets/img/mbellasartes.jpg" alt="Heladeria La Cigale">
 
         <div class="slide-info">
-            <h2>Museo Bellas Artes</h2>
+            <h2>Heladeria La Cigale</h2>
             <p>
-               El Museo Bellas Artes alberga una colección de obras de arte que abarca desde la pintura 
-               y la escultura hasta la fotografía y el diseño, ofreciendo a los visitantes una 
-               experiencia cultural enriquecedora.
+                La Heladería La Cigale es un lugar emblemático que ofrece una amplia variedad de sabores
+                de helado, elaborados con ingredientes frescos y de alta calidad, brindando una experiencia
+                única para los amantes del helado.
             </p>
         </div>
 
@@ -63,13 +64,14 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Heladeria">
+        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Heladeria Alfredito">
 
         <div class="slide-info">
-            <h2>Museo de Horacio Quiroga</h2>
+            <h2>Heladeria Alfredito</h2>
             <p>
-                Un espacio dedicado a la preservación y exhibición del patrimonio cultural y 
-                literario del escritor horaciano.
+               Es una heladería tradicional que ofrece una amplia variedad de sabores artesanales,
+               elaborados con ingredientes frescos y de alta calidad, brindando una experiencia
+               única para los amantes del helado.
             </p>
         </div>
 
