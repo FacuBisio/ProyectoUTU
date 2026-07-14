@@ -22,7 +22,53 @@
 <?php include("../../includes/navbar.php"); ?>
 
 <!-- SLIDER -->
-<?php include("../../includes/slider.php"); ?> 
+<?php
+// include("../../includes/slider.php");
+?>
+
+<!-- SLIDER -->
+
+<section class="slider-container">
+
+    <button class="slider-btn prev">&#10094;</button>
+
+    <div class="slide active">
+
+        <img src="../../assets/img/termas.jpeg" alt="Termas del Daymán">
+
+        <div class="slide-info">
+            <h2>Termas del Daymán</h2>
+            <p>
+                Un complejo termal que ofrece una experiencia relajante y terapéutica, 
+                con piscinas de aguas termales, spa y servicios de bienestar.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../../assets/img/arapey.jpg" alt="Termas del Arapey">
+
+        <div class="slide-info">
+            <h2>Termas del Arapey</h2>
+            <p>
+                Un complejo termal que ofrece una experiencia relajante y terapéutica, 
+                con piscinas de aguas termales, spa y servicios de bienestar.
+            </p>
+        </div>
+
+    </div>
+
+    <button class="slider-btn next">&#10095;</button>
+
+    <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
 
 <!-- SECCION COMENTARIOS -->
 <?php include("../../includes/comments.php"); ?>

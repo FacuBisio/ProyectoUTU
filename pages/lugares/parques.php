@@ -22,7 +22,67 @@
 <?php include("../../includes/navbar.php"); ?>
 
 <!-- SLIDER -->
-<?php include("../../includes/slider.php"); ?>
+<?php
+// include("../../includes/slider.php");
+?>
+
+<!-- SLIDER -->
+
+<section class="slider-container">
+
+    <button class="slider-btn prev">&#10094;</button>
+
+    <div class="slide active">
+
+        <img src="../../assets/img/parqueharriague.jpg" alt="Parque Harriague">
+
+        <div class="slide-info">
+            <h2>Parque Harriague</h2>
+            <p>
+                Un espacio verde ideal para relajarse, hacer ejercicio y disfrutar de la naturaleza. 
+                El parque cuenta con áreas de picnic, senderos para caminar y zonas de juegos para niños.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../../assets/img/parquesolari.png" alt="Parque Solari">
+
+        <div class="slide-info">
+            <h2>Parque Solari</h2>
+            <p>
+                Este parque es perfecto para familias y personas que buscan disfrutar de la naturaleza. 
+                El parque ofrece instalaciones para deportes y áreas de descanso.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../../assets/img/parqueindigena.jpg" alt="Parque Indigena Vaimaca Pirú">
+
+        <div class="slide-info">
+            <h2>Parque Indigena Vaimaca Pirú</h2>
+            <p>
+                Un espacio verde y acogedor, perfecto para familias y personas que buscan disfrutar de la naturaleza. 
+                El parque ofrece instalaciones para deportes y áreas de descanso.
+            </p>
+        </div>
+
+    </div>
+
+    <button class="slider-btn next">&#10095;</button>
+
+    <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
 
 <!-- SECCION COMENTARIOS -->
 <?php include("../../includes/comments.php"); ?>
