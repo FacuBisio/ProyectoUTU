@@ -48,7 +48,7 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/mbellasartes" alt="Museo Bellas Artes">
+        <img src="../../assets/img/gallino.jpg" alt="Museo Bellas Artes">
 
         <div class="slide-info">
             <h2>Museo Bellas Artes</h2>
@@ -63,14 +63,13 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/parqueindigena.jpg" alt="Parque Indígena">
+        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Museo de Horacio Quiroga">
 
         <div class="slide-info">
-            <h2>Parque Indígena "Vaimaca Pirú"</h2>
+            <h2>Museo de Horacio Quiroga</h2>
             <p>
-                Un espacio verde que combina naturaleza, recreación y homenaje
-                a la cultura indígena, ideal para pasear, hacer deporte y
-                disfrutar del aire libre.
+                Un espacio dedicado a la preservación y exhibición del patrimonio cultural y 
+                literario del escritor horaciano.
             </p>
         </div>
 

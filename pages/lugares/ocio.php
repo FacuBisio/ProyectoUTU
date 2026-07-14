@@ -22,7 +22,72 @@
 <?php include("../../includes/navbar.php"); ?>
 
 <!-- SLIDER -->
-<?php include("../../includes/slider.php"); ?>
+<?php
+// include("../../includes/slider.php");
+?>
+
+<!-- SLIDER -->
+
+<section class="slider-container">
+
+    <button class="slider-btn prev">&#10094;</button>
+
+    <div class="slide active">
+
+        <img src="../../assets/img/mdelhombre.jpg" alt="Calle Uruguay">
+
+        <div class="slide-info">
+            <h2>Calle Uruguay</h2>
+            <p>
+                Una de las calles más emblemáticas de la ciudad, llena de historia y cultura. 
+                Es un lugar ideal para pasear, disfrutar de la arquitectura y 
+                conocer la vida nocturna de la ciudad.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../../assets/img/mbellasartes.jpg" alt="Salto Shopping">
+
+        <div class="slide-info">
+            <h2>Salto Shopping</h2>
+            <p>
+                Un centro comercial moderno con una amplia variedad de tiendas y servicios.
+                Queda a pocos minutos del centro de la ciudad y es un lugar ideal para disfrutar de compras 
+                y entretenimiento.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="slide">
+
+        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Cine Sarandi">
+
+        <div class="slide-info">
+            <h2>Cine Sarandi</h2>
+            <p>
+                El Cine Sarandi es un lugar emblemático para los amantes del cine, 
+                ofreciendo una experiencia única con una programación variada de películas nacionales 
+                e internacionales.
+            </p>
+        </div>
+
+    </div>
+
+    <button class="slider-btn next">&#10095;</button>
+
+    <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+</section>
+
+
 
 <!-- SECCION COMENTARIOS -->
 <?php include("../../includes/comments.php"); ?>
