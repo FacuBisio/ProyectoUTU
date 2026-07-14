@@ -34,13 +34,13 @@
 
     <div class="slide active">
 
-        <img src="../../assets/img/mdelhombre.jpg" alt="Museo del Hombre y la Tecnología">
+        <img src="../../assets/img/mdelhombre.jpg" alt="El Rancho">
 
         <div class="slide-info">
-            <h2>Museo del Hombre y la Tecnología</h2>
+            <h2>El Rancho</h2>
             <p>
-                Un espacio dedicado a la preservación y exhibición del patrimonio cultural y 
-                tecnológico de la región.
+                El Rancho es un restaurante particularmente conocido por su ambiente acogedor y su excelente servicio,
+                 ofreciendo a sus clientes una experiencia culinaria única con platos elaborados con ingredientes frescos y de alta calidad.
             </p>
         </div>
 
@@ -48,15 +48,14 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/mbellasartes.jpg" alt="Museo Bellas Artes">
+        <img src="../../assets/img/mbellasartes.jpg" alt="La Trattoria">
 
         <div class="slide-info">
-            <h2>Museo Bellas Artes</h2>
+            <h2>La Trattoria</h2>
             <p>
-               El Museo Bellas Artes alberga una colección de obras de arte que abarca desde la pintura 
-               y la escultura hasta la fotografía y el diseño, ofreciendo a los visitantes una 
-               experiencia cultural enriquecedora.
-            </p>
+                La Trattoria es un restaurante que a diferencia de otros lugares de gastronomia
+                te ofrece una experiencia unica en la que podras disfrutar de una comida deliciosa y un ambiente acogedor,
+                brindando a sus clientes un momento de disfrute y satisfacción.
         </div>
 
     </div>
