@@ -48,14 +48,14 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/parquesolari.png" alt="Parque Solari">
+        <img src="../../assets/img/mbellasartes.jpg" alt="Museo Bellas Artes">
 
         <div class="slide-info">
-            <h2>Parque Solari</h2>
+            <h2>Museo Bellas Artes</h2>
             <p>
-                Un amplio espacio verde ideal para disfrutar de la naturaleza,
-                realizar actividades recreativas y compartir momentos en familia
-                en un entorno tranquilo y agradable.
+               El Museo Bellas Artes alberga una colección de obras de arte que abarca desde la pintura 
+               y la escultura hasta la fotografía y el diseño, ofreciendo a los visitantes una 
+               experiencia cultural enriquecedora.
             </p>
         </div>
 
