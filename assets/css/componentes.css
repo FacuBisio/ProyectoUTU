@@ -69,7 +69,29 @@
     justify-content: flex-end;
     gap: 15px;
 }
+.ith-navbar{
 
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:8px 15px;
+
+    margin-right:15px;
+
+    background:#2f855a;
+
+    color:white;
+
+    border-radius:25px;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    white-space:nowrap;
+
+}
 .buscador {
     display: flex;
     align-items: center;

@@ -136,6 +136,11 @@ require_once(__DIR__ . "/../config/config.php");
 
         <div class="nav-extra">
 
+            <!-- Indicador del ITH -->
+            <div class="ith-navbar">
+                🌡 <span id="ithPorcentaje">ITH: --</span>
+            </div>
+
             <div class="buscador">
 
                 <input
@@ -161,3 +166,5 @@ require_once(__DIR__ . "/../config/config.php");
     </div>
 
 </section>
+
+<script src="<?= url('assets/js/ith.js') ?>"></script>
