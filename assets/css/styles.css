@@ -193,5 +193,33 @@ main {
         height: 58px;
         font-size: 22px;
     }
+
+    /* ========================= */
+/* CLIMA EN EL NAVBAR */
+/* ========================= */
+
+.ith-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 8px 15px;
+
+    background: #0d6efd;
+    color: #fff;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.ith-navbar:hover {
+    background: #0b5ed7;
+}
+
 }
 

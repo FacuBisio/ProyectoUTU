@@ -137,8 +137,10 @@ require_once(__DIR__ . "/../config/config.php");
         <div class="nav-extra">
 
             <!-- Indicador del ITH -->
-            <div class="ith-navbar">
-                🌡 <span id="ithPorcentaje">ITH: --</span>
+         <div class="ith-navbar">
+             <span id="clima">
+             🌡 Cargando...
+             </span>
             </div>
 
             <div class="buscador">
@@ -168,3 +170,4 @@ require_once(__DIR__ . "/../config/config.php");
 </section>
 
 <script src="<?= url('assets/js/ith.js') ?>"></script>
+<script src="<?= url('assets/js/clima.js') ?>"></script>
