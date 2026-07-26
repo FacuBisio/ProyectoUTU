@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,29 +13,33 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        #mapaOcio {
+            width: 100%;
+            height: 450px;
+            border-radius: 8px;
+            margin-top: 15px;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
 
 <main class="main-content pagina-interna">
 
-<!-- NAVBAR -->
 <?php include("../../includes/navbar.php"); ?>
-
-<!-- SLIDER -->
-<?php
-// include("../../includes/slider.php");
-?>
-
-<!-- SLIDER -->
 
 <section class="slider-container">
 
     <button class="slider-btn prev">&#10094;</button>
 
     <div class="slide active">
-
         <img src="../../assets/img/mdelhombre.jpg" alt="Calle Uruguay">
-
         <div class="slide-info">
             <h2>Calle Uruguay</h2>
             <p>
@@ -44,13 +48,10 @@
                 conocer la vida nocturna de la ciudad.
             </p>
         </div>
-
     </div>
 
     <div class="slide">
-
         <img src="../../assets/img/mbellasartes.jpg" alt="Salto Shopping">
-
         <div class="slide-info">
             <h2>Salto Shopping</h2>
             <p>
@@ -59,22 +60,18 @@
                 y entretenimiento.
             </p>
         </div>
-
     </div>
 
     <div class="slide">
-
-        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Cine Sarandi">
-
+        <img src="../../assets/img/mhoracioquiroga.jpg" alt="Cine Sarandí">
         <div class="slide-info">
-            <h2>Cine Sarandi</h2>
+            <h2>Cine Sarandí</h2>
             <p>
-                El Cine Sarandi es un lugar emblemático para los amantes del cine, 
+                El Cine Sarandí es un lugar emblemático para los amantes del cine, 
                 ofreciendo una experiencia única con una programación variada de películas nacionales 
                 e internacionales.
             </p>
         </div>
-
     </div>
 
     <button class="slider-btn next">&#10095;</button>
@@ -87,20 +84,80 @@
 
 </section>
 
+<section class="mapa-seccion">
+    <h2>Ubicación de centros de ocio y entretenimiento</h2>
+    <p>
+        Descubre los principales puntos de paseo, compras y entretenimiento nocturno en Salto.
+    </p>
 
+    <div id="mapaOcio"></div>
+</section>
 
-<!-- SECCION COMENTARIOS -->
 <?php include("../../includes/comments.php"); ?>
 
 </main>
 
-<!-- FOOTER -->
 <?php include("../../includes/footer.php"); ?>
 
-<!-- CHAT PERSONAS -->
 <?php include("../../includes/chat-widget.php"); ?>
 
 <script src="../../assets/js/slider.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inicializar el mapa centrado en Salto
+    const mapa = L.map('mapaOcio').setView([-31.3880, -57.9600], 14);
+
+    // 2. Capa de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+
+    // 3. Datos de los lugares de ocio
+    const lugaresOcio = [
+      {
+        nombre: "Calle Uruguay",
+        coords: [-31.3878, -57.9625],
+        imagen: "../../assets/img/mdelhombre.jpg",
+        descripcion: "Eje comercial y cultural céntrico ideal para paseos y gastronomía."
+      },
+      {
+        nombre: "Salto Shopping & Terminal",
+        coords: [-31.3850, -57.9480],
+        imagen: "../../assets/img/mbellasartes.jpg",
+        descripcion: "Centro comercial, patio de comidas, cines y servicios."
+      },
+      {
+        nombre: "Cine Sarandí",
+        coords: [-31.3888, -57.9605],
+        imagen: "../../assets/img/mhoracioquiroga.jpg",
+        descripcion: "Espacio emblemático para proyección de cine local e internacional."
+      }
+    ];
+
+    // 4. Recorrer los puntos e incluirlos en el mapa
+    lugaresOcio.forEach(lugar => {
+      const [lat, lng] = lugar.coords;
+      
+      const popupContent = `
+        <h3>${lugar.nombre}</h3>
+        <img src="${lugar.imagen}" width="220" alt="${lugar.nombre}">
+        <p>${lugar.descripcion}</p>
+        <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank">
+          📍 Cómo llegar
+        </a>
+      `;
+
+      L.marker(lugar.coords)
+        .addTo(mapa)
+        .bindPopup(popupContent);
+    });
+
+    // 5. Ajustar el tamaño del lienzo de Leaflet por si acaso
+    setTimeout(() => {
+      mapa.invalidateSize();
+    }, 200);
+  });
+</script>
 
 </body>
 </html>
