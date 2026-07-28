@@ -36,7 +36,7 @@
 
 <section class="slider-container">
 
-    <button class="slider-btn prev">❮</button>
+    <button class="slider-btn prev"></button>
 
     <div class="slide active">
         <img src="../../assets/img/mdelhombre.jpg" alt="Carnaval de Salto">
@@ -50,7 +50,7 @@
     </div>
 
     <div class="slide">
-        <img src="../../assets/img/mbellasartes.jpg" alt="Expo Salto">
+        <img src="../../assets/img/exposaltoo.jpg" alt="Expo Salto">
         <div class="slide-info">
             <h2>Expo Salto</h2>
             <p>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <button class="slider-btn next">❯</button>
+    <button class="slider-btn next"></button>
 
     <div class="slider-dots">
         <span class="dot active"></span>
