@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?php echo '../../assets/css/componentes.css'; ?>">
     <link rel="stylesheet" href="<?php echo '../../assets/css/style-secciones.css'; ?>">
     <link rel="stylesheet" href="<?php echo '../../assets/css/slider.css'; ?>"> 
-
+    <link rel="stylesheet" href="../../assets/css/comentarios.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 

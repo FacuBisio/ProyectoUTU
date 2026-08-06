@@ -1,4 +1,9 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+<?php
 
 require_once(__DIR__ . "/../config/config.php");
 
@@ -156,12 +161,31 @@ require_once(__DIR__ . "/../config/config.php");
 
             </div>
 
-            <a
-                href="<?= url('pages/login.php') ?>"
-                class="user"
-            >
-                <i class="fa-regular fa-user"></i>
-            </a>
+         <?php if(isset($_SESSION["nombre"])): ?>
+
+    <div class="usuario-logueado">
+
+        <span>
+            👤 <?= $_SESSION["nombre"] ?>
+        </span>
+
+        <a href="<?= url('pages/logout.php') ?>">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+
+<?php else: ?>
+
+    <a
+        href="<?= url('pages/login.php') ?>"
+        class="user"
+    >
+        <i class="fa-regular fa-user"></i>
+    </a>
+
+<?php endif; ?>
 
         </div>
 
