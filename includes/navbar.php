@@ -168,7 +168,13 @@ require_once(__DIR__ . "/../config/config.php");
         <span>
             👤 <?= $_SESSION["nombre"] ?>
         </span>
+        <?php if($_SESSION["id_rol"] == 3): ?>
 
+        <a href="<?= url('pages/admin/panel.php') ?>">
+            Panel Admin
+        </a>
+
+         <?php endif; ?>
         <a href="<?= url('pages/logout.php') ?>">
             Cerrar sesión
         </a>
