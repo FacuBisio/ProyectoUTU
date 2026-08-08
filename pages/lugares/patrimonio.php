@@ -1,3 +1,6 @@
+<?php
+$id_lugar = 2;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

@@ -1,7 +1,55 @@
 <?php
-$id_lugar = 2;
-?>
 
+require_once(__DIR__ . "/../../conexion.php");
+
+// Buscar la categoría Termas
+$sql_categoria = "SELECT id_categoria
+                  FROM categoria
+                  WHERE nombre = 'Termas'
+                  LIMIT 1";
+
+$resultado_categoria = $conexion->query($sql_categoria);
+
+if (!$resultado_categoria) {
+    die("Error al buscar la categoría: " . $conexion->error);
+}
+
+if ($resultado_categoria->num_rows == 0) {
+    die("No se encontró la categoría Termas.");
+}
+
+$categoria = $resultado_categoria->fetch_assoc();
+
+$id_categoria = $categoria["id_categoria"];
+
+
+// Buscar los lugares pertenecientes a Termas
+$sql_lugares = "SELECT id_lugar, nombre, descripcion, direccion, imagen
+                FROM lugar
+                WHERE id_categoria = ?
+                ORDER BY id_lugar ASC";
+
+$stmt_lugares = $conexion->prepare($sql_lugares);
+
+if (!$stmt_lugares) {
+    die("Error al preparar la consulta: " . $conexion->error);
+}
+
+$stmt_lugares->bind_param("i", $id_categoria);
+
+$stmt_lugares->execute();
+
+$lugares = $stmt_lugares->get_result();
+
+
+// Guardar los lugares en un array
+$lista_lugares = [];
+
+while ($lugar = $lugares->fetch_assoc()) {
+    $lista_lugares[] = $lugar;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -45,38 +93,67 @@ $id_lugar = 2;
 
     <button class="slider-btn prev">❮</button>
 
-    <div class="slide active">
-        <img src="../../assets/img/termas.jpeg" alt="Termas del Daymán">
+    <?php
 
-        <div class="slide-info">
-            <h2>Termas del Daymán</h2>
+$primer_slide = true;
 
-            <p>
-                Un complejo termal que ofrece una experiencia relajante y terapéutica,
-                con piscinas de aguas termales, spa y servicios de bienestar.
-            </p>
-        </div>
+while ($lugar = $lugares->fetch_assoc()) {
+
+?>
+
+<div class="slide <?= $primer_slide ? 'active' : '' ?>">
+
+    <img 
+        src="../../assets/img/<?= htmlspecialchars($lugar["imagen"]) ?>" 
+        alt="<?= htmlspecialchars($lugar["nombre"]) ?>"
+    >
+
+    <div class="slide-info">
+
+        <h2>
+            <?= htmlspecialchars($lugar["nombre"]) ?>
+        </h2>
+
+        <p>
+            <?= htmlspecialchars($lugar["descripcion"]) ?>
+        </p>
+
+        <?php if (!empty($lugar["direccion"])) { ?>
+
+            <small>
+                📍 <?= htmlspecialchars($lugar["direccion"]) ?>
+            </small>
+
+        <?php } ?>
+
     </div>
 
-    <div class="slide">
-        <img src="../../assets/img/arapey.jpg" alt="Termas del Arapey">
+</div>
 
-        <div class="slide-info">
-            <h2>Termas del Arapey</h2>
+<?php
 
-            <p>
-                Complejo termal rodeado de naturaleza,
-                piscinas y servicios turísticos.
-            </p>
-        </div>
-    </div>
+    $primer_slide = false;
+
+}
+
+?>
 
     <button class="slider-btn next">❯</button>
+<div class="slider-dots">
 
-    <div class="slider-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-    </div>
+    <?php
+
+    $cantidad_lugares = $lugares->num_rows;
+
+    for ($i = 0; $i < $cantidad_lugares; $i++) {
+
+    ?>
+
+        <span class="dot <?= $i == 0 ? 'active' : '' ?>"></span>
+
+    <?php } ?>
+
+</div>
 
 </section>
 
