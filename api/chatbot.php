@@ -1,73 +1,140 @@
 <?php
 
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=UTF-8");
 
-$apiKey = getenv("OPENAI_API_KEY");
-
-if (!$apiKey) {
-    echo json_encode([
-        "error" => "No se encontró OPENAI_API_KEY"
-    ]);
-    exit;
-}
 
 $mensaje = $_POST["mensaje"] ?? "";
 
-if (empty(trim($mensaje))) {
+
+if (trim($mensaje) === "") {
+
     echo json_encode([
-        "error" => "Mensaje vacío"
+        "error" => "No se recibió ningún mensaje."
     ]);
+
     exit;
 }
 
-$data = [
-    "model" => "gpt-5-mini",
-    "input" => [
+
+$datos = [
+
+    "model" => "llama3.2:1b",
+
+    "messages" => [
+
         [
             "role" => "system",
-            "content" => "Sos el asistente virtual de GoSalto, una página turística sobre Salto, Uruguay. Respondé de forma clara, amable y breve. Ayudá a los usuarios con información turística sobre Salto."
+
+            "content" =>
+            "Sos el asistente virtual de GoSalto.
+
+            GoSalto es una página turística sobre Salto, Uruguay.
+
+            Ayudás a los usuarios con información sobre:
+            termas,
+            parques,
+            paisajes,
+            gastronomía,
+            eventos,
+            alojamientos,
+            museos,
+            patrimonio
+            y lugares turísticos de Salto.
+
+            Respondé siempre en español.
+
+            Sé amable, claro y breve.
+
+            No inventes información.
+            Si no conocés un dato, decí que no tenés esa información."
         ],
+
         [
             "role" => "user",
+
             "content" => $mensaje
         ]
-    ]
+
+    ],
+
+    "stream" => false
 ];
 
-$ch = curl_init("https://api.openai.com/v1/responses");
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$ch = curl_init(
+    "http://localhost:11434/api/chat"
+);
 
-curl_setopt($ch, CURLOPT_POST, true);
 
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Content-Type: application/json",
-    "Authorization: Bearer " . $apiKey
-]);
+curl_setopt(
+    $ch,
+    CURLOPT_RETURNTRANSFER,
+    true
+);
 
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+curl_setopt(
+    $ch,
+    CURLOPT_POST,
+    true
+);
+
+
+curl_setopt(
+    $ch,
+    CURLOPT_HTTPHEADER,
+    [
+        "Content-Type: application/json"
+    ]
+);
+
+
+curl_setopt(
+    $ch,
+    CURLOPT_POSTFIELDS,
+    json_encode($datos)
+);
+
 
 $respuesta = curl_exec($ch);
 
+
 if ($respuesta === false) {
+
     echo json_encode([
         "error" => curl_error($ch)
     ]);
+
     curl_close($ch);
+
     exit;
 }
+
 
 curl_close($ch);
 
-$resultado = json_decode($respuesta, true);
+
+$resultado =
+    json_decode($respuesta, true);
+
 
 if (isset($resultado["error"])) {
+
     echo json_encode([
-        "error" => $resultado["error"]["message"]
+        "error" => $resultado["error"]
     ]);
+
     exit;
 }
 
+
+$respuestaIA =
+    $resultado["message"]["content"]
+    ?? "No recibí una respuesta.";
+
+
 echo json_encode([
-    "respuesta" => $resultado["output"][0]["content"][0]["text"] ?? "No pude generar una respuesta."
+
+    "respuesta" => $respuestaIA
+
 ]);

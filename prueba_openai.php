@@ -3,11 +3,8 @@
 $apiKey = getenv("OPENAI_API_KEY");
 
 if (!$apiKey) {
-    die("❌ ERROR: PHP no encuentra OPENAI_API_KEY");
+    die("❌ PHP no encuentra OPENAI_API_KEY");
 }
-
-echo "✅ PHP encontró la API key.<br>";
-echo "Ahora vamos a comprobar la conexión con OpenAI...<br><br>";
 
 $data = [
     "model" => "gpt-5-mini",
@@ -24,7 +21,11 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Authorization: Bearer " . $apiKey
 ]);
 
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt(
+    $ch,
+    CURLOPT_POSTFIELDS,
+    json_encode($data)
+);
 
 $respuesta = curl_exec($ch);
 
@@ -38,18 +39,32 @@ curl_close($ch);
 
 $resultado = json_decode($respuesta, true);
 
-echo "Código HTTP: " . $codigo . "<br><br>";
+echo "<h2>Prueba de conexión con OpenAI</h2>";
+
+echo "<p>Código HTTP: $codigo</p>";
 
 if (isset($resultado["error"])) {
-    echo "❌ Error de OpenAI:<br>";
-    echo htmlspecialchars($resultado["error"]["message"]);
+
+    echo "<p>❌ Error de OpenAI:</p>";
+
+    echo "<pre>";
+    echo htmlspecialchars(
+        $resultado["error"]["message"] ?? "Error desconocido"
+    );
+    echo "</pre>";
+
     exit;
 }
 
-echo "✅ CONEXIÓN CORRECTA<br><br>";
+echo "<p>✅ CONEXIÓN CORRECTA</p>";
 
-echo "Respuesta de OpenAI:<br>";
+echo "<p>Respuesta:</p>";
+
+echo "<strong>";
 
 echo htmlspecialchars(
-    $resultado["output"][0]["content"][0]["text"] ?? "No se recibió texto."
+    $resultado["output"][0]["content"][0]["text"]
+    ?? "No se recibió respuesta"
 );
+
+echo "</strong>";

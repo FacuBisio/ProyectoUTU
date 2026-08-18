@@ -1,5 +1,7 @@
 function abrirChat() {
     document.getElementById("chatbot").style.display = "block";
+
+    document.getElementById("mensaje").focus();
 }
 
 function cerrarChat() {
@@ -16,99 +18,108 @@ function enviarMensaje() {
         return;
     }
 
+    // Mostrar mensaje del usuario
     agregarMensaje(texto, "usuario");
 
+    // Limpiar input
     input.value = "";
 
-    setTimeout(function() {
+    // Mostrar mensaje de espera
+    const cargando = document.createElement("div");
 
-        const respuesta = responder(texto);
+    cargando.classList.add("mensaje", "bot");
+    cargando.id = "mensaje-cargando";
 
-        agregarMensaje(respuesta, "bot");
+    cargando.innerHTML = "🤖 Escribiendo...";
 
-    }, 500);
+    const mensajes = document.getElementById("chat-mensajes");
+
+    mensajes.appendChild(cargando);
+
+    mensajes.scrollTop = mensajes.scrollHeight;
+
+
+    // Enviar mensaje a PHP
+    const datos = new FormData();
+
+    datos.append("mensaje", texto);
+
+
+    fetch("api/chatbot.php", {
+
+        method: "POST",
+
+        body: datos
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        // Eliminar "Escribiendo..."
+        const cargando =
+            document.getElementById("mensaje-cargando");
+
+        if (cargando) {
+            cargando.remove();
+        }
+
+
+        if (data.error) {
+
+            agregarMensaje(
+                "❌ Ocurrió un error: " + data.error,
+                "bot"
+            );
+
+            return;
+        }
+
+
+        agregarMensaje(
+            data.respuesta,
+            "bot"
+        );
+
+    })
+
+    .catch(error => {
+
+        const cargando =
+            document.getElementById("mensaje-cargando");
+
+        if (cargando) {
+            cargando.remove();
+        }
+
+        agregarMensaje(
+            "❌ No pude conectarme con el asistente.",
+            "bot"
+        );
+
+        console.error(error);
+
+    });
+
 }
 
 
 function agregarMensaje(texto, tipo) {
 
-    const mensajes = document.getElementById("chat-mensajes");
+    const mensajes =
+        document.getElementById("chat-mensajes");
 
-    const mensaje = document.createElement("div");
+    const mensaje =
+        document.createElement("div");
 
-    mensaje.classList.add("mensaje");
+    mensaje.classList.add("mensaje");s
     mensaje.classList.add(tipo);
 
-    mensaje.innerHTML = texto;
+    mensaje.innerText = texto;
 
     mensajes.appendChild(mensaje);
 
-    mensajes.scrollTop = mensajes.scrollHeight;
-}
-
-
-function responder(texto) {
-
-    texto = texto.toLowerCase();
-
-    if (
-        texto.includes("hola") ||
-        texto.includes("buenas") ||
-        texto.includes("buenos días")
-    ) {
-        return "¡Hola! 👋 Bienvenido a GoSalto. ¿Qué lugar de Salto querés conocer?";
-    }
-
-    if (
-        texto.includes("terma") ||
-        texto.includes("termas")
-    ) {
-        return "♨️ En GoSalto podés encontrar información sobre las termas de Salto y conocer sus principales características.";
-    }
-
-    if (
-        texto.includes("parque") ||
-        texto.includes("parques")
-    ) {
-        return "🌳 Salto cuenta con varios espacios naturales y parques para visitar. Podés entrar en la sección de Parques para conocerlos.";
-    }
-
-    if (
-        texto.includes("paisaje") ||
-        texto.includes("naturaleza")
-    ) {
-        return "🌿 En la sección Paisajes podés encontrar diferentes lugares naturales para visitar en Salto.";
-    }
-
-    if (
-        texto.includes("comida") ||
-        texto.includes("comer") ||
-        texto.includes("restaurante") ||
-        texto.includes("gastronomia")
-    ) {
-        return "🍽️ GoSalto también cuenta con información sobre gastronomía y lugares donde podés comer.";
-    }
-
-    if (
-        texto.includes("evento") ||
-        texto.includes("eventos")
-    ) {
-        return "🎉 Podés consultar la sección de Eventos para conocer las actividades que se realizan en Salto.";
-    }
-
-    if (
-        texto.includes("alojamiento") ||
-        texto.includes("hotel") ||
-        texto.includes("dormir")
-    ) {
-        return "🏨 En la sección Alojamientos podés encontrar información sobre lugares donde hospedarte.";
-    }
-
-    if (
-        texto.includes("gracias")
-    ) {
-        return "¡De nada! 😊 Estoy para ayudarte.";
-    }
-
-    return "🤔 No estoy seguro de esa pregunta. Probá preguntarme por **termas, parques, paisajes, gastronomía, eventos o alojamientos**.";
+    mensajes.scrollTop =
+        mensajes.scrollHeight;
 }
