@@ -148,8 +148,13 @@
 <!-- FOOTER -->
 <?php include("includes/footer.php"); ?>
 
-<!-- CHAT PERSONAS -->
-<?php include("includes/chat-widget.php"); ?>
+<!-- CHATBOT GOSALTO -->
+
+<?php include("includes/chatbot.php"); ?>
+
+<link rel="stylesheet" href="assets/css/chatbot.css">
+
+<script src="assets/js/chatbot.js"></script>
 
 <script src="assets/js/script.js"></script>
 

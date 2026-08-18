@@ -74,7 +74,10 @@ Registrar
 
 
 </form>
-
+<!-- BOTÓN VOLVER -->
+<button type="button" onclick="history.back()" class="btn-volver">
+    <i class="fa-solid fa-arrow-left"></i> Volver
+</button>
 
 </section>
 
