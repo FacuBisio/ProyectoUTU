@@ -1,13 +1,11 @@
 function abrirChat() {
     document.getElementById("chatbot").style.display = "block";
-
     document.getElementById("mensaje").focus();
 }
 
 function cerrarChat() {
     document.getElementById("chatbot").style.display = "none";
 }
-
 
 function enviarMensaje() {
 
@@ -24,47 +22,51 @@ function enviarMensaje() {
     // Limpiar input
     input.value = "";
 
-    // Mostrar mensaje de espera
+    // Mostrar "Escribiendo..."
     const cargando = document.createElement("div");
 
     cargando.classList.add("mensaje", "bot");
     cargando.id = "mensaje-cargando";
-
     cargando.innerHTML = "🤖 Escribiendo...";
 
     const mensajes = document.getElementById("chat-mensajes");
 
     mensajes.appendChild(cargando);
-
     mensajes.scrollTop = mensajes.scrollHeight;
 
-
-    // Enviar mensaje a PHP
+    // Crear datos para enviar a PHP
     const datos = new FormData();
-
     datos.append("mensaje", texto);
 
+    // Medir tiempo
+    const inicio = performance.now();
+    console.log("Enviando mensaje a PHP...");
 
+    // Enviar a PHP
     fetch("api/chatbot.php", {
-
         method: "POST",
-
         body: datos
-
     })
+    .then(response => {
 
-    .then(response => response.json())
+        console.log(
+            "PHP respondió en:",
+            ((performance.now() - inicio) / 1000).toFixed(2),
+            "segundos"
+        );
 
+        return response.json();
+    })
     .then(data => {
 
-        // Eliminar "Escribiendo..."
+        console.log("Respuesta recibida:", data);
+
         const cargando =
             document.getElementById("mensaje-cargando");
 
         if (cargando) {
             cargando.remove();
         }
-
 
         if (data.error) {
 
@@ -76,14 +78,12 @@ function enviarMensaje() {
             return;
         }
 
-
         agregarMensaje(
             data.respuesta,
             "bot"
         );
 
     })
-
     .catch(error => {
 
         const cargando =
@@ -98,10 +98,8 @@ function enviarMensaje() {
             "bot"
         );
 
-        console.error(error);
-
+        console.error("ERROR:", error);
     });
-
 }
 
 
@@ -113,7 +111,7 @@ function agregarMensaje(texto, tipo) {
     const mensaje =
         document.createElement("div");
 
-    mensaje.classList.add("mensaje");s
+    mensaje.classList.add("mensaje");
     mensaje.classList.add(tipo);
 
     mensaje.innerText = texto;
@@ -123,3 +121,18 @@ function agregarMensaje(texto, tipo) {
     mensajes.scrollTop =
         mensajes.scrollHeight;
 }
+
+
+// Enviar con Enter
+document.getElementById("mensaje").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            enviarMensaje();
+        }
+    }
+);s

@@ -4,6 +4,7 @@ header("Content-Type: application/json; charset=UTF-8");
 
 
 $mensaje = $_POST["mensaje"] ?? "";
+$inicio = microtime(true);
 
 
 if (trim($mensaje) === "") {
@@ -62,7 +63,7 @@ $datos = [
 
 
 $ch = curl_init(
-    "http://localhost:11434/api/chat"
+    "http://127.0.0.1:11434/api/chat"
 );
 
 
@@ -71,6 +72,8 @@ curl_setopt(
     CURLOPT_RETURNTRANSFER,
     true
 );
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
 
 curl_setopt(
@@ -132,7 +135,13 @@ $respuestaIA =
     $resultado["message"]["content"]
     ?? "No recibí una respuesta.";
 
+$tiempo = microtime(true) - $inicio;
 
+file_put_contents(
+    __DIR__ . "/tiempo.txt",
+    "Tiempo: " . $tiempo . " segundos\n",
+    FILE_APPEND
+);
 echo json_encode([
 
     "respuesta" => $respuestaIA
