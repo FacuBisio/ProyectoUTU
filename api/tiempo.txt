@@ -1,3 +1,5 @@
 Tiempo: 5.5868599414825 segundos
 Tiempo: 18.363829135895 segundos
 Tiempo: 29.122495174408 segundos
+CURL: 30.009483098984 segundos
+CURL: 30.007573843002 segundos
