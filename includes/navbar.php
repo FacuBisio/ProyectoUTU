@@ -147,19 +147,21 @@ require_once(__DIR__ . "/../config/config.php");
              🌡 Cargando...
              </span>
             </div>
+<form class="buscador" action="<?= url('pages/buscar.php') ?>" method="GET">
 
-            <div class="buscador">
+    <input
+        type="text"
+        name="q"
+        placeholder="Buscar..."
+        autocomplete="off"
+        required
+    >
 
-                <input
-                    type="text"
-                    placeholder="Buscar..."
-                >
+    <button type="submit">
+        ⌕
+    </button>
 
-                <button>
-                    ⌕
-                </button>
-
-            </div>
+</form>
 
          <?php if(isset($_SESSION["nombre"])): ?>
 
