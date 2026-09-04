@@ -22,9 +22,10 @@
             onkeypress="if(event.key === 'Enter') enviarMensaje()"
         >
 
-        <button type="button" onclick="enviarMensaje()">
-    <i class="fas fa-paper-plane"></i>
-</button>
+        <button onclick="enviarMensaje()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
     </div>
 
 </div>
