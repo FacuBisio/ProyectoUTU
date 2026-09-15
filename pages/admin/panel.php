@@ -7,10 +7,6 @@ if (!isset($_SESSION["id_usuario"])) {
     exit();
 }
 
-if ($_SESSION["id_rol"] != 3) {
-    die("Acceso denegado.");
-}
-
 ?>
 
 <!DOCTYPE html>

@@ -170,7 +170,7 @@ require_once(__DIR__ . "/../config/config.php");
         <span>
             👤 <?= $_SESSION["nombre"] ?>
         </span>
-        <?php if($_SESSION["id_rol"] == 3): ?>
+        <?php if($_SESSION["id_rol"] == 1): ?>
 
         <a href="<?= url('pages/admin/panel.php') ?>">
             Panel Admin
@@ -187,7 +187,7 @@ require_once(__DIR__ . "/../config/config.php");
 <?php else: ?>
 
     <a
-        href="<?= url('pages/login.php') ?>"
+        href="<?= url('pages/register.php') ?>"
         class="user"
     >
         <i class="fa-regular fa-user"></i>

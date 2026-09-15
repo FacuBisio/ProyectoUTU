@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/style-secciones.css">
     <link rel="stylesheet" href="assets/css/var.css">
+    <link rel="stylesheet" href="assets/css/comments.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">

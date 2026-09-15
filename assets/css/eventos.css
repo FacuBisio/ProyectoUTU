@@ -1,0 +1,49 @@
+/* CONTENEDOR DE LOS POSTS */
+.eventos-container {
+    width: 380px;
+    max-width: 30%;
+    margin: 100px auto 40px auto;
+}
+
+/* POST */
+.evento {
+    width: 100%;
+    background-color: white;
+    margin-bottom: 25px;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* IMAGEN */
+.evento img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+}
+
+/* INFORMACIÓN */
+.evento-info {
+    padding: 15px 18px;
+}
+
+/* NOMBRE */
+.evento-info h2 {
+    margin: 0 0 12px 0;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+/* DATOS */
+.evento-info p {
+    margin: 7px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* ÚLTIMO DATO SIN TANTO ESPACIO */
+.evento-info p:last-child {
+    margin-bottom: 0;
+}
+

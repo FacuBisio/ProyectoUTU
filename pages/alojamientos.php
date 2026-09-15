@@ -54,7 +54,8 @@
 <?php include("../../includes/chat-widget.php"); ?>
 
 <script src="../../assets/js/slider.js"></script>
-<script>
+
+<!-- <script>
   document.addEventListener('DOMContentLoaded', () => {
     // 1. Inicializar el mapa centrado en Salto
     const mapa = L.map('mapaAlojamientos').setView([-31.3880, -57.9600], 13);
@@ -109,7 +110,7 @@
       mapa.invalidateSize();
     }, 200);
   });
-</script>
+</script> -->
 
 </body>
 </html>

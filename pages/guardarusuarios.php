@@ -1,52 +1,55 @@
 <?php
 
-include("../conexion.php");
+session_start();
 
-$nombre = trim($_POST["usuario"]);
-$contrasena = trim($_POST["password"]);
-$correo = trim($_POST["correo"]);
+require_once("../conexion.php");
 
-if (empty($nombre) || empty($contrasena) || empty($correo)) {
-    die("Complete todos los campos.");
-}
+$nombre = $_POST["nombre"];
+$correo = $_POST["correo"];
+$contrasena = $_POST["contrasena"];
+$telefono = $_POST["telefono"];
 
-// Verificar si el correo ya existe
-$sql = "SELECT id_usuario FROM usuario WHERE correo = ?";
-$stmt = $conexion->prepare($sql);
-$stmt->bind_param("s", $correo);
-$stmt->execute();
-$resultado = $stmt->get_result();
+// Comprobar si el correo ya existe
+$sql = "SELECT * FROM usuario WHERE correo = '$correo'";
+
+$resultado = $conexion->query($sql);
 
 if ($resultado->num_rows > 0) {
-    die("El correo ya está registrado.");
-}
 
-// Encriptar contraseña
-$contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
-
-// Rol Usuario
-$id_rol = 1;
-
-// Guardar usuario
-$sql = "INSERT INTO usuario (id_rol, nombre, contrasena, correo)
-VALUES (?, ?, ?, ?)";
-
-$stmt = $conexion->prepare($sql);
-$stmt->bind_param("isss", $id_rol, $nombre, $contrasenaHash, $correo);
-
-if ($stmt->execute()) {
-
-    echo "<h2>Usuario registrado correctamente.</h2>";
-    echo "<br>";
-    echo "<a href='login.php'>Volver</a>";
+    echo "Ese correo ya está registrado.";
 
 } else {
 
-    echo "Error: " . $conexion->error;
+    // Registrar usuario como usuario normal
+    $sql = "INSERT INTO usuario (ID_ROL, NOMBRE, CONTRASENA, CORREO)
+            VALUES (3, '$nombre', '$contrasena', '$correo')";
 
+    if ($conexion->query($sql)) {
+
+        // Obtener ID del usuario recién creado
+        $idUsuario = $conexion->insert_id;
+
+        // Guardar teléfono
+        $sqlTelefono = "INSERT INTO usuario_telefono (ID_USUARIO, TELEFONO)
+                        VALUES ($idUsuario, '$telefono')";
+
+        $conexion->query($sqlTelefono);
+
+        // Iniciar sesión automáticamente
+        $_SESSION["id_usuario"] = $idUsuario;
+        $_SESSION["nombre"] = $nombre;
+        $_SESSION["correo"] = $correo;
+        $_SESSION["id_rol"] = 3;
+
+        // Volver al index
+        header("Location: ../index.php");
+        exit();
+
+    } else {
+
+        echo "Error al registrar el usuario.";
+
+    }
 }
-
-$stmt->close();
-$conexion->close();
 
 ?>

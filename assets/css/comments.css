@@ -1,0 +1,57 @@
+.comentarios {
+    width: 1100px;
+    max-width: 90%;
+    margin: 60px auto;
+}
+
+.comentarios h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.comentarios > p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Contenedor de los comentarios */
+.comentarios {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Título y descripción ocupan todo el ancho */
+.comentarios h2,
+.comentarios > p {
+    width: 100%;
+}
+
+/* Cada comentario */
+.comentario {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px 20px;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.comentario h3 {
+    margin: 0 0 8px 0;
+    font-size: 17px;
+}
+
+.comentario p {
+    margin: 0 0 10px 0;
+    color: #444;
+    line-height: 1.5;
+}
+
+.comentario small {
+    color: #888;
+    font-size: 12px;
+}
