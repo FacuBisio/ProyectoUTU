@@ -5,7 +5,7 @@ session_start();
 require_once("../../conexion.php");
 
 
-if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 3) {
+if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
 
     die("Acceso denegado.");
 
@@ -20,7 +20,7 @@ $categorias = $conexion->query($sql);
 
 
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if($_SERVER["REQUEST_METHO+D"] == "POST"){
 
 
     $id_categoria = $_POST["id_categoria"];

@@ -5,7 +5,7 @@ session_start();
 require_once("../../conexion.php");
 
 
-if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 3) {
+if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
 
     die("Acceso denegado.");
 
