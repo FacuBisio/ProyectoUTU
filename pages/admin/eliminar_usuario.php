@@ -27,12 +27,39 @@ if ($id_usuario == $_SESSION["id_usuario"]) {
 
 $sql = "DELETE FROM usuario WHERE id_usuario = ?";
 
-$stmt = $conexion->prepare($sql);
+$conexion->begin_transaction();
 
-$stmt->bind_param(
-    "i",
-    $id_usuario
-);
+try {
+
+    // Eliminar comentarios del usuario
+    $sql = "DELETE FROM comentario WHERE ID_USUARIO = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+
+    // Eliminar eventos del usuario
+    $sql = "DELETE FROM evento WHERE ID_USUARIO = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+
+    // Eliminar usuario
+    $sql = "DELETE FROM usuario WHERE ID_USUARIO = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+
+    $conexion->commit();
+
+    header("Location: usuarios.php");
+    exit();
+
+} catch (mysqli_sql_exception $e) {
+
+    $conexion->rollback();
+
+    echo "No se pudo eliminar el usuario.";
+}
 
 
 if($stmt->execute()){

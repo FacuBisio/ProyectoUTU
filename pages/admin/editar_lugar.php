@@ -1,215 +1,223 @@
 <?php
 
 session_start();
-
 require_once("../../conexion.php");
 
-
 if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
-
     die("Acceso denegado.");
-
 }
 
+$id_lugar = $_GET["id"] ?? null;
 
-$id_lugar = $_GET["id"];
+if (!$id_lugar) {
+    die("Lugar no encontrado.");
+}
 
-
-// Obtener lugar
-
-$sql = "SELECT * FROM lugar WHERE id_lugar = ?";
+$sql = "SELECT 
+            l.*,
+            lc.ID_CATEGORIA
+        FROM LUGAR l
+        LEFT JOIN LUGAR_CATEGORIA lc
+            ON l.ID_LUGAR = lc.ID_LUGAR
+        WHERE l.ID_LUGAR = ?";
 
 $stmt = $conexion->prepare($sql);
 
-$stmt->bind_param("i",$id_lugar);
+$stmt->bind_param(
+    "i",
+    $id_lugar
+);
 
 $stmt->execute();
 
-$resultado = $stmt->get_result();
+$lugar = $stmt->get_result()->fetch_assoc();
 
-$lugar = $resultado->fetch_assoc();
-
-
-
-// Obtener categorías
+if (!$lugar) {
+    die("Lugar no encontrado.");
+}
 
 $categorias = $conexion->query(
-    "SELECT * FROM categoria"
+    "SELECT ID_CATEGORIA, NOMBRE
+     FROM CATEGORIA
+     ORDER BY NOMBRE"
 );
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-
-
-
-// Actualizar
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-
-    $id_categoria = $_POST["id_categoria"];
     $nombre = $_POST["nombre"];
     $descripcion = $_POST["descripcion"];
     $direccion = $_POST["direccion"];
     $imagen = $_POST["imagen"];
+    $latitud = $_POST["latitud"];
+    $longitud = $_POST["longitud"];
+    $id_categoria = $_POST["id_categoria"];
 
-
-
-    $sql = "UPDATE lugar SET
-            id_categoria=?,
-            nombre=?,
-            descripcion=?,
-            direccion=?,
-            imagen=?
-
-            WHERE id_lugar=?";
-
-
+    $sql = "UPDATE LUGAR
+            SET NOMBRE = ?,
+                DESCRIPCION = ?,
+                DIRECCION = ?,
+                IMAGEN = ?,
+                LATITUD = ?,
+                LONGITUD = ?
+            WHERE ID_LUGAR = ?";
 
     $stmt = $conexion->prepare($sql);
 
-
     $stmt->bind_param(
-        "issssi",
-        $id_categoria,
+        "ssssddi",
         $nombre,
         $descripcion,
         $direccion,
         $imagen,
+        $latitud,
+        $longitud,
         $id_lugar
     );
 
+    $stmt->execute();
 
-    if($stmt->execute()){
+    $sql = "DELETE FROM LUGAR_CATEGORIA
+            WHERE ID_LUGAR = ?";
 
-        header("Location: lugares.php");
-        exit();
+    $stmt = $conexion->prepare($sql);
 
-    }
+    $stmt->bind_param(
+        "i",
+        $id_lugar
+    );
 
+    $stmt->execute();
 
+    $sql = "INSERT INTO LUGAR_CATEGORIA
+            (ID_LUGAR, ID_CATEGORIA)
+            VALUES (?, ?)";
+
+    $stmt = $conexion->prepare($sql);
+
+    $stmt->bind_param(
+        "ii",
+        $id_lugar,
+        $id_categoria
+    );
+
+    $stmt->execute();
+
+    header("Location: lugares.php");
+    exit();
 }
-
 
 ?>
 
-
 <!DOCTYPE html>
-
-<html>
+<html lang="es">
 
 <head>
 
-<title>Editar Lugar</title>
+    <meta charset="UTF-8">
 
-<style>
-
-body{
-
-font-family:Arial;
-padding:40px;
-background:#f4f4f4;
-
-}
-
-
-form{
-
-background:white;
-padding:30px;
-width:500px;
-
-}
-
-
-input,textarea,select{
-
-width:100%;
-padding:10px;
-margin-bottom:15px;
-
-}
-
-</style>
+    <title>Editar Lugar</title>
 
 </head>
 
-
 <body>
-
 
 <h1>Editar Lugar</h1>
 
-
 <form method="POST">
 
+    <label>Categoría:</label>
 
-<label>Categoría</label>
+    <select name="id_categoria" required>
 
-<select name="id_categoria">
+        <?php while ($categoria = $categorias->fetch_assoc()) { ?>
 
+            <option 
+                value="<?= $categoria["ID_CATEGORIA"] ?>"
+                <?= $categoria["ID_CATEGORIA"] == $lugar["ID_CATEGORIA"] ? "selected" : "" ?>
+            >
 
-<?php while($cat=$categorias->fetch_assoc()){ ?>
+                <?= htmlspecialchars($categoria["NOMBRE"]) ?>
 
+            </option>
 
-<option value="<?= $cat["id_categoria"] ?>"
-<?= $cat["id_categoria"] == $lugar["id_categoria"] ? "selected":"" ?>
->
+        <?php } ?>
 
-<?= $cat["nombre"] ?>
+    </select>
 
-</option>
+    <br><br>
 
+    <label>Nombre:</label>
 
-<?php } ?>
+    <input 
+        type="text"
+        name="nombre"
+        value="<?= htmlspecialchars($lugar["NOMBRE"]) ?>"
+        required
+    >
 
+    <br><br>
 
-</select>
+    <label>Descripción:</label>
 
+    <textarea 
+        name="descripcion"
+        required
+    ><?= htmlspecialchars($lugar["DESCRIPCION"]) ?></textarea>
 
+    <br><br>
 
-<label>Nombre</label>
+    <label>Dirección:</label>
 
-<input 
-name="nombre"
-value="<?= $lugar["nombre"] ?>"
->
+    <input
+        type="text"
+        name="direccion"
+        value="<?= htmlspecialchars($lugar["DIRECCION"]) ?>"
+        required
+    >
 
+    <br><br>
 
+    <label>Imagen:</label>
 
-<label>Descripción</label>
+    <input
+        type="text"
+        name="imagen"
+        value="<?= htmlspecialchars($lugar["IMAGEN"] ?? "") ?>"
+    >
 
-<textarea name="descripcion"><?= $lugar["descripcion"] ?></textarea>
+    <br><br>
 
+    <label>Latitud:</label>
 
+    <input
+        type="text"
+        name="latitud"
+        value="<?= htmlspecialchars($lugar["LATITUD"] ?? "") ?>"
+    >
 
-<label>Dirección</label>
+    <br><br>
 
-<input 
-name="direccion"
-value="<?= $lugar["direccion"] ?>"
->
+    <label>Longitud:</label>
 
+    <input
+        type="text"
+        name="longitud"
+        value="<?= htmlspecialchars($lugar["LONGITUD"] ?? "") ?>"
+    >
 
+    <br><br>
 
-<label>Imagen</label>
-
-<input 
-name="imagen"
-value="<?= $lugar["imagen"] ?>"
->
-
-
-
-<button>
-
-Guardar cambios
-
-</button>
-
-
+    <button type="submit">
+        Guardar cambios
+    </button>
 
 </form>
 
+<br>
+
+<a href="lugares.php">
+    Volver a lugares
+</a>
 
 </body>
 

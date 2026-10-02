@@ -8,7 +8,7 @@ if (!isset($_SESSION["id_usuario"])) {
     exit();
 }
 
-if ($_SESSION["id_rol"] != 3) {
+if ($_SESSION["id_rol"] != 1) {
     die("Acceso denegado.");
 }
 
@@ -31,48 +31,7 @@ $resultado = $conexion->query($sql);
 
 <meta charset="UTF-8">
 <title>Usuarios</title>
-
-<style>
-
-body{
-
-    font-family:Arial;
-    background:#f4f4f4;
-    padding:40px;
-
-}
-
-table{
-
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-
-}
-
-th,td{
-
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:center;
-
-}
-
-th{
-
-    background:#1f2937;
-    color:white;
-
-}
-
-a{
-
-    text-decoration:none;
-
-}
-
-</style>
-
+<link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
 
 <body>
@@ -121,16 +80,16 @@ a{
 
     <select name="id_rol">
 
-        <option value="1" <?= $fila["rol"] == "Usuario" ? "selected" : "" ?>>
-            Usuario
-        </option>
-
-        <option value="2" <?= $fila["rol"] == "Moderador" ? "selected" : "" ?>>
-            Moderador
-        </option>
-
-        <option value="3" <?= $fila["rol"] == "Administrador" ? "selected" : "" ?>>
+        <option value="1" <?= $fila["rol"] == "Administrador" ? "selected" : "" ?>>
             Administrador
+        </option>
+
+        <option value="2" <?= $fila["rol"] == "Organizador" ? "selected" : "" ?>>
+            Organizador
+        </option>
+
+        <option value="3" <?= $fila["rol"] == "Usuario" ? "selected" : "" ?>>
+            Usuario
         </option>
 
     </select>
@@ -149,6 +108,7 @@ Eliminar
 
 </a>
 
+
 </form>
 
 </td>
@@ -158,6 +118,10 @@ Eliminar
 <?php } ?>
 
 </table>
+
+<a href="panel.php">
+    Volver al panel
+</a>
 
 </body>
 

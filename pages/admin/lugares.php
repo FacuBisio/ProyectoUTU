@@ -1,220 +1,125 @@
 <?php
 
 session_start();
-
 require_once("../../conexion.php");
 
-
-if (!isset($_SESSION["id_usuario"])) {
-
-    header("Location: ../login.php");
-    exit();
-
-}
-
-
-if ($_SESSION["id_rol"] != 3) {
-
+if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
     die("Acceso denegado.");
-
 }
-
-
 
 $sql = "SELECT 
-            lugar.id_lugar,
-            lugar.nombre,
-            lugar.descripcion,
-            lugar.direccion,
-            lugar.imagen,
-            categoria.nombre AS categoria
-
-        FROM lugar
-
-        INNER JOIN categoria
-
-        ON lugar.id_categoria = categoria.id_categoria
-
-        ORDER BY lugar.id_lugar DESC";
-
+            l.ID_LUGAR,
+            l.NOMBRE,
+            l.DESCRIPCION,
+            l.DIRECCION,
+            l.IMAGEN,
+            c.NOMBRE AS CATEGORIA
+        FROM LUGAR l
+        LEFT JOIN LUGAR_CATEGORIA lc 
+            ON l.ID_LUGAR = lc.ID_LUGAR
+        LEFT JOIN CATEGORIA c 
+            ON lc.ID_CATEGORIA = c.ID_CATEGORIA
+        ORDER BY l.ID_LUGAR DESC";
 
 $resultado = $conexion->query($sql);
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-
-<meta charset="UTF-8">
-
-<title>Lugares</title>
-
-
-<style>
-
-body{
-
-font-family:Arial;
-background:#f4f4f4;
-padding:40px;
-
-}
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-background:white;
-
-}
-
-
-th,td{
-
-padding:12px;
-border:1px solid #ddd;
-text-align:center;
-
-}
-
-
-th{
-
-background:#1f2937;
-color:white;
-
-}
-
-
-img{
-
-width:100px;
-height:70px;
-object-fit:cover;
-
-}
-
-</style>
-
-
+    <meta charset="UTF-8">
+    <title>Administrar Lugares</title>
+    <link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
-
 
 <body>
 
-
 <h1>Administrar Lugares</h1>
 
-
-<br>
-
-
 <a href="agregar_lugar.php">
-
-<button>
-Agregar Lugar
-</button>
-
+    <button>Agregar Lugar</button>
 </a>
-
 
 <br><br>
 
+<table border="1" cellpadding="10">
 
-<table>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Dirección</th>
+        <th>Imagen</th>
+        <th>Acciones</th>
+    </tr>
 
+    <?php while ($lugar = $resultado->fetch_assoc()) { ?>
 
-<tr>
+        <tr>
 
-<th>ID</th>
+            <td>
+                <?= $lugar["ID_LUGAR"] ?>
+            </td>
 
-<th>Imagen</th>
+            <td>
+                <?= htmlspecialchars($lugar["NOMBRE"]) ?>
+            </td>
 
-<th>Nombre</th>
+            <td>
+                <?= htmlspecialchars($lugar["CATEGORIA"] ?? "Sin categoría") ?>
+            </td>
 
-<th>Categoría</th>
+            <td>
+                <?= htmlspecialchars($lugar["DIRECCION"]) ?>
+            </td>
 
-<th>Dirección</th>
+            <td>
 
-<th>Acciones</th>
+                <?php if (!empty($lugar["IMAGEN"])) { ?>
 
+                    <img 
+                        src="../../<?= htmlspecialchars($lugar["IMAGEN"]) ?>" 
+                        width="100"
+                    >
 
-</tr>
+                <?php } else { ?>
 
+                    Sin imagen
 
+                <?php } ?>
 
-<?php while($fila = $resultado->fetch_assoc()){ ?>
+            </td>
 
+            <td>
 
-<tr>
+                <a href="editar_lugar.php?id=<?= $lugar["ID_LUGAR"] ?>">
+                    Editar
+                </a>
 
+                |
 
-<td>
-<?= $fila["id_lugar"] ?>
-</td>
+                <a 
+                    href="eliminar_lugar.php?id=<?= $lugar["ID_LUGAR"] ?>"
+                    onclick="return confirm('¿Seguro que quieres eliminar este lugar?')"
+                >
+                    Eliminar
+                </a>
 
+            </td>
 
-<td>
+        </tr>
 
-<img src="../../assets/img/<?= $fila["imagen"] ?>">
-
-</td>
-
-
-<td>
-<?= $fila["nombre"] ?>
-</td>
-
-
-<td>
-<?= $fila["categoria"] ?>
-</td>
-
-
-<td>
-<?= $fila["direccion"] ?>
-</td>
-
-
-
-<td>
-
-<a href="editar_lugar.php?id=<?= $fila["id_lugar"] ?>">
-
-<button>
-Editar
-</button>
-
-</a>
-
-<a 
-href="eliminar_lugar.php?id=<?= $fila["id_lugar"] ?>"
-onclick="return confirm('¿Seguro que quieres eliminar este lugar?')"
->
-
-<button type="button">
-Eliminar
-</button>
-
-</a>
-
-
-</td>
-
-
-</tr>
-
-
-
-<?php } ?>
-
+    <?php } ?>
 
 </table>
 
+<br>
+
+<a href="panel.php">
+    Volver al panel
+</a>
 
 </body>
 

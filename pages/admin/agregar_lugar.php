@@ -1,201 +1,171 @@
 <?php
 
 session_start();
-
 require_once("../../conexion.php");
 
-
 if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
-
     die("Acceso denegado.");
-
 }
 
+$categorias = $conexion->query(
+    "SELECT ID_CATEGORIA, NOMBRE 
+     FROM CATEGORIA 
+     ORDER BY NOMBRE"
+);
 
-// Obtener categorías
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$sql = "SELECT * FROM categoria";
-
-$categorias = $conexion->query($sql);
-
-
-
-if($_SERVER["REQUEST_METHO+D"] == "POST"){
-
-
-    $id_categoria = $_POST["id_categoria"];
     $nombre = $_POST["nombre"];
     $descripcion = $_POST["descripcion"];
     $direccion = $_POST["direccion"];
     $imagen = $_POST["imagen"];
+    $latitud = $_POST["latitud"];
+    $longitud = $_POST["longitud"];
+    $id_categoria = $_POST["id_categoria"];
 
-
-
-    $sql = "INSERT INTO lugar
-            (id_categoria,nombre,descripcion,direccion,imagen)
-            VALUES (?,?,?,?,?)";
-
+    $sql = "INSERT INTO LUGAR
+            (NOMBRE, DESCRIPCION, DIRECCION, IMAGEN, LATITUD, LONGITUD)
+            VALUES (?, ?, ?, ?, ?, ?)";
 
     $stmt = $conexion->prepare($sql);
 
-
     $stmt->bind_param(
-        "issss",
-        $id_categoria,
+        "ssssdd",
         $nombre,
         $descripcion,
         $direccion,
-        $imagen
+        $imagen,
+        $latitud,
+        $longitud
     );
 
+    $stmt->execute();
 
-    if($stmt->execute()){
+    $id_lugar = $conexion->insert_id;
 
-        header("Location: lugares.php");
-        exit();
+    $sql = "INSERT INTO LUGAR_CATEGORIA
+            (ID_LUGAR, ID_CATEGORIA)
+            VALUES (?, ?)";
 
-    }else{
+    $stmt = $conexion->prepare($sql);
 
-        echo "Error al guardar: ".$conexion->error;
+    $stmt->bind_param(
+        "ii",
+        $id_lugar,
+        $id_categoria
+    );
 
-    }
+    $stmt->execute();
 
-
+    header("Location: lugares.php");
+    exit();
 }
-
 
 ?>
 
-
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Agregar Lugar</title>
-
-
-<style>
-
-body{
-
-font-family:Arial;
-background:#f4f4f4;
-padding:40px;
-
-}
-
-
-form{
-
-background:white;
-padding:30px;
-width:500px;
-border-radius:10px;
-
-}
-
-
-input,textarea,select{
-
-width:100%;
-padding:10px;
-margin-bottom:15px;
-
-}
-
-
-button{
-
-padding:10px 20px;
-
-}
-
-</style>
-
+    <title>Agregar Lugar</title>
 
 </head>
 
-
 <body>
-
 
 <h1>Agregar Lugar</h1>
 
-
 <form method="POST">
 
+    <label>Categoría:</label>
 
-<label>Categoría</label>
+    <select name="id_categoria" required>
 
-<select name="id_categoria">
+        <?php while ($categoria = $categorias->fetch_assoc()) { ?>
 
+            <option value="<?= $categoria["ID_CATEGORIA"] ?>">
 
-<?php while($cat = $categorias->fetch_assoc()){ ?>
+                <?= htmlspecialchars($categoria["NOMBRE"]) ?>
 
+            </option>
 
-<option value="<?= $cat["id_categoria"] ?>">
+        <?php } ?>
 
-<?= $cat["nombre"] ?>
+    </select>
 
-</option>
+    <br><br>
 
+    <label>Nombre:</label>
 
-<?php } ?>
+    <input 
+        type="text" 
+        name="nombre" 
+        required
+    >
 
+    <br><br>
 
-</select>
+    <label>Descripción:</label>
 
+    <textarea 
+        name="descripcion" 
+        required
+    ></textarea>
 
+    <br><br>
 
-<label>Nombre</label>
+    <label>Dirección:</label>
 
-<input 
-type="text"
-name="nombre"
-required
->
+    <input 
+        type="text" 
+        name="direccion" 
+        required
+    >
 
+    <br><br>
 
+    <label>Imagen:</label>
 
-<label>Descripción</label>
+    <input 
+        type="text" 
+        name="imagen"
+        placeholder="assets/img/ejemplo.jpg"
+    >
 
-<textarea 
-name="descripcion"
-required></textarea>
+    <br><br>
 
+    <label>Latitud:</label>
 
+    <input 
+        type="text" 
+        name="latitud"
+    >
 
-<label>Dirección</label>
+    <br><br>
 
-<input
-type="text"
-name="direccion"
-required
->
+    <label>Longitud:</label>
 
+    <input 
+        type="text" 
+        name="longitud"
+    >
 
+    <br><br>
 
-<label>Imagen</label>
-
-<input
-type="text"
-name="imagen"
-placeholder="ejemplo.jpg"
-required
->
-
-
-<button type="submit">
-Guardar Lugar
-</button>
-
+    <button type="submit">
+        Guardar Lugar
+    </button>
 
 </form>
 
+<br>
+
+<a href="lugares.php">
+    Volver a lugares
+</a>
 
 </body>
 
