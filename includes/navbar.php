@@ -9,6 +9,7 @@ require_once(__DIR__ . "/../config/config.php");
 
 ?>
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/accesibilidad.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
+<link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=3'), ENT_QUOTES, 'UTF-8') ?>">
 
 <section id="navbar">
 
@@ -148,20 +149,25 @@ require_once(__DIR__ . "/../config/config.php");
              🌡 Cargando...
              </span>
             </div>
-<form class="buscador" action="<?= url('pages/buscar.php') ?>" method="GET">
-
+<form class="buscador" action="<?= htmlspecialchars(url('pages/buscar.php'), ENT_QUOTES, 'UTF-8') ?>" method="GET" role="search">
+    <label class="buscador-sr-only" for="busquedaNavbar">Buscar lugares</label>
     <input
-        type="text"
+        id="busquedaNavbar"
+        type="search"
         name="q"
         placeholder="Buscar..."
         autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="false"
+        aria-controls="sugerenciasBusqueda"
+        data-suggestions-url="<?= htmlspecialchars(url('pages/buscar.php'), ENT_QUOTES, 'UTF-8') ?>"
         required
     >
-
-    <button type="submit">
-        ⌕
+    <button type="submit" aria-label="Buscar">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
     </button>
-
+    <div class="buscador-sugerencias" id="sugerenciasBusqueda" role="listbox" aria-label="Resultados sugeridos" hidden></div>
 </form>
 
             <div class="menu-usuario">
@@ -248,4 +254,5 @@ require_once(__DIR__ . "/../config/config.php");
 <script src="<?= url('assets/js/ith.js?v=2') ?>"></script>
 <script src="<?= url('assets/js/clima.js') ?>"></script>
 <script src="<?= htmlspecialchars(url('assets/js/accesibilidad.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
+<script src="<?= htmlspecialchars(url('assets/js/busqueda-navbar.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 <?php include(__DIR__ . "/chat-widget.php"); ?>

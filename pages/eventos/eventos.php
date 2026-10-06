@@ -105,7 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($accion === "publicar") {
         $nombre = $_POST["nombre"] ?? "";
         $descripcion = $_POST["descripcion"] ?? "";
-        $lugarId = filter_var($_POST["id_lugar"] ?? null, FILTER_VALIDATE_INT);
+        $direccion = $_POST["direccion"] ?? "";
+        $latitudRecibida = $_POST["latitud"] ?? "";
+        $longitudRecibida = $_POST["longitud"] ?? "";
         $fecha = $_POST["fecha"] ?? "";
         $horaInicio = $_POST["hora_inicio"] ?? "";
         $horaFin = $_POST["hora_fin"] ?? "";
@@ -113,6 +115,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (
             !is_string($nombre)
             || !is_string($descripcion)
+            || !is_string($direccion)
+            || !is_string($latitudRecibida)
+            || !is_string($longitudRecibida)
             || !is_string($fecha)
             || !is_string($horaInicio)
             || !is_string($horaFin)
@@ -122,58 +127,122 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $nombre = trim($nombre);
         $descripcion = trim($descripcion);
+        $direccion = trim($direccion);
         $fechaEvento = DateTime::createFromFormat("!Y-m-d", $fecha);
         $fechaValida = $fechaEvento && $fechaEvento->format("Y-m-d") === $fecha;
         $horaInicioValida = preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $horaInicio) === 1;
         $horaFinValida = preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $horaFin) === 1;
+        $latitudRecibida = trim($latitudRecibida);
+        $longitudRecibida = trim($longitudRecibida);
+        $tieneLatitud = $latitudRecibida !== "";
+        $tieneLongitud = $longitudRecibida !== "";
+        $latitud = $tieneLatitud && is_numeric($latitudRecibida) ? (float) $latitudRecibida : null;
+        $longitud = $tieneLongitud && is_numeric($longitudRecibida) ? (float) $longitudRecibida : null;
+        $coordenadasValidas = $tieneLatitud
+            && $tieneLongitud
+            && $latitud !== null
+            && $longitud !== null
+            && $latitud >= -90
+            && $latitud <= 90
+            && $longitud >= -180
+            && $longitud <= 180;
+        $ubicacionValida = $direccion !== "" || $coordenadasValidas;
 
         if (
             $nombre === ""
             || mb_strlen($nombre, "UTF-8") > 150
             || mb_strlen($descripcion, "UTF-8") > 2000
-            || !$lugarId
+            || mb_strlen($direccion, "UTF-8") > 255
+            || (($tieneLatitud || $tieneLongitud) && !$coordenadasValidas)
+            || !$ubicacionValida
             || !$fechaValida
             || $fechaEvento->format("Y-m-d") < date("Y-m-d")
             || !$horaInicioValida
             || !$horaFinValida
             || $horaFin <= $horaInicio
         ) {
-            volverAEventos("Completá el título, lugar, fecha y horario. La descripción puede tener hasta 2000 caracteres y el horario de fin debe ser posterior al de inicio.");
+            volverAEventos("Completá el título, una dirección o ubicación marcada en el mapa, la fecha y un horario válido. La descripción admite hasta 2000 caracteres.");
         }
 
-        $stmtLugar = $conexion->prepare("SELECT ID_LUGAR FROM LUGAR WHERE ID_LUGAR = ?");
-        $stmtLugar->bind_param("i", $lugarId);
-        $stmtLugar->execute();
-        $lugarExiste = $stmtLugar->get_result()->num_rows > 0;
-        $stmtLugar->close();
-        if (!$lugarExiste) {
-            volverAEventos("Elegí un lugar válido para el evento.");
+        $imagenEvento = null;
+        $archivoImagen = $_FILES["imagen_portada"] ?? null;
+        if (is_array($archivoImagen) && ($archivoImagen["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            if (
+                !isset($archivoImagen["error"], $archivoImagen["size"], $archivoImagen["tmp_name"])
+                || !is_string($archivoImagen["tmp_name"])
+            ) {
+                volverAEventos("El archivo de portada no es válido.");
+            }
+            if ($archivoImagen["error"] !== UPLOAD_ERR_OK) {
+                volverAEventos("No se pudo recibir la imagen. Elegí otra e intentá nuevamente.");
+            }
+            if ($archivoImagen["size"] < 1 || $archivoImagen["size"] > 5 * 1024 * 1024) {
+                volverAEventos("La imagen debe pesar como máximo 5 MB.");
+            }
+            if (!is_uploaded_file($archivoImagen["tmp_name"])) {
+                volverAEventos("El archivo de portada no es válido.");
+            }
+
+            $informacionImagen = @getimagesize($archivoImagen["tmp_name"]);
+            $detectorMime = new finfo(FILEINFO_MIME_TYPE);
+            $mimeImagen = $detectorMime->file($archivoImagen["tmp_name"]);
+            $mimesPermitidos = [
+                "image/jpeg" => "jpg",
+                "image/png" => "png",
+                "image/webp" => "webp",
+            ];
+            if (
+                !$informacionImagen
+                || !isset($mimesPermitidos[$mimeImagen])
+                || $informacionImagen["mime"] !== $mimeImagen
+            ) {
+                volverAEventos("La portada debe ser una imagen JPG, PNG o WebP.");
+            }
+
+            $carpetaImagenes = __DIR__ . "/../../assets/img/eventos";
+            if (!is_dir($carpetaImagenes) && !mkdir($carpetaImagenes, 0755, true) && !is_dir($carpetaImagenes)) {
+                error_log("No se pudo crear la carpeta de portadas de eventos.");
+                volverAEventos("No se pudo guardar la imagen de portada. Intentá nuevamente.");
+            }
+            $nombreArchivo = bin2hex(random_bytes(16)) . "." . $mimesPermitidos[$mimeImagen];
+            if (!move_uploaded_file($archivoImagen["tmp_name"], $carpetaImagenes . "/" . $nombreArchivo)) {
+                error_log("No se pudo mover una imagen cargada para un evento.");
+                volverAEventos("No se pudo guardar la imagen de portada. Intentá nuevamente.");
+            }
+            $imagenEvento = "assets/img/eventos/" . $nombreArchivo;
         }
 
         $dia = (int) $fechaEvento->format("d");
         $mes = (int) $fechaEvento->format("m");
         $anio = (int) $fechaEvento->format("Y");
         $stmtPublicacion = $conexion->prepare(
-            "INSERT INTO EVENTO (ID_USUARIO, ID_LUGAR, NOMBRE, DESCRIPCION, HORA_INI, HORA_FIN, DIA, MES, ANIO)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO EVENTO
+                (ID_USUARIO, ID_LUGAR, NOMBRE, DESCRIPCION, HORA_INI, HORA_FIN, DIA, MES, ANIO, DIRECCION, LATITUD, LONGITUD, IMAGEN)
+             VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmtPublicacion->bind_param(
-            "iissssiii",
+            "issssiiisdds",
             $usuarioId,
-            $lugarId,
             $nombre,
             $descripcion,
             $horaInicio,
             $horaFin,
             $dia,
             $mes,
-            $anio
+            $anio,
+            $direccion,
+            $latitud,
+            $longitud,
+            $imagenEvento
         );
 
         try {
             $stmtPublicacion->execute();
             $eventoNuevo = $conexion->insert_id;
         } catch (mysqli_sql_exception $error) {
+            if ($imagenEvento !== null) {
+                unlink(__DIR__ . "/../../" . $imagenEvento);
+            }
             error_log("No se pudo publicar el evento: " . $error->getMessage());
             volverAEventos("No se pudo publicar el evento. Intentá nuevamente.");
         }
@@ -187,23 +256,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $flash = $_SESSION["flash_eventos"] ?? null;
 unset($_SESSION["flash_eventos"]);
 
-$lugares = [];
-$resultadoLugares = $conexion->query("SELECT ID_LUGAR, NOMBRE, DIRECCION FROM LUGAR ORDER BY NOMBRE");
-while ($lugar = $resultadoLugares->fetch_assoc()) {
-    $lugares[] = $lugar;
-}
-
 $usuarioActualSql = $estaAutenticado ? (string) $usuarioId : "0";
 $sqlEventos = "
     SELECT e.ID_EVENTO, e.ID_USUARIO, e.ID_LUGAR, e.NOMBRE, e.DESCRIPCION,
            e.HORA_INI, e.HORA_FIN, e.DIA, e.MES, e.ANIO,
-           u.NOMBRE AS AUTOR, l.NOMBRE AS LUGAR, l.DIRECCION, l.IMAGEN,
+           e.DIRECCION AS EVENTO_DIRECCION, e.LATITUD AS EVENTO_LATITUD,
+           e.LONGITUD AS EVENTO_LONGITUD, e.IMAGEN AS EVENTO_IMAGEN,
+           u.NOMBRE AS AUTOR, l.NOMBRE AS LUGAR, l.DIRECCION AS LUGAR_DIRECCION,
+           l.IMAGEN AS LUGAR_IMAGEN,
            (SELECT COUNT(*) FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.TIPO = 1) AS ME_GUSTA,
            (SELECT COUNT(*) FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.TIPO = -1) AS NO_ME_GUSTA,
            (SELECT r.TIPO FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.ID_USUARIO = $usuarioActualSql LIMIT 1) AS MI_REACCION
     FROM EVENTO e
     INNER JOIN USUARIO u ON u.ID_USUARIO = e.ID_USUARIO
-    INNER JOIN LUGAR l ON l.ID_LUGAR = e.ID_LUGAR
+    LEFT JOIN LUGAR l ON l.ID_LUGAR = e.ID_LUGAR
     ORDER BY e.ID_EVENTO DESC";
 $resultadoEventos = $conexion->query($sqlEventos);
 $eventos = [];
@@ -242,7 +308,8 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/componentes.css">
     <link rel="stylesheet" href="../../assets/css/accesibilidad.css?v=5">
-    <link rel="stylesheet" href="../../assets/css/eventos.css?v=4">
+    <link rel="stylesheet" href="../../assets/css/eventos.css?v=5">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -292,7 +359,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                         </div>
                     </div>
                     <?php if ($estaAutenticado): ?>
-                        <form class="evento-formulario" method="POST" action="eventos.php#publicar">
+                        <form class="evento-formulario" method="POST" enctype="multipart/form-data" action="eventos.php#publicar">
                             <input type="hidden" name="csrf_token" value="<?= escaparEvento($_SESSION["csrf_eventos"]) ?>">
                             <input type="hidden" name="accion" value="publicar">
 
@@ -302,16 +369,30 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <label for="evento-descripcion">Contale a la comunidad <span>opcional</span></label>
                             <textarea id="evento-descripcion" name="descripcion" rows="3" maxlength="2000" placeholder="¿Qué va a pasar? ¿Por qué no hay que perdérselo?"></textarea>
 
-                            <div class="evento-formulario-fila">
-                                <div>
-                                    <label for="evento-lugar">Lugar</label>
-                                    <select id="evento-lugar" name="id_lugar" required>
-                                        <option value="">Elegí dónde</option>
-                                        <?php foreach ($lugares as $lugar): ?>
-                                            <option value="<?= (int) $lugar["ID_LUGAR"] ?>"><?= escaparEvento($lugar["NOMBRE"]) ?> · <?= escaparEvento($lugar["DIRECCION"]) ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                            <fieldset class="evento-ubicacion">
+                                <legend>¿Dónde se realiza? <span>Marcá el mapa o escribí la dirección</span></legend>
+                                <label for="evento-direccion">Dirección o referencia <span>opcional si marcás el mapa</span></label>
+                                <input id="evento-direccion" type="text" name="direccion" maxlength="255" placeholder="Ej.: Plaza Artigas, Salto">
+                                <div class="evento-mapa-ayuda"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Tocá el mapa para marcar el punto exacto del evento.</div>
+                                <div id="mapaEvento" class="evento-mapa" aria-label="Elegí la ubicación del evento en el mapa"></div>
+                                <input id="evento-latitud" type="hidden" name="latitud">
+                                <input id="evento-longitud" type="hidden" name="longitud">
+                                <div class="evento-mapa-estado">
+                                    <span id="evento-mapa-estado" role="status">Podés marcar el mapa, escribir una dirección o completar ambas opciones.</span>
+                                    <button type="button" id="limpiar-ubicacion-evento" hidden>Quitar marcador</button>
                                 </div>
+                            </fieldset>
+
+                            <div class="evento-portada-campo">
+                                <label for="evento-imagen">Imagen de portada <span>opcional · JPG, PNG o WebP · hasta 5 MB</span></label>
+                                <input id="evento-imagen" type="file" name="imagen_portada" accept="image/jpeg,image/png,image/webp">
+                                <div id="evento-imagen-preview" class="evento-imagen-preview" hidden>
+                                    <img id="evento-imagen-preview-img" alt="Vista previa de la portada">
+                                    <button type="button" id="quitar-imagen-evento" aria-label="Quitar imagen seleccionada"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="evento-formulario-fila">
                                 <div>
                                     <label for="evento-fecha">Fecha</label>
                                     <input id="evento-fecha" type="date" name="fecha" min="<?= escaparEvento($fechaMinima) ?>" value="<?= escaparEvento($fechaPredeterminada) ?>" required>
@@ -350,7 +431,21 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                 <?php foreach ($eventos as $evento): ?>
                     <?php
                     $eventoId = (int) $evento["ID_EVENTO"];
-                    $imagen = trim((string) ($evento["IMAGEN"] ?? ""));
+                    $direccionEvento = trim((string) ($evento["EVENTO_DIRECCION"] ?? ""));
+                    if ($direccionEvento === "") {
+                        $direccionEvento = trim((string) ($evento["LUGAR_DIRECCION"] ?? ""));
+                    }
+                    $nombreLugar = trim((string) ($evento["LUGAR"] ?? ""));
+                    $latitudEvento = $evento["EVENTO_LATITUD"];
+                    $longitudEvento = $evento["EVENTO_LONGITUD"];
+                    $tieneCoordenadasEvento = is_numeric($latitudEvento) && is_numeric($longitudEvento);
+                    $textoUbicacionEvento = $direccionEvento !== ""
+                        ? $direccionEvento
+                        : ($tieneCoordenadasEvento ? "Ubicación marcada en el mapa" : ($nombreLugar !== "" ? $nombreLugar : "Ubicación a confirmar"));
+                    $imagen = trim((string) ($evento["EVENTO_IMAGEN"] ?? ""));
+                    if ($imagen === "") {
+                        $imagen = trim((string) ($evento["LUGAR_IMAGEN"] ?? ""));
+                    }
                     $rutaImagen = $imagen !== "" ? __DIR__ . "/../../" . ltrim($imagen, "/\\") : "";
                     $imagenSrc = $imagen !== "" && is_file($rutaImagen)
                         ? "../../" . ltrim($imagen, "/\\")
@@ -368,14 +463,14 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <span class="evento-avatar" aria-hidden="true"><?= escaparEvento(mb_strtoupper(mb_substr($evento["AUTOR"], 0, 1, "UTF-8"), "UTF-8")) ?></span>
                             <div class="evento-post-autor">
                                 <strong><?= escaparEvento($evento["AUTOR"]) ?></strong>
-                                <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?= escaparEvento($evento["LUGAR"]) ?></span>
+                                <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?= escaparEvento($textoUbicacionEvento) ?></span>
                             </div>
                             <span class="evento-fecha-publicacion"><i class="fa-regular fa-calendar" aria-hidden="true"></i> <?= escaparEvento($fechaTexto) ?></span>
                         </header>
 
                         <?php if ($imagenSrc !== ""): ?>
                             <div class="evento-post-imagen">
-                                <img src="<?= escaparEvento($imagenSrc) ?>" alt="<?= escaparEvento($evento["LUGAR"]) ?>" loading="lazy">
+                                <img src="<?= escaparEvento($imagenSrc) ?>" alt="Portada de <?= escaparEvento($evento["NOMBRE"]) ?>" loading="lazy">
                                 <span><i class="fa-regular fa-clock" aria-hidden="true"></i> <?= escaparEvento(substr((string) $evento["HORA_INI"], 0, 5)) ?>–<?= escaparEvento(substr((string) $evento["HORA_FIN"], 0, 5)) ?></span>
                             </div>
                         <?php endif; ?>
@@ -385,7 +480,21 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <?php if (!empty($evento["DESCRIPCION"])): ?>
                                 <p class="evento-post-descripcion"><?= nl2br(escaparEvento($evento["DESCRIPCION"])) ?></p>
                             <?php endif; ?>
-                            <p class="evento-post-direccion"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?= escaparEvento($evento["DIRECCION"]) ?></p>
+                            <?php if ($tieneCoordenadasEvento): ?>
+                                <?php $urlMapaEvento = "https://www.google.com/maps/search/?api=1&query=" . rawurlencode($latitudEvento . "," . $longitudEvento); ?>
+                            <?php elseif ($direccionEvento !== ""): ?>
+                                <?php $urlMapaEvento = "https://www.google.com/maps/search/?api=1&query=" . rawurlencode($direccionEvento . ", Salto, Uruguay"); ?>
+                            <?php else: ?>
+                                <?php $urlMapaEvento = ""; ?>
+                            <?php endif; ?>
+                            <p class="evento-post-direccion">
+                                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                                <?php if ($urlMapaEvento !== ""): ?>
+                                    <a href="<?= escaparEvento($urlMapaEvento) ?>" target="_blank" rel="noopener noreferrer"><?= escaparEvento($textoUbicacionEvento) ?> <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                                <?php else: ?>
+                                    <?= escaparEvento($textoUbicacionEvento) ?>
+                                <?php endif; ?>
+                            </p>
                         </div>
 
                         <div class="evento-reacciones">
@@ -449,5 +558,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
 
     <?php include("../../includes/footer.php"); ?>
     <?php include("../../includes/chat-widget.php"); ?>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../../assets/js/evento-formulario.js?v=1" defer></script>
 </body>
 </html>

@@ -16,6 +16,9 @@ $sql = "SELECT
         WHERE LUGAR_CATEGORIA.ID_CATEGORIA = 2";
 
 $resultado = $conexion->query($sql);
+$mapaCategorias = [2];
+$mapaTitulo = "Ubicación de los paisajes y espacios naturales";
+$mapaDescripcion = "Explorá los paisajes, paseos y espacios naturales de Salto.";
 
 ?>
 
@@ -39,6 +42,7 @@ $resultado = $conexion->query($sql);
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <?php include("../../includes/mapa-head.php"); ?>
 
 </head>
 
@@ -98,20 +102,7 @@ $resultado = $conexion->query($sql);
 </section>
 
 
-<!-- MAPA -->
-
-<!-- <section class="mapa-seccion">
-
-    <h2>Ubicación de los paisajes</h2>
-
-    <p>
-        Explora los mejores entornos naturales y paseos al aire libre en Salto.
-    </p>
-
-    <div id="mapaPaisajes"></div>
-
-</section> -->
-
+<?php include("../../includes/mapa-categoria.php"); ?>
 
 <!-- COMENTARIOS -->
 

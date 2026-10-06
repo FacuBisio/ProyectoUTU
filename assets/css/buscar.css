@@ -419,6 +419,31 @@
 
 }
 
+.resultado-enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: #18744f;
+    font-size: 0.82rem;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.resultado-enlace:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+html[data-tema="oscuro"] .resultado-enlace {
+    color: #a9e5bb;
+}
+
+html[data-alto-contraste="true"] .resultado-enlace {
+    color: #ffeb3b;
+    text-decoration: underline;
+}
+
 
 /* =========================
    SIN RESULTADOS
@@ -567,4 +592,3 @@
     }
 
 }
-

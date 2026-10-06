@@ -14,6 +14,9 @@ $sql = "SELECT
         WHERE LUGAR_CATEGORIA.ID_CATEGORIA = 3";
 
 $resultado = $conexion->query($sql);
+$mapaCategorias = [3];
+$mapaTitulo = "Ubicación del patrimonio histórico";
+$mapaDescripcion = "Ubicá los edificios históricos y espacios culturales de Salto.";
 
 ?>
 
@@ -37,6 +40,7 @@ $resultado = $conexion->query($sql);
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <?php include("../../includes/mapa-head.php"); ?>
 
 </head>
 
@@ -94,6 +98,7 @@ $resultado = $conexion->query($sql);
 
 </section>
 
+<?php include("../../includes/mapa-categoria.php"); ?>
 
 <?php include("../../includes/comments.php"); ?>
 

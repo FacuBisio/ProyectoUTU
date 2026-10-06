@@ -16,6 +16,9 @@ $sql = "SELECT
         WHERE LUGAR_CATEGORIA.ID_CATEGORIA = 9";
 
 $resultado = $conexion->query($sql);
+$mapaCategorias = [9];
+$mapaTitulo = "Ubicación de heladerías";
+$mapaDescripcion = "Descubrí dónde encontrar heladerías en Salto.";
 
 ?>
 
@@ -40,6 +43,7 @@ $resultado = $conexion->query($sql);
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<?php include("../../includes/mapa-head.php"); ?>
 
 </head>
 
@@ -98,6 +102,8 @@ $resultado = $conexion->query($sql);
 </div>
 
 </section>
+
+<?php include("../../includes/mapa-categoria.php"); ?>
 
 <?php include("../../includes/comments.php"); ?>
 

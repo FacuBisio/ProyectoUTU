@@ -81,14 +81,18 @@ INSERT INTO `comentario` (`ID_COMENTARIO`, `ID_USUARIO`, `COMENTARIO`, `FECHA`) 
 CREATE TABLE `evento` (
   `ID_EVENTO` int(11) NOT NULL,
   `ID_USUARIO` int(11) NOT NULL,
-  `ID_LUGAR` int(11) NOT NULL,
+  `ID_LUGAR` int(11) DEFAULT NULL,
   `NOMBRE` varchar(150) NOT NULL,
   `DESCRIPCION` text DEFAULT NULL,
   `HORA_INI` time NOT NULL,
   `HORA_FIN` time NOT NULL,
   `DIA` int(11) NOT NULL,
   `MES` int(11) NOT NULL,
-  `ANIO` smallint(6) DEFAULT NULL
+  `ANIO` smallint(6) DEFAULT NULL,
+  `DIRECCION` varchar(255) DEFAULT NULL,
+  `LATITUD` decimal(10,7) DEFAULT NULL,
+  `LONGITUD` decimal(10,7) DEFAULT NULL,
+  `IMAGEN` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -132,9 +136,9 @@ INSERT INTO `lugar` (`ID_LUGAR`, `NOMBRE`, `DESCRIPCION`, `DIRECCION`, `IMAGEN`,
 (12, 'Costanera Norte', 'Un lugar ideal para disfrutar de la naturaleza, realizar caminatas y apreciar la belleza del paisaje.', 'Costanera Norte, Salto', 'assets/img/Paisajes/costaneranorte.jpeg', -31.3735000, -57.9690000),
 (13, 'Cuevas de San Antonio', 'Un lugar natural y fascinante, con cuevas que albergan una gran variedad de formaciones geológicas y una rica biodiversidad.', 'San Antonio, Salto', 'assets/img/Paisajes/cuevas.png', -31.3520000, -57.9730000),
 (14, 'Plaza Roosevelt', 'Un espacio público que ofrece un entorno ideal para relajarse, socializar y disfrutar de la vida urbana.', 'Plaza Roosevelt, Salto', 'assets/img/Paisajes/roosevelt.png', -31.3885000, -57.9685000),
-(15, 'Teatro Larrañaga', 'Un espacio cultural emblemático que ofrece una variedad de espectáculos artísticos, desde teatro y música hasta danza y eventos comunitarios.', 'Juan Carlos Gómez, Salto', 'assets/img/Historia/teatro.jpeg', NULL, NULL),
-(16, 'Catedral Basílica San Juan Bautista', 'Un majestuoso edificio religioso que combina arquitectura histórica y espiritualidad, siendo un punto de referencia para la comunidad y los visitantes.', 'Artigas 510, Salto', 'assets/img/Historia/catedral.jpg', NULL, NULL),
-(17, 'Gran Hotel Concordia', 'Un edificio histórico que combina arquitectura clásica y moderna, ofreciendo a los visitantes una experiencia única de alojamiento y eventos en un entorno elegante y sofisticado.', 'Artigas 500, Salto', 'assets/img/Historia/granhotel.jpg', NULL, NULL),
+(15, 'Teatro Larrañaga', 'Un espacio cultural emblemático que ofrece una variedad de espectáculos artísticos, desde teatro y música hasta danza y eventos comunitarios.', 'Juan Carlos Gómez, Salto', 'assets/img/Historia/teatro.jpeg', -31.3868228, -57.9682536),
+(16, 'Catedral Basílica San Juan Bautista', 'Un majestuoso edificio religioso que combina arquitectura histórica y espiritualidad, siendo un punto de referencia para la comunidad y los visitantes.', 'Artigas 510, Salto', 'assets/img/Historia/catedral.jpg', -31.3887715, -57.9592628),
+(17, 'Gran Hotel Concordia', 'Un edificio histórico que combina arquitectura clásica y moderna, ofreciendo a los visitantes una experiencia única de alojamiento y eventos en un entorno elegante y sofisticado.', 'Artigas 500, Salto', 'assets/img/Historia/granhotel.jpg', -31.3872378, -57.9661186),
 (21, 'Museo del Hombre y la Tecnología', 'Un espacio dedicado a la preservación y exhibición del patrimonio cultural y tecnológico de la región.', 'Brasil 511, Salto', 'assets/img/Museos/mdelhombre.jpg', -31.3872000, -57.9635000),
 (22, 'Museo Bellas Artes', 'El Museo Bellas Artes alberga una colección de obras de arte que abarca desde la pintura y la escultura hasta la fotografía y el diseño, ofreciendo a los visitantes una experiencia cultural enriquecedora.', 'Artigas 808, Salto', 'assets/img/Museos/gallino.jpg', -31.3855000, -57.9610000),
 (23, 'Museo de Horacio Quiroga', 'Un espacio dedicado a la preservación y exhibición del patrimonio cultural y literario del escritor Horacio Quiroga.', 'Avenida Manuel Oribe, Salto', 'assets/img/Museos/horacio.jpg', -31.3965000, -57.9530000),

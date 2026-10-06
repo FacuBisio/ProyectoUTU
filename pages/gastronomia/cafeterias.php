@@ -16,11 +16,13 @@ $sql = "SELECT
         WHERE LUGAR_CATEGORIA.ID_CATEGORIA = 10";
 
 $resultado = $conexion->query($sql);
+$mapaCategorias = [10];
+$mapaTitulo = "Ubicación de cafeterías";
+$mapaDescripcion = "Explorá las cafeterías y lugares para compartir algo rico en Salto.";
 
 ?>
 
 <!DOCTYPE html>
-x
 <html lang="es">
 
 <head>
@@ -39,6 +41,7 @@ x
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<?php include("../../includes/mapa-head.php"); ?>
 
 </head>
 
@@ -94,6 +97,8 @@ x
 </div>
 
 </section>
+
+<?php include("../../includes/mapa-categoria.php"); ?>
 
 <?php include("../../includes/comments.php"); ?>
 

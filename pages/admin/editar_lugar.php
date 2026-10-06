@@ -3,7 +3,8 @@
 session_start();
 require_once("../../conexion.php");
 
-if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
+if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
+    http_response_code(403);
     die("Acceso denegado.");
 }
 
@@ -112,112 +113,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <title>Editar Lugar</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#163d30">
+    <title>Editar lugar | GoSalto</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="../../assets/css/admin-panel.css?v=2">
+    <link rel="stylesheet" href="../../assets/css/admin-crud.css?v=3">
 </head>
 
 <body>
+<div class="admin-crud">
+    <header class="admin-crud-nav">
+        <a class="admin-crud-marca" href="../../index.php"><span>G</span> GoSalto <small>Administración</small></a>
+        <nav aria-label="Administración">
+            <a href="panel.php">Panel</a>
+            <a href="usuarios.php">Usuarios</a>
+            <a href="lugares.php" aria-current="page">Lugares</a>
+            <a href="eventos.php">Eventos</a>
+            <a href="comentarios.php">Comentarios</a>
+        </nav>
+        <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
+    </header>
 
-<h1>Editar Lugar</h1>
+    <main class="admin-crud-contenido admin-crud-contenido--formulario">
+        <div class="admin-crud-migas"><a href="panel.php">Panel</a><span>/</span><a href="lugares.php">Lugares</a><span>/</span><span>Editar</span></div>
+        <section class="admin-crud-encabezado">
+            <div>
+                <p class="admin-crud-etiqueta">Actualizá el catálogo</p>
+                <h1>Editar lugar</h1>
+                <p>Modificá los datos de <?= htmlspecialchars($lugar["NOMBRE"], ENT_QUOTES, "UTF-8") ?>.</p>
+            </div>
+        </section>
 
-<form method="POST">
-
-    <label>Categoría:</label>
-
-    <select name="id_categoria" required>
-
-        <?php while ($categoria = $categorias->fetch_assoc()) { ?>
-
-            <option 
-                value="<?= $categoria["ID_CATEGORIA"] ?>"
-                <?= $categoria["ID_CATEGORIA"] == $lugar["ID_CATEGORIA"] ? "selected" : "" ?>
-            >
-
-                <?= htmlspecialchars($categoria["NOMBRE"]) ?>
-
-            </option>
-
-        <?php } ?>
-
-    </select>
-
-    <br><br>
-
-    <label>Nombre:</label>
-
-    <input 
-        type="text"
-        name="nombre"
-        value="<?= htmlspecialchars($lugar["NOMBRE"]) ?>"
-        required
-    >
-
-    <br><br>
-
-    <label>Descripción:</label>
-
-    <textarea 
-        name="descripcion"
-        required
-    ><?= htmlspecialchars($lugar["DESCRIPCION"]) ?></textarea>
-
-    <br><br>
-
-    <label>Dirección:</label>
-
-    <input
-        type="text"
-        name="direccion"
-        value="<?= htmlspecialchars($lugar["DIRECCION"]) ?>"
-        required
-    >
-
-    <br><br>
-
-    <label>Imagen:</label>
-
-    <input
-        type="text"
-        name="imagen"
-        value="<?= htmlspecialchars($lugar["IMAGEN"] ?? "") ?>"
-    >
-
-    <br><br>
-
-    <label>Latitud:</label>
-
-    <input
-        type="text"
-        name="latitud"
-        value="<?= htmlspecialchars($lugar["LATITUD"] ?? "") ?>"
-    >
-
-    <br><br>
-
-    <label>Longitud:</label>
-
-    <input
-        type="text"
-        name="longitud"
-        value="<?= htmlspecialchars($lugar["LONGITUD"] ?? "") ?>"
-    >
-
-    <br><br>
-
-    <button type="submit">
-        Guardar cambios
-    </button>
-
-</form>
-
-<br>
-
-<a href="lugares.php">
-    Volver a lugares
-</a>
+        <section class="admin-crud-form-card" aria-labelledby="titulo-formulario">
+            <div class="admin-crud-form-intro">
+                <span class="admin-crud-form-icono" aria-hidden="true">✎</span>
+                <div><h2 id="titulo-formulario">Información del lugar</h2><p>Revisá los datos antes de guardar los cambios.</p></div>
+            </div>
+            <form class="admin-crud-form" method="POST">
+                <div class="admin-crud-campos">
+                    <div class="admin-crud-campo">
+                        <label for="id_categoria">Categoría <span aria-hidden="true">*</span></label>
+                        <select id="id_categoria" name="id_categoria" required>
+                            <?php while ($categoria = $categorias->fetch_assoc()): ?>
+                                <option value="<?= (int) $categoria["ID_CATEGORIA"] ?>" <?= (int) $categoria["ID_CATEGORIA"] === (int) $lugar["ID_CATEGORIA"] ? "selected" : "" ?>><?= htmlspecialchars($categoria["NOMBRE"], ENT_QUOTES, "UTF-8") ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="nombre">Nombre del lugar <span aria-hidden="true">*</span></label>
+                        <input id="nombre" type="text" name="nombre" maxlength="150" value="<?= htmlspecialchars($lugar["NOMBRE"], ENT_QUOTES, "UTF-8") ?>" required>
+                    </div>
+                    <div class="admin-crud-campo admin-crud-campo--ancho">
+                        <label for="descripcion">Descripción <span aria-hidden="true">*</span></label>
+                        <textarea id="descripcion" name="descripcion" rows="4" required><?= htmlspecialchars($lugar["DESCRIPCION"], ENT_QUOTES, "UTF-8") ?></textarea>
+                    </div>
+                    <div class="admin-crud-campo admin-crud-campo--ancho">
+                        <label for="direccion">Dirección <span aria-hidden="true">*</span></label>
+                        <input id="direccion" type="text" name="direccion" maxlength="200" value="<?= htmlspecialchars($lugar["DIRECCION"], ENT_QUOTES, "UTF-8") ?>" required>
+                    </div>
+                    <div class="admin-crud-campo admin-crud-campo--ancho">
+                        <label for="imagen">Ruta de la imagen</label>
+                        <input id="imagen" type="text" name="imagen" maxlength="255" value="<?= htmlspecialchars($lugar["IMAGEN"] ?? "", ENT_QUOTES, "UTF-8") ?>" placeholder="assets/img/ejemplo.jpg">
+                        <small>Ingresá una ruta dentro de la carpeta de imágenes del sitio.</small>
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="latitud">Latitud</label>
+                        <input id="latitud" type="number" name="latitud" step="any" min="-90" max="90" value="<?= htmlspecialchars($lugar["LATITUD"] ?? "", ENT_QUOTES, "UTF-8") ?>" placeholder="-31.3977508">
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="longitud">Longitud</label>
+                        <input id="longitud" type="number" name="longitud" step="any" min="-180" max="180" value="<?= htmlspecialchars($lugar["LONGITUD"] ?? "", ENT_QUOTES, "UTF-8") ?>" placeholder="-57.9623953">
+                    </div>
+                </div>
+                <div class="admin-crud-form-acciones">
+                    <a class="admin-crud-boton-secundario" href="lugares.php">Cancelar</a>
+                    <button class="admin-crud-boton-principal" type="submit">Guardar cambios <span aria-hidden="true">→</span></button>
+                </div>
+            </form>
+        </section>
+        <footer class="admin-crud-pie"><span>GoSalto <span aria-hidden="true">·</span> Panel de administración</span><a href="lugares.php">Volver a lugares <span aria-hidden="true">→</span></a></footer>
+    </main>
+</div>
 
 <?php include("../../includes/chat-widget.php"); ?>
 </body>
