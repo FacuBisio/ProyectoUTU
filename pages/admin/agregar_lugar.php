@@ -167,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     Volver a lugares
 </a>
 
+<?php include("../../includes/chat-widget.php"); ?>
 </body>
 
 </html>

@@ -1,57 +1,276 @@
 .comentarios {
-    width: 1100px;
-    max-width: 90%;
-    margin: 60px auto;
+    width: min(1100px, calc(100% - 40px));
+    margin: 72px auto;
+    color: #17211d;
 }
 
-.comentarios h2 {
+#comentarios.comentarios {
+    width: min(1100px, calc(100% - 40px));
+    margin: 72px auto;
+    padding: 0;
+    background: transparent;
+}
+
+.comentarios-header {
+    margin-bottom: 32px;
     text-align: center;
+}
+
+.comentarios-etiqueta {
+    display: inline-block;
     margin-bottom: 10px;
-    font-size: 28px;
+    color: #16805d;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-.comentarios > p {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
+.comentarios-header h2 {
+    margin: 0 0 10px;
+    color: #173c31;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
 }
 
-/* Contenedor de los comentarios */
-.comentarios {
+.comentarios-header p {
+    margin: 0;
+    color: #66736d;
+    line-height: 1.6;
+}
+
+.comentarios-contenido {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.4fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.comentario-formulario {
+    padding: 26px;
+    border: 1px solid #dce9e2;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #f0f8f3, #ffffff);
+    box-shadow: 0 12px 30px rgba(20, 65, 48, 0.07);
+}
+
+.comentario-formulario h3 {
+    margin: 0 0 8px;
+    color: #173c31;
+    font-size: 1.2rem;
+}
+
+.comentario-formulario > p {
+    margin: 0 0 18px;
+    color: #66736d;
+    line-height: 1.55;
+}
+
+.comentario-formulario .comentario-sesion {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.comentario-sesion strong {
+    color: #16805d;
+}
+
+.comentario-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    color: #35443d;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.comentario-formulario textarea {
+    display: block;
+    width: 100%;
+    min-height: 140px;
+    padding: 13px 14px;
+    resize: vertical;
+    border: 1px solid #cbd9d1;
+    border-radius: 11px;
+    background: #fff;
+    color: #17211d;
+    font: inherit;
+    line-height: 1.5;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.comentario-formulario textarea:focus {
+    border-color: #16805d;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(22, 128, 93, 0.14);
+}
+
+.comentario-formulario-pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.comentario-formulario-pie small {
+    color: #77847d;
+}
+
+.comentario-formulario button,
+.comentario-acceso a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #167553;
+    color: #fff;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease;
+}
+
+.comentario-formulario button:hover,
+.comentario-acceso a:hover {
+    transform: translateY(-1px);
+    background: #105c40;
+}
+
+.comentario-acceso {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    gap: 10px;
 }
 
-/* Título y descripción ocupan todo el ancho */
-.comentarios h2,
-.comentarios > p {
-    width: 100%;
+.comentario-acceso a + a {
+    border: 1px solid #cbd9d1;
+    background: #fff;
+    color: #176849;
 }
 
-/* Cada comentario */
-.comentario {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 18px 20px;
-    width: 300px;
-    box-sizing: border-box;
+.comentario-acceso a + a:hover {
+    background: #edf6f0;
 }
 
-.comentario h3 {
-    margin: 0 0 8px 0;
-    font-size: 17px;
-}
-
-.comentario p {
-    margin: 0 0 10px 0;
-    color: #444;
+.comentarios-aviso {
+    margin: 0 0 22px;
+    padding: 13px 16px;
+    border-radius: 10px;
     line-height: 1.5;
 }
 
-.comentario small {
-    color: #888;
-    font-size: 12px;
+.comentarios-aviso--exito {
+    border: 1px solid #b8e2c7;
+    background: #effaf2;
+    color: #17643a;
+}
+
+.comentarios-aviso--error {
+    border: 1px solid #f0c5bd;
+    background: #fff4f1;
+    color: #963a2d;
+}
+
+.comentarios-lista {
+    display: grid;
+    gap: 14px;
+}
+
+.comentario {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    border: 1px solid #e3eae5;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(24, 52, 39, 0.055);
+}
+
+.comentario-avatar {
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 50%;
+    background: #dff1e5;
+    color: #176849;
+    font-weight: 700;
+}
+
+.comentario-detalle {
+    min-width: 0;
+    flex: 1;
+}
+
+.comentario-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin-bottom: 9px;
+}
+
+.comentario-meta h3 {
+    margin: 0;
+    color: #203c30;
+    font-size: 1rem;
+}
+
+.comentario-meta time {
+    color: #7b8780;
+    font-size: 0.78rem;
+}
+
+.comentario-detalle > p {
+    margin: 0;
+    color: #4b5851;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.comentarios-vacio {
+    margin: 0;
+    padding: 24px;
+    border: 1px dashed #cbd9d1;
+    border-radius: 14px;
+    color: #66736d;
+    line-height: 1.6;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .comentarios {
+        width: min(100% - 28px, 560px);
+        margin: 48px auto;
+    }
+
+    #comentarios.comentarios {
+        width: min(100% - 28px, 560px);
+        margin: 48px auto;
+    }
+
+    .comentarios-contenido {
+        grid-template-columns: 1fr;
+    }
+
+    .comentario-formulario {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .comentario-formulario-pie {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .comentario-formulario button {
+        width: 100%;
+    }
 }

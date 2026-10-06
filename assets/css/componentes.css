@@ -203,12 +203,6 @@
    SECCION COMENTARIOS
 ========================= */
 
-#comentarios {
-    width: 100%;
-    padding: 90px 20px;
-    background: white;
-}
-
 .comentarios-container {
     max-width: 1100px;
     margin: 0 auto;
@@ -471,3 +465,11 @@
     font-size: 14px;
 }
 
+.footer-copy a {
+    color: #d4eadb;
+    text-underline-offset: 3px;
+}
+
+.footer-copy a:hover {
+    color: #fff;
+}

@@ -123,6 +123,7 @@ Eliminar
     Volver al panel
 </a>
 
+<?php include("../../includes/chat-widget.php"); ?>
 </body>
 
 </html>

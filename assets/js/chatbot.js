@@ -1,138 +1,90 @@
-function abrirChat() {
-    document.getElementById("chatbot").style.display = "block";
-    document.getElementById("mensaje").focus();
-}
-
-function cerrarChat() {
-    document.getElementById("chatbot").style.display = "none";
-}
-
-function enviarMensaje() {
-
+document.addEventListener("DOMContentLoaded", () => {
+    const panel = document.getElementById("chatbot");
+    const botonAbrir = document.getElementById("boton-chat");
+    const botonCerrar = document.getElementById("cerrar-chat");
+    const formulario = document.getElementById("chat-input");
     const input = document.getElementById("mensaje");
-    const texto = input.value.trim();
+    const mensajes = document.getElementById("chat-mensajes");
 
-    if (texto === "") {
+    if (!panel || !botonAbrir || !botonCerrar || !formulario || !input || !mensajes) {
         return;
     }
 
-    // Mostrar mensaje del usuario
-    agregarMensaje(texto, "usuario");
+    function alternarChat(abierto) {
+        panel.classList.toggle("chat-abierto", abierto);
+        panel.setAttribute("aria-hidden", String(!abierto));
+        botonAbrir.setAttribute("aria-expanded", String(abierto));
 
-    // Limpiar input
-    input.value = "";
-
-    // Mostrar "Escribiendo..."
-    const cargando = document.createElement("div");
-
-    cargando.classList.add("mensaje", "bot");
-    cargando.id = "mensaje-cargando";
-    cargando.innerHTML = "🤖 Escribiendo...";
-
-    const mensajes = document.getElementById("chat-mensajes");
-
-    mensajes.appendChild(cargando);
-    mensajes.scrollTop = mensajes.scrollHeight;
-
-    // Crear datos para enviar a PHP
-    const datos = new FormData();
-    datos.append("mensaje", texto);
-
-    // Medir tiempo
-    const inicio = performance.now();
-    console.log("Enviando mensaje a PHP...");
-
-    // Enviar a PHP
-    fetch("api/chatbot.php", {
-        method: "POST",
-        body: datos
-    })
-    .then(response => {
-
-        console.log(
-            "PHP respondió en:",
-            ((performance.now() - inicio) / 1000).toFixed(2),
-            "segundos"
-        );
-
-        return response.json();
-    })
-    .then(data => {
-
-        console.log("Respuesta recibida:", data);
-
-        const cargando =
-            document.getElementById("mensaje-cargando");
-
-        if (cargando) {
-            cargando.remove();
+        if (abierto) {
+            input.focus();
+        } else {
+            botonAbrir.focus();
         }
+    }
 
-        if (data.error) {
+    function agregarMensaje(texto, tipo) {
+        const mensaje = document.createElement("div");
+        mensaje.classList.add("mensaje", tipo);
+        mensaje.textContent = texto;
+        mensajes.appendChild(mensaje);
+        mensajes.scrollTop = mensajes.scrollHeight;
+    }
 
-            agregarMensaje(
-                "❌ Ocurrió un error: " + data.error,
-                "bot"
-            );
+    botonAbrir.addEventListener("click", () => alternarChat(true));
+    botonCerrar.addEventListener("click", () => alternarChat(false));
 
+    document.addEventListener("keydown", evento => {
+        if (evento.key === "Escape" && panel.classList.contains("chat-abierto")) {
+            alternarChat(false);
+        }
+    });
+
+    formulario.addEventListener("submit", async evento => {
+        evento.preventDefault();
+        const texto = input.value.trim();
+
+        if (!texto) {
             return;
         }
 
-        agregarMensaje(
-            data.respuesta,
-            "bot"
-        );
+        agregarMensaje(texto, "usuario");
+        input.value = "";
+        input.disabled = true;
+        formulario.querySelector("button").disabled = true;
 
-    })
-    .catch(error => {
+        const cargando = document.createElement("div");
+        cargando.classList.add("mensaje", "bot");
+        cargando.textContent = "🤖 Escribiendo...";
+        mensajes.appendChild(cargando);
+        mensajes.scrollTop = mensajes.scrollHeight;
 
-        const cargando =
-            document.getElementById("mensaje-cargando");
+        try {
+            const datos = new FormData();
+            datos.append("mensaje", texto);
+            const respuesta = await fetch(panel.dataset.endpoint, {
+                method: "POST",
+                body: datos,
+                headers: { "Accept": "application/json" }
+            });
+            const tipoContenido = respuesta.headers.get("content-type") || "";
+            if (!tipoContenido.includes("application/json")) {
+                throw new Error("El servidor devolvió una respuesta inesperada.");
+            }
+            const resultado = await respuesta.json();
 
-        if (cargando) {
+            if (!respuesta.ok || resultado.error) {
+                throw new Error(resultado.error || `El asistente respondió con HTTP ${respuesta.status}.`);
+            }
+
+            agregarMensaje(resultado.respuesta || "No encontré una respuesta para esa consulta.", "bot");
+        } catch (error) {
+            agregarMensaje(error.message || "No pude completar la consulta. Intentá nuevamente.", "bot");
+            console.error("No se pudo completar la solicitud al chatbot.", error);
+        } finally {
             cargando.remove();
+            input.disabled = false;
+            formulario.querySelector("button").disabled = false;
+            input.focus();
         }
-
-        agregarMensaje(
-            "❌ No pude conectarme con el asistente.",
-            "bot"
-        );
-
-        console.error("ERROR:", error);
     });
-}
-
-
-function agregarMensaje(texto, tipo) {
-
-    const mensajes =
-        document.getElementById("chat-mensajes");
-
-    const mensaje =
-        document.createElement("div");
-
-    mensaje.classList.add("mensaje");
-    mensaje.classList.add(tipo);
-
-    mensaje.innerText = texto;
-
-    mensajes.appendChild(mensaje);
-
-    mensajes.scrollTop =
-        mensajes.scrollHeight;
-}
-
-
-// Enviar con Enter
-document.getElementById("mensaje").addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-
-            event.preventDefault();
-
-            enviarMensaje();
-        }
-    }
-);
+});

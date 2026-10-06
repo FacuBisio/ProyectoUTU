@@ -1,0 +1,156 @@
+.perfil-pagina {
+    flex: 1;
+    min-height: 100vh;
+    padding: 145px 24px 70px;
+    background: #f3f7f4;
+}
+
+.perfil-tarjeta {
+    width: min(100%, 680px);
+    margin: 0 auto;
+    padding: 36px;
+    border: 1px solid #e2ebe4;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(24, 57, 42, 0.1);
+}
+
+.perfil-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.perfil-icono {
+    display: grid;
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
+    place-items: center;
+    border-radius: 16px;
+    background: #e9f5ec;
+    color: #19734e;
+    font-size: 1.3rem;
+}
+
+.perfil-etiqueta {
+    margin: 0 0 5px;
+    color: #21805a;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.perfil-encabezado h1 {
+    margin: 0;
+    color: #17382d;
+    font-size: clamp(1.6rem, 4vw, 2rem);
+}
+
+.perfil-encabezado div > p:last-child,
+.perfil-separador p {
+    margin: 7px 0 0;
+    color: #708077;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.perfil-formulario {
+    display: grid;
+    gap: 9px;
+}
+
+.perfil-formulario label {
+    margin-top: 7px;
+    color: #30483b;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.perfil-formulario input {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 13px;
+    border: 1px solid #d8e2db;
+    border-radius: 10px;
+    background: #fbfdfb;
+    color: #23382e;
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.perfil-formulario input:focus {
+    border-color: #208057;
+    outline: 3px solid rgba(32, 128, 87, 0.14);
+}
+
+.perfil-separador {
+    margin-top: 17px;
+    padding-top: 22px;
+    border-top: 1px solid #e7ece8;
+}
+
+.perfil-separador h2 {
+    margin: 0;
+    color: #17382d;
+    font-size: 1.1rem;
+}
+
+.perfil-mensaje {
+    margin: 0 0 20px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.perfil-mensaje--error {
+    border: 1px solid #f1c8bf;
+    background: #fff5f2;
+    color: #923e30;
+}
+
+.perfil-mensaje--exito {
+    border: 1px solid #bfdfc8;
+    background: #eff9f1;
+    color: #21643f;
+}
+
+.perfil-guardar {
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #21845c, #146444);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 9px 18px rgba(26, 111, 74, 0.18);
+}
+
+.perfil-guardar:hover {
+    filter: brightness(1.05);
+}
+
+.perfil-guardar:focus-visible {
+    outline: 3px solid #75bd92;
+    outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+    .perfil-pagina {
+        padding: 125px 16px 40px;
+    }
+
+    .perfil-tarjeta {
+        padding: 25px 20px;
+        border-radius: 17px;
+    }
+}

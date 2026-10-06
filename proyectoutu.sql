@@ -83,10 +83,12 @@ CREATE TABLE `evento` (
   `ID_USUARIO` int(11) NOT NULL,
   `ID_LUGAR` int(11) NOT NULL,
   `NOMBRE` varchar(150) NOT NULL,
+  `DESCRIPCION` text DEFAULT NULL,
   `HORA_INI` time NOT NULL,
   `HORA_FIN` time NOT NULL,
   `DIA` int(11) NOT NULL,
-  `MES` int(11) NOT NULL
+  `MES` int(11) NOT NULL,
+  `ANIO` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -124,9 +126,9 @@ INSERT INTO `lugar` (`ID_LUGAR`, `NOMBRE`, `DESCRIPCION`, `DIRECCION`, `IMAGEN`,
 (6, 'Café Central', 'Cafetería para eventos.', 'Uruguay 456', 'assets/img/cafe.jpg', NULL, NULL),
 (7, 'Heladería del Centro', 'Heladería para eventos.', 'Brasil 789', 'assets/img/heladeria.jpg', NULL, NULL),
 (8, 'La Terraza', 'Espacio gastronómico para eventos.', 'Rivera 321', 'assets/img/terraza.jpg', NULL, NULL),
-(9, 'Parque Harriague', 'Un espacio verde ideal para relajarse, hacer ejercicio y disfrutar de la naturaleza. El parque cuenta con áreas de picnic, senderos para caminar y zonas de juegos para niños.', 'Salto', 'assets/img/Parques/parqueharriague.jpg', -31.3833000, -57.9667000),
-(10, 'Parque Solari', 'Este parque es perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parquesolari.png', -31.3900000, -57.9570000),
-(11, 'Parque Indigena Vaimaca Pirú', 'Un espacio verde y acogedor, perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parqueindigena.jpg', -31.4025000, -57.9620000),
+(9, 'Parque Harriague', 'Un espacio verde ideal para relajarse, hacer ejercicio y disfrutar de la naturaleza. El parque cuenta con áreas de picnic, senderos para caminar y zonas de juegos para niños.', 'Salto', 'assets/img/Parques/parqueharriague.jpg', -31.3977508, -57.9623953),
+(10, 'Parque Solari', 'Este parque es perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parquesolari.png', -31.3791252, -57.9446967),
+(11, 'Parque Indigena Vaimaca Pirú', 'Un espacio verde y acogedor, perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parqueindigena.jpg', -31.3720848, -57.9797180),
 (12, 'Costanera Norte', 'Un lugar ideal para disfrutar de la naturaleza, realizar caminatas y apreciar la belleza del paisaje.', 'Costanera Norte, Salto', 'assets/img/Paisajes/costaneranorte.jpeg', -31.3735000, -57.9690000),
 (13, 'Cuevas de San Antonio', 'Un lugar natural y fascinante, con cuevas que albergan una gran variedad de formaciones geológicas y una rica biodiversidad.', 'San Antonio, Salto', 'assets/img/Paisajes/cuevas.png', -31.3520000, -57.9730000),
 (14, 'Plaza Roosevelt', 'Un espacio público que ofrece un entorno ideal para relajarse, socializar y disfrutar de la vida urbana.', 'Plaza Roosevelt, Salto', 'assets/img/Paisajes/roosevelt.png', -31.3885000, -57.9685000),
@@ -276,6 +278,30 @@ INSERT INTO `usuario_telefono` (`ID_USUARIO`, `TELEFONO`) VALUES
 (14, '091352873');
 
 --
+-- Estructura de tablas para reacciones y comentarios de eventos
+--
+
+CREATE TABLE `evento_reaccion` (
+  `ID_EVENTO` int(11) NOT NULL,
+  `ID_USUARIO` int(11) NOT NULL,
+  `TIPO` tinyint(4) NOT NULL,
+  `FECHA` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID_EVENTO`,`ID_USUARIO`),
+  KEY `FK_REACCION_USUARIO` (`ID_USUARIO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `evento_comentario` (
+  `ID_COMENTARIO` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_EVENTO` int(11) NOT NULL,
+  `ID_USUARIO` int(11) NOT NULL,
+  `COMENTARIO` varchar(1000) NOT NULL,
+  `FECHA` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID_COMENTARIO`),
+  KEY `FK_COMENTARIO_EVENTO` (`ID_EVENTO`),
+  KEY `FK_EVENTO_COMENTARIO_USUARIO` (`ID_USUARIO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -407,6 +433,18 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `usuario_telefono`
   ADD CONSTRAINT `FK_TELEFONO_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuario` (`ID_USUARIO`) ON DELETE CASCADE;
+
+--
+-- Filtros para reacciones y comentarios de eventos
+--
+ALTER TABLE `evento_reaccion`
+  ADD CONSTRAINT `FK_REACCION_EVENTO` FOREIGN KEY (`ID_EVENTO`) REFERENCES `evento` (`ID_EVENTO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_REACCION_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuario` (`ID_USUARIO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `CHK_REACCION_TIPO` CHECK (`TIPO` IN (-1, 1));
+
+ALTER TABLE `evento_comentario`
+  ADD CONSTRAINT `FK_COMENTARIO_EVENTO` FOREIGN KEY (`ID_EVENTO`) REFERENCES `evento` (`ID_EVENTO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_EVENTO_COMENTARIO_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuario` (`ID_USUARIO`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

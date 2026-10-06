@@ -19,10 +19,10 @@
 
                 <h3>Navegación</h3>
 
-                <a href="<?= url('#') ?>">Inicio</a>
-                <a href="<?= url('#') ?>">Lugares</a>
-                <a href="<?= url('#') ?>">Eventos</a>
-                <a href="<?= url('#') ?>">Gastronomía</a>
+                <a href="<?= url('index.php') ?>">Inicio</a>
+                <a href="<?= url('index.php#segunda-seccion') ?>">Lugares</a>
+                <a href="<?= url('pages/eventos/eventos.php') ?>">Eventos</a>
+                <a href="<?= url('pages/gastronomia/locales-top.php') ?>">Gastronomía</a>
 
             </div>
 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="footer-copy">
-        <p>© 2026 GoSalto — Todos los derechos reservados.</p>
+        <p>© 2026 GoSalto · Los contenidos originales de este sitio se comparten bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener noreferrer">Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional</a>. Los recursos de terceros pertenecen a sus respectivos autores.</p>
     </div>
 
 </footer>

@@ -174,6 +174,7 @@ body{
 
 </div>
 
+<?php include("../../includes/chat-widget.php"); ?>
 </body>
 
 </html>

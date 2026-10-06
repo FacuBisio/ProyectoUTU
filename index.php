@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/style-secciones.css">
     <link rel="stylesheet" href="assets/css/var.css">
-    <link rel="stylesheet" href="assets/css/comments.css">
+    <link rel="stylesheet" href="assets/css/comments.css?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -31,14 +31,11 @@
             Vení a conocer Salto, una ciudad donde la naturaleza,
             las termas y la tranquilidad te esperan para vivir
             momentos únicos e inolvidables.
-            <span id="textoExtra">
-                Entre ellos se encuentran las termas, el Parque del Lago, el Museo del Hombre y la Tecnología y diversos eventos culturales durante todo el año.
-            </span>
         </p>
 
-    <button id="btnMostrar" class="btn-mostrar">
-        Mostrar más
-    </button>
+        <a href="#segunda-seccion" class="empresa-btn">
+            Mostrar más
+        </a>
 
     </div>
 
@@ -53,7 +50,7 @@
 
     <div class="cards-container">
 
-        <div class="card">
+        <a class="card" href="pages/lugares/termas.php">
 
             <img src="assets/img/termas.jpeg" alt="Termas">
 
@@ -63,13 +60,9 @@
                 Relajate en las mejores aguas termales y disfrutá momentos únicos.
             </p>
 
-            <a href="pages/lugares/termas.php" class="card-btn">
-                Ver más →
-            </a>
+        </a>
 
-        </div>
-
-        <div class="card">
+        <a class="card" href="pages/lugares/paisajes.php">
 
             <img src="assets/img/fuente-naturaleza.jpeg" alt="Naturaleza">
 
@@ -79,13 +72,9 @@
                 Descubrí paisajes increíbles, parques y actividades al aire libre.
             </p>
 
-            <a href="pages/lugares/paisajes.php" class="card-btn">
-                Ver más →
-            </a>
+        </a>
 
-        </div>
-
-        <div class="card">
+        <a class="card" href="pages/gastronomia/locales-top.php">
 
             <img src="assets/img/trouville.jpeg" alt="Gastronomía">
 
@@ -95,11 +84,7 @@
                 Probá sabores locales y experiencias gastronómicas inolvidables.
             </p>
 
-            <a href="pages/gastronomia/locales-top.php" class="card-btn">
-                Ver más →
-            </a>
-
-        </div>
+        </a>
 
     </div>
 
@@ -120,11 +105,11 @@
             <h2>GoSalto</h2>
 
             <p>
-                GoSalto es una plataforma turística creada para conectar a visitantes y residentes con los principales atractivos de la ciudad de Salto. Reunimos en un solo lugar información sobre destinos, gastronomía, eventos y experiencias para que descubrir la ciudad sea más fácil y agradable.
+                GoSalto es una empresa turística ficticia nacida en Salto, impulsada por un equipo apasionado por la hospitalidad y la identidad del litoral. Diseñamos recorridos y experiencias para que cada visitante pueda conocer la ciudad desde su naturaleza, su cultura y su vida cotidiana.
             </p>
 
             <p>
-                Nuestro objetivo es impulsar el turismo local mediante una plataforma moderna, intuitiva y accesible, ofreciendo recomendaciones, información útil y recursos que ayuden a planificar cada visita de la mejor manera.
+                Trabajamos junto a emprendimientos y comunidades locales para promover un turismo cercano, responsable y sostenible, creando oportunidades para que los atractivos y sabores de Salto sean protagonistas durante todo el año.
             </p>
 
             <a href="#seccion-principal" class="empresa-btn">
@@ -148,16 +133,6 @@
 
 <!-- FOOTER -->
 <?php include("includes/footer.php"); ?>
-
-<!-- CHATBOT GOSALTO -->
-
-<?php include("includes/chatbot.php"); ?>
-
-<link rel="stylesheet" href="assets/css/chatbot.css">
-
-<script src="assets/js/chatbot.js"></script>
-
-<script src="assets/js/script.js"></script>
 
 </body>
 </html>

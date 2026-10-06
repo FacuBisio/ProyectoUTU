@@ -32,7 +32,7 @@ $lugares = $conexion->query($sql);
     <link rel="stylesheet" href="../../assets/css/componentes.css">
     <link rel="stylesheet" href="../../assets/css/style-secciones.css">
     <link rel="stylesheet" href="../../assets/css/slider.css">
-    <link rel="stylesheet" href="../../assets/css/comments.css">
+    <link rel="stylesheet" href="../../assets/css/comments.css?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 
