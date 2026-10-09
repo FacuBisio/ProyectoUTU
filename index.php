@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-UY">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <meta name="description" content="Descubrí qué hacer en Salto, Uruguay: termas, paisajes, parques, cultura, eventos y gastronomía local. Planificá tu próxima visita con GoSalto.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_UY">
+    <meta property="og:site_name" content="GoSalto">
+    <meta property="og:title" content="GoSalto | Turismo, termas y experiencias en Salto, Uruguay">
+    <meta property="og:description" content="Explorá termas, naturaleza, cultura, eventos y gastronomía de Salto, Uruguay.">
+    <title>GoSalto | Turismo, termas y experiencias en Salto, Uruguay</title>
 
     <link rel="stylesheet" href="assets/css/componentes.css">
     <link rel="stylesheet" href="assets/css/styles.css">
