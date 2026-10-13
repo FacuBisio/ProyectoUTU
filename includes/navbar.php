@@ -1,13 +1,13 @@
 <?php
+// La barra muestra opciones distintas según la sesión activa.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-?>
-<?php
 
 require_once(__DIR__ . "/../config/config.php");
-
 ?>
+
+<!-- Estilos y navegación principal compartidos por las páginas del sitio. -->
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/accesibilidad.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=3'), ENT_QUOTES, 'UTF-8') ?>">
 
@@ -23,6 +23,7 @@ require_once(__DIR__ . "/../config/config.php");
 
         <div class="nav-links">
 
+            <!-- Enlaces de navegación agrupados por tipo de contenido. -->
             <a class="link-btn" href="<?= url('index.php') ?>">
                 Inicio
             </a>
@@ -143,7 +144,7 @@ require_once(__DIR__ . "/../config/config.php");
 
         <div class="nav-extra">
 
-            <!-- Indicador del ITH -->
+            <!-- Indicador climático y búsqueda rápida del catálogo. -->
          <div class="ith-navbar">
              <span id="clima">
              🌡 Cargando...
@@ -170,6 +171,7 @@ require_once(__DIR__ . "/../config/config.php");
     <div class="buscador-sugerencias" id="sugerenciasBusqueda" role="listbox" aria-label="Resultados sugeridos" hidden></div>
 </form>
 
+            <!-- Acceso a la cuenta y controles de accesibilidad. -->
             <div class="menu-usuario">
                 <button
                     type="button"
@@ -251,7 +253,7 @@ require_once(__DIR__ . "/../config/config.php");
 
 </section>
 
-<script src="<?= url('assets/js/ith.js?v=2') ?>"></script>
+<script src="<?= url('assets/js/ITH.js?v=2') ?>"></script>
 <script src="<?= url('assets/js/clima.js') ?>"></script>
 <script src="<?= htmlspecialchars(url('assets/js/accesibilidad.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 <script src="<?= htmlspecialchars(url('assets/js/busqueda-navbar.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>

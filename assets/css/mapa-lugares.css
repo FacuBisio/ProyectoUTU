@@ -1,3 +1,4 @@
+/* Map section and the map surface used by place pages. */
 .mapa-lugares {
     width: 90%;
     margin: 60px auto;
@@ -27,6 +28,7 @@
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Place details and status notice displayed over the map. */
 .mapa-lugares-popup {
     max-width: 250px;
 }
@@ -84,6 +86,7 @@
     box-shadow: 0 8px 24px rgba(20, 60, 38, 0.14);
 }
 
+/* Theme variants and compact map sizing. */
 html[data-tema="oscuro"] .mapa-lugares h2,
 html[data-tema="oscuro"] .mapa-lugares > p {
     color: #e7eee9;

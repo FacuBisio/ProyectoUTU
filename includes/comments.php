@@ -1,4 +1,5 @@
 <?php
+// Prepara la sesión, el token del formulario y el mensaje de la última operación.
 require_once(__DIR__ . "/../conexion.php");
 require_once(__DIR__ . "/../config/config.php");
 
@@ -14,6 +15,7 @@ $flashComentario = $_SESSION['flash_comentario'] ?? null;
 unset($_SESSION['flash_comentario']);
 
 try {
+    // Carga los comentarios más recientes junto al nombre de quien los publicó.
     $resultadoComentarios = $conexion->query(
         "SELECT COMENTARIO.COMENTARIO, USUARIO.NOMBRE, COMENTARIO.FECHA
          FROM COMENTARIO
@@ -39,6 +41,7 @@ try {
         </p>
     <?php } ?>
 
+    <!-- El formulario solo está disponible para usuarios autenticados. -->
     <div class="comentarios-contenido">
         <div class="comentario-formulario">
             <h3>Compartí tu experiencia</h3>
@@ -75,6 +78,7 @@ try {
             <?php } ?>
         </div>
 
+        <!-- Presenta los resultados o un mensaje claro si no hay datos. -->
         <div class="comentarios-lista">
             <?php if ($resultadoComentarios === false) { ?>
                 <p class="comentarios-vacio">No se pudieron cargar los comentarios en este momento. Intentá nuevamente más tarde.</p>

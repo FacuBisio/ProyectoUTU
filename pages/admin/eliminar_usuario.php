@@ -23,10 +23,7 @@ if ($id_usuario == $_SESSION["id_usuario"]) {
 }
 
 
-// Eliminar usuario
-
-$sql = "DELETE FROM usuario WHERE id_usuario = ?";
-
+// Elimina las dependencias antes que la cuenta para conservar la integridad referencial.
 $conexion->begin_transaction();
 
 try {
@@ -60,18 +57,6 @@ try {
 
     echo "No se pudo eliminar el usuario.";
 }
-
-
-if($stmt->execute()){
-
-    header("Location: usuarios.php");
-
-}else{
-
-    echo "Error al eliminar: " . $conexion->error;
-
-}
-
 
 exit();
 

@@ -45,6 +45,7 @@ $categorias = $conexion->query(
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Actualiza los datos y reemplaza la categoría asociada al lugar.
     $nombre = $_POST["nombre"];
     $descripcion = $_POST["descripcion"];
     $direccion = $_POST["direccion"];

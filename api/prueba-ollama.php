@@ -1,5 +1,6 @@
 <?php
 
+// Endpoint de diagnóstico local para comprobar la conexión con Ollama.
 header("Content-Type: application/json; charset=UTF-8");
 
 $datos = [

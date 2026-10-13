@@ -2,11 +2,13 @@
 require_once(__DIR__ . "/../conexion.php");
 require_once(__DIR__ . "/../config/config.php");
 
+// Escapa los datos de búsqueda al insertarlos en el HTML.
 function escaparBusqueda($valor)
 {
     return htmlspecialchars((string) $valor, ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8");
 }
 
+// Reutiliza la misma consulta para resultados completos y sugerencias rápidas.
 function obtenerResultadosBusqueda($conexion, $busqueda, $limite = null)
 {
     $termino = "%" . $busqueda . "%";
@@ -59,6 +61,7 @@ function obtenerResultadosBusqueda($conexion, $busqueda, $limite = null)
 $busqueda = isset($_GET["q"]) && is_string($_GET["q"]) ? trim($_GET["q"]) : "";
 $esSugerencias = ($_GET["sugerencias"] ?? "") === "1";
 
+// El buscador del navbar consume sugerencias JSON sin renderizar la página entera.
 if ($esSugerencias) {
     header("Content-Type: application/json; charset=UTF-8");
     header("Cache-Control: no-store");
@@ -78,6 +81,7 @@ if ($esSugerencias) {
 
 $resultados = $busqueda !== "" ? obtenerResultadosBusqueda($conexion, $busqueda) : [];
 
+// Relaciona categorías del catálogo con sus páginas de destino.
 $rutasCategorias = [
     "parques" => "pages/lugares/parques.php",
     "paisajes" => "pages/lugares/paisajes.php",

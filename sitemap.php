@@ -1,5 +1,6 @@
 <?php
 
+// Publica un sitemap XML con las páginas públicas principales del sitio.
 $host = $_SERVER["HTTP_HOST"] ?? "";
 if (!preg_match('/\A(?:[a-z0-9.-]+|\[[a-f0-9:]+\])(?::[0-9]{1,5})?\z/i', $host)) {
     http_response_code(400);
@@ -30,6 +31,7 @@ $pages = [
     "pages/lugares/termas.php",
 ];
 
+// Usa el esquema, host y subdirectorio de la URL que solicitó el sitemap.
 header("Content-Type: application/xml; charset=UTF-8");
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";

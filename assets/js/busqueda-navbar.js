@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return opcion;
     }
 
+    // Solicita sugerencias para la consulta actual y descarta respuestas obsoletas.
     async function cargarSugerencias() {
         const consulta = input.value.trim();
         if (consulta.length < 2) {
@@ -151,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Actualiza sugerencias al escribir y permite recorrerlas con el teclado.
     input.addEventListener("input", () => {
         window.clearTimeout(temporizador);
         temporizador = window.setTimeout(cargarSugerencias, 180);

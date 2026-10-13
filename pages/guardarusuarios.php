@@ -2,8 +2,23 @@
 
 session_start();
 
+require_once("../includes/captcha.php");
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code(405);
+    header("Allow: POST");
+    exit("Método no permitido.");
+}
+
+$respuestaCaptcha = $_POST["g-recaptcha-response"] ?? null;
+if (!recaptcha_validar($respuestaCaptcha)) {
+    header("Location: register.php?error=captcha");
+    exit();
+}
+
 require_once("../conexion.php");
 
+// Valida los campos antes de crear la cuenta y su teléfono asociado.
 $nombre = $_POST["nombre"] ?? "";
 $correo = $_POST["correo"] ?? "";
 $contrasena = $_POST["contrasena"] ?? "";
@@ -44,6 +59,7 @@ if ($stmt->get_result()->num_rows > 0) {
 $hashContrasena = password_hash($contrasena, PASSWORD_DEFAULT);
 $conexion->begin_transaction();
 
+// Guarda los datos relacionados en una sola transacción.
 try {
     $stmtUsuario = $conexion->prepare(
         "INSERT INTO USUARIO (ID_ROL, NOMBRE, CONTRASENA, CORREO)
@@ -67,6 +83,7 @@ try {
     exit("No se pudo completar el registro. Intentá nuevamente.");
 }
 
+// Inicia la sesión del nuevo usuario solo después de confirmar la transacción.
 session_regenerate_id(true);
 $_SESSION["id_usuario"] = $idUsuario;
 $_SESSION["nombre"] = $nombre;

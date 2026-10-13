@@ -1,3 +1,4 @@
+/* Comment section heading and submission form. */
 .comentarios {
     width: min(1100px, calc(100% - 40px));
     margin: 72px auto;
@@ -156,6 +157,7 @@
     background: #edf6f0;
 }
 
+/* Submission feedback and the rendered comment list. */
 .comentarios-aviso {
     margin: 0 0 22px;
     padding: 13px 16px;
@@ -244,6 +246,7 @@
     text-align: center;
 }
 
+/* Stack the form and feed on narrow screens. */
 @media (max-width: 760px) {
     .comentarios {
         width: min(100% - 28px, 560px);

@@ -1,3 +1,4 @@
+<!-- Recursos de Leaflet requeridos por los mapas de las páginas de categorías. -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="../../assets/css/mapa-lugares.css?v=1">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

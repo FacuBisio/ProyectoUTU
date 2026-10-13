@@ -2,6 +2,7 @@
 header("Content-Type: application/json; charset=UTF-8");
 header("Cache-Control: no-store");
 
+// Devuelve una respuesta JSON uniforme y termina el procesamiento.
 function responderChat($payload, $status = 200)
 {
     http_response_code($status);
@@ -9,6 +10,7 @@ function responderChat($payload, $status = 200)
     exit();
 }
 
+// Normaliza acentos y signos para comparar consultas y datos del catálogo.
 function normalizarChat($texto)
 {
     $texto = mb_strtolower($texto, "UTF-8");
@@ -26,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     responderChat(["error" => "Enviá tu consulta desde el chat."], 405);
 }
 
+// Valida el mensaje antes de consultar la base de datos.
 $mensaje = $_POST["mensaje"] ?? "";
 if (!is_string($mensaje)) {
     responderChat(["error" => "El mensaje no tiene un formato válido."], 400);
@@ -39,6 +42,7 @@ if ($mensaje === "" || mb_strlen($mensaje, "UTF-8") > 1000) {
 $consulta = normalizarChat($mensaje);
 
 try {
+    // Carga lugares y categorías para responder con datos publicados en el sitio.
     require_once(__DIR__ . "/../conexion.php");
 
     $sql = "SELECT l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION,
@@ -76,6 +80,7 @@ $categorias = [
     "eventos" => ["evento", "eventos", "agenda", "actividad"],
 ];
 
+// Mantiene juntas las palabras clave, rutas y categorías consultables por tema.
 $rutas = [
     "termas" => "pages/lugares/termas.php",
     "parques" => "pages/lugares/parques.php",

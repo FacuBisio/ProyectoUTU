@@ -1,4 +1,5 @@
 
+<!-- Enlaces permanentes y atribución al pie de todas las páginas. -->
 <footer id="footer">
 
     <div class="footer-container">

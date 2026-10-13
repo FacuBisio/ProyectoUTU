@@ -3,6 +3,7 @@ session_start();
 require_once("../../conexion.php");
 require_once("../../config/config.php");
 
+// Identifica al usuario y prepara la protección de los formularios del feed.
 $usuarioId = isset($_SESSION["id_usuario"]) ? (int) $_SESSION["id_usuario"] : null;
 $estaAutenticado = $usuarioId !== null;
 
@@ -23,6 +24,7 @@ function volverAEventos($mensaje, $tipo = "error", $eventoId = null)
     exit();
 }
 
+// Procesa las acciones del feed antes de cargar y mostrar las publicaciones.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!$estaAutenticado) {
         volverAEventos("Iniciá sesión para participar de la comunidad.");
@@ -34,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     $accion = $_POST["accion"] ?? "";
+    // Alterna la reacción del usuario o cambia su tipo si ya había reaccionado.
     if ($accion === "reaccionar") {
         $eventoId = filter_var($_POST["id_evento"] ?? null, FILTER_VALIDATE_INT);
         $tipo = $_POST["tipo"] ?? "";
@@ -77,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         volverAEventos("Tu reacción quedó actualizada.", "exito", $eventoId);
     }
 
+    // Valida y guarda comentarios asociados a una publicación.
     if ($accion === "comentar") {
         $eventoId = filter_var($_POST["id_evento"] ?? null, FILTER_VALIDATE_INT);
         $comentario = $_POST["comentario"] ?? "";
@@ -102,6 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         volverAEventos("Tu comentario se publicó correctamente.", "exito", $eventoId);
     }
 
+    // Valida los datos, la ubicación y la portada antes de crear un evento.
     if ($accion === "publicar") {
         $nombre = $_POST["nombre"] ?? "";
         $descripcion = $_POST["descripcion"] ?? "";
@@ -183,6 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 volverAEventos("El archivo de portada no es válido.");
             }
 
+            // Comprueba el contenido real de la imagen antes de guardarla.
             $informacionImagen = @getimagesize($archivoImagen["tmp_name"]);
             $detectorMime = new finfo(FILEINFO_MIME_TYPE);
             $mimeImagen = $detectorMime->file($archivoImagen["tmp_name"]);
@@ -212,6 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $imagenEvento = "assets/img/eventos/" . $nombreArchivo;
         }
 
+        // Guarda la publicación después de validar sus datos y archivo opcional.
         $dia = (int) $fechaEvento->format("d");
         $mes = (int) $fechaEvento->format("m");
         $anio = (int) $fechaEvento->format("Y");
@@ -256,6 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $flash = $_SESSION["flash_eventos"] ?? null;
 unset($_SESSION["flash_eventos"]);
 
+// Carga publicaciones y comentarios antes de renderizar el feed.
 $usuarioActualSql = $estaAutenticado ? (string) $usuarioId : "0";
 $sqlEventos = "
     SELECT e.ID_EVENTO, e.ID_USUARIO, e.ID_LUGAR, e.NOMBRE, e.DESCRIPCION,
@@ -316,6 +324,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
 <body>
     <?php include("../../includes/navbar.php"); ?>
 
+    <!-- Presentación, formulario para publicar y listado de publicaciones. -->
     <main class="eventos-pagina">
         <header class="eventos-portada">
             <div class="eventos-portada-contenido">

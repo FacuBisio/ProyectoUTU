@@ -1,3 +1,12 @@
+<?php
+// Obtiene el estado del CAPTCHA para mostrar el formulario o el error correspondiente.
+session_start();
+require_once("../includes/captcha.php");
+
+$errorCaptcha = ($_GET['error'] ?? '') === 'captcha';
+$siteKeyCaptcha = recaptcha_site_key();
+$captchaConfigurado = recaptcha_configurado();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,7 +15,7 @@
     <meta name="theme-color" content="#123c30">
     <title>Crear cuenta | GoSalto</title>
     <link rel="stylesheet" href="../assets/css/var.css">
-    <link rel="stylesheet" href="../assets/css/login.css?v=4">
+    <link rel="stylesheet" href="../assets/css/login.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -46,6 +55,14 @@
                 <h2 id="titulo-registro">Crear cuenta</h2>
                 <p class="auth-descripcion">Completá tus datos para empezar a explorar Salto.</p>
 
+                <?php if ($errorCaptcha) { ?>
+                    <div class="auth-error" role="alert">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        No se pudo validar el captcha. Intentá nuevamente.
+                    </div>
+                <?php } ?>
+
+                <!-- El alta de la cuenta se procesa y valida en el servidor. -->
                 <form class="auth-form" action="guardarusuarios.php" method="POST">
                     <label for="nombre">Nombre completo</label>
                     <div class="auth-campo">
@@ -100,6 +117,15 @@
                         >
                     </div>
 
+                    <?php if ($captchaConfigurado) { ?>
+                        <div class="g-recaptcha" data-sitekey="<?= htmlspecialchars($siteKeyCaptcha, ENT_QUOTES, "UTF-8") ?>"></div>
+                    <?php } else { ?>
+                        <div class="auth-error" role="alert">
+                            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                            Google reCAPTCHA todavía no está configurado para este sitio.
+                        </div>
+                    <?php } ?>
+
                     <button class="auth-submit" type="submit">
                         Crear mi cuenta
                         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -119,5 +145,8 @@
         </section>
     </main>
     <?php include("../includes/chat-widget.php"); ?>
+    <?php if ($captchaConfigurado) { ?>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <?php } ?>
 </body>
 </html>

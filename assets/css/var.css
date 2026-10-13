@@ -1,3 +1,4 @@
+/* Shared typography and color tokens used across site styles. */
 :root {
   --fuente: 'Montserrat', sans-serif;
   --color-principal: rgb(255, 255, 255);

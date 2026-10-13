@@ -8,20 +8,28 @@ if (!isset($_SESSION["id_usuario"])) {
 
 require_once("../conexion.php");
 
+// Centraliza la consulta para cargar el perfil al abrir la página y después de guardarlo.
+function cargarPerfil(mysqli $conexion, int $idUsuario): ?array
+{
+    $stmt = $conexion->prepare(
+        "SELECT u.NOMBRE, u.CORREO, u.CONTRASENA, ut.TELEFONO
+         FROM USUARIO u
+         LEFT JOIN USUARIO_TELEFONO ut ON ut.ID_USUARIO = u.ID_USUARIO
+         WHERE u.ID_USUARIO = ?
+         LIMIT 1"
+    );
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    $perfil = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $perfil ?: null;
+}
+
 $idUsuario = (int) $_SESSION["id_usuario"];
 $error = "";
 $exito = "";
-$stmtPerfil = $conexion->prepare(
-    "SELECT u.NOMBRE, u.CORREO, u.CONTRASENA, ut.TELEFONO
-     FROM USUARIO u
-     LEFT JOIN USUARIO_TELEFONO ut ON ut.ID_USUARIO = u.ID_USUARIO
-     WHERE u.ID_USUARIO = ?
-     LIMIT 1"
-);
-$stmtPerfil->bind_param("i", $idUsuario);
-$stmtPerfil->execute();
-$perfil = $stmtPerfil->get_result()->fetch_assoc();
-$stmtPerfil->close();
+$perfil = cargarPerfil($conexion, $idUsuario);
 
 if (!$perfil) {
     session_destroy();
@@ -33,6 +41,7 @@ if (empty($_SESSION["csrf_perfil"])) {
     $_SESSION["csrf_perfil"] = bin2hex(random_bytes(32));
 }
 
+// Valida el formulario y actualiza los datos solo si el token de sesión coincide.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombre = $_POST["nombre"] ?? "";
     $correo = $_POST["correo"] ?? "";
@@ -140,18 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $_SESSION["nombre"] = $nombre;
                     $_SESSION["correo"] = $correo;
                     $exito = "Tus datos se actualizaron correctamente.";
-
-                    $stmtPerfil = $conexion->prepare(
-                        "SELECT u.NOMBRE, u.CORREO, u.CONTRASENA, ut.TELEFONO
-                         FROM USUARIO u
-                         LEFT JOIN USUARIO_TELEFONO ut ON ut.ID_USUARIO = u.ID_USUARIO
-                         WHERE u.ID_USUARIO = ?
-                         LIMIT 1"
-                    );
-                    $stmtPerfil->bind_param("i", $idUsuario);
-                    $stmtPerfil->execute();
-                    $perfil = $stmtPerfil->get_result()->fetch_assoc();
-                    $stmtPerfil->close();
+                    $perfil = cargarPerfil($conexion, $idUsuario);
                 } catch (mysqli_sql_exception $exception) {
                     $conexion->rollback();
                     error_log("No se pudo actualizar el perfil del usuario: " . $exception->getMessage());
@@ -211,6 +209,7 @@ function escaparPerfil($valor)
                 <div class="perfil-mensaje perfil-mensaje--exito" role="status"><?= escaparPerfil($exito) ?></div>
             <?php endif; ?>
 
+            <!-- Los campos de contraseña se pueden dejar vacíos para mantener la actual. -->
             <form class="perfil-formulario" method="POST" action="perfil.php">
                 <input type="hidden" name="csrf_token" value="<?= escaparPerfil($_SESSION["csrf_perfil"]) ?>">
 

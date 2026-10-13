@@ -3,13 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonAbrir = document.getElementById("boton-chat");
     const botonCerrar = document.getElementById("cerrar-chat");
     const formulario = document.getElementById("chat-input");
+    const botonEnviar = formulario?.querySelector("button");
     const input = document.getElementById("mensaje");
     const mensajes = document.getElementById("chat-mensajes");
 
-    if (!panel || !botonAbrir || !botonCerrar || !formulario || !input || !mensajes) {
+    if (!panel || !botonAbrir || !botonCerrar || !formulario || !botonEnviar || !input || !mensajes) {
         return;
     }
 
+    // Mantiene sincronizados el estado visible del panel y los controles accesibles.
     function alternarChat(abierto) {
         panel.classList.toggle("chat-abierto", abierto);
         panel.setAttribute("aria-hidden", String(!abierto));
@@ -39,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Envía el mensaje y muestra la respuesta o un error comprensible.
     formulario.addEventListener("submit", async evento => {
         evento.preventDefault();
         const texto = input.value.trim();
@@ -50,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         agregarMensaje(texto, "usuario");
         input.value = "";
         input.disabled = true;
-        formulario.querySelector("button").disabled = true;
+        botonEnviar.disabled = true;
 
         const cargando = document.createElement("div");
         cargando.classList.add("mensaje", "bot");
@@ -83,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             cargando.remove();
             input.disabled = false;
-            formulario.querySelector("button").disabled = false;
+            botonEnviar.disabled = false;
             input.focus();
         }
     });

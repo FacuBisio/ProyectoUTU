@@ -11,6 +11,6 @@ Tecnologías utilizadas:
 - JavaScript
 - PHP
 
+El inicio de sesión y el registro utilizan Google reCAPTCHA v2 (casilla). Registrá el dominio en la consola de Google reCAPTCHA y configurá `RECAPTCHA_SITE_KEY` y `RECAPTCHA_SECRET_KEY` como variables de entorno de Apache/PHP (en XAMPP, podés definirlas con `SetEnv` en la configuración de Apache y reiniciarlo). La clave secreta se usa solo en el servidor y no debe publicarse. También debe estar habilitada la extensión PHP cURL.
+
 "Descubrí los mejores lugares, experiencias y sabores de Salto."
-
-

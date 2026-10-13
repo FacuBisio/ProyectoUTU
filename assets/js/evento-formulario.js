@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonLimpiarUbicacion = document.querySelector("#limpiar-ubicacion-evento");
     const contenedorMapa = document.querySelector("#mapaEvento");
 
+    // Permite marcar un punto en el mapa o quitar la ubicación seleccionada.
     if (contenedorMapa && window.L) {
         const mapa = L.map(contenedorMapa).setView([-31.3833, -57.9667], 13);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -60,6 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const inputImagen = document.querySelector("#evento-imagen");
+
+    // Valida ubicación y tamaño de imagen antes de enviar el formulario.
     formulario.addEventListener("submit", evento => {
         const puntoParcial = Boolean(latitud.value) !== Boolean(longitud.value);
         if (puntoParcial || (!direccion.value.trim() && (!latitud.value || !longitud.value))) {
@@ -71,15 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const archivo = document.querySelector("#evento-imagen").files[0];
+        const archivo = inputImagen.files[0];
         if (archivo && archivo.size > 5 * 1024 * 1024) {
             evento.preventDefault();
             window.alert("La imagen de portada debe pesar como máximo 5 MB.");
-            document.querySelector("#evento-imagen").focus();
+            inputImagen.focus();
         }
     });
 
-    const inputImagen = document.querySelector("#evento-imagen");
+    // Crea una vista previa y libera su URL temporal al cambiarla o quitarla.
     const preview = document.querySelector("#evento-imagen-preview");
     const imagenPreview = document.querySelector("#evento-imagen-preview-img");
     const botonQuitarImagen = document.querySelector("#quitar-imagen-evento");

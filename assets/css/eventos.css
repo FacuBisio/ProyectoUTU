@@ -1,3 +1,4 @@
+/* Events page hero and three-column content layout. */
 .eventos-pagina {
     min-height: 100vh;
     padding-bottom: 80px;
@@ -86,6 +87,7 @@
     font-size: 9rem;
 }
 
+/* Side information cards and the central events feed. */
 .eventos-layout {
     display: grid;
     width: min(1180px, calc(100% - 40px));
@@ -217,6 +219,7 @@
     line-height: 1.5;
 }
 
+/* Form fields, location map, and cover-image preview. */
 .evento-formulario {
     display: grid;
     gap: 9px;
@@ -464,6 +467,7 @@
     color: #fff;
 }
 
+/* Published event cards and their location details. */
 .evento-post {
     scroll-margin-top: 115px;
 }
@@ -579,6 +583,7 @@
     text-decoration: underline;
 }
 
+/* Reactions, comments, and empty/error states. */
 .evento-reacciones {
     display: flex;
     align-items: center;
@@ -737,6 +742,7 @@
     clip-path: inset(50%);
 }
 
+/* Dark-theme colors for event cards, forms, and controls. */
 html[data-tema="oscuro"] .eventos-pagina {
     background: #17231e;
 }
@@ -791,6 +797,7 @@ html[data-tema="oscuro"] .evento-reaccion--activa {
     color: #b8ebc7;
 }
 
+/* Collapse the side columns and adapt controls on small screens. */
 @media (max-width: 1050px) {
     .eventos-layout {
         grid-template-columns: minmax(0, 680px);

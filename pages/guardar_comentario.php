@@ -4,6 +4,7 @@ session_start();
 require_once("../config/config.php");
 require_once("../conexion.php");
 
+// Redirige solo a rutas locales del proyecto para evitar destinos externos.
 function volverAComentarios($ruta)
 {
     if (!is_string($ruta)) {
@@ -28,6 +29,7 @@ function volverAComentarios($ruta)
 
 $destino = $_POST['return_to'] ?? BASE_URL;
 
+// Rechaza métodos, sesiones y tokens que no correspondan al formulario.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     header('Allow: POST');
@@ -55,6 +57,7 @@ if (
     volverAComentarios($destino);
 }
 
+// Normaliza y limita el texto antes de guardarlo.
 $textoEnviado = $_POST['comentario'] ?? '';
 if (!is_string($textoEnviado)) {
     $_SESSION['flash_comentario'] = [
@@ -82,6 +85,7 @@ if ($longitud === 0 || $longitud > 2000) {
     volverAComentarios($destino);
 }
 
+// Persiste el comentario y devuelve un mensaje de resultado a la página de origen.
 try {
     $stmt = $conexion->prepare(
         "INSERT INTO COMENTARIO (ID_USUARIO, COMENTARIO) VALUES (?, ?)"

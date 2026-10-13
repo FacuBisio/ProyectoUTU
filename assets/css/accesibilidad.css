@@ -1,3 +1,4 @@
+/* User-account menu layout and keyboard focus indicators. */
 .menu-usuario {
     position: relative;
     flex: 0 0 auto;
@@ -104,6 +105,7 @@
     background: #e7ece8;
 }
 
+/* In-menu switches and controls for adjustable text size. */
 .accesibilidad-controles {
     padding: 0 8px 4px;
 }
@@ -206,6 +208,7 @@
     background: #eaf5ed;
 }
 
+/* Site-wide color overrides for dark theme and high contrast. */
 html[data-tema="oscuro"] {
     color-scheme: dark;
 }

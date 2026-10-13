@@ -1,3 +1,4 @@
+/* Slide frame and caption overlay. */
 .slider-container{
     position: relative;
     max-width: 1200px;
@@ -44,6 +45,7 @@
     line-height: 1.5;
 }
 
+/* Previous/next controls and slide-position indicators. */
 .slider-btn{
     position: absolute;
     top: 50%;

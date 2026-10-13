@@ -1,7 +1,12 @@
 <?php
+// Inicializa el CAPTCHA y los mensajes que se muestran al volver de un intento fallido.
 session_start();
+require_once("../includes/captcha.php");
 
 $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
+$errorCaptcha = ($_GET['error'] ?? '') === 'captcha';
+$siteKeyCaptcha = recaptcha_site_key();
+$captchaConfigurado = recaptcha_configurado();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,7 +16,7 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
     <meta name="theme-color" content="#123c30">
     <title>Iniciar sesión | GoSalto</title>
     <link rel="stylesheet" href="../assets/css/var.css">
-    <link rel="stylesheet" href="../assets/css/login.css?v=3">
+    <link rel="stylesheet" href="../assets/css/login.css?v=5">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
@@ -56,8 +61,14 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
                         <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
                         El correo o la contraseña no son correctos. Revisalos e intentá nuevamente.
                     </div>
+                <?php } elseif ($errorCaptcha) { ?>
+                    <div class="auth-error" role="alert">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        No se pudo validar el captcha. Intentá nuevamente.
+                    </div>
                 <?php } ?>
 
+                <!-- El servidor valida tanto las credenciales como el token de Google. -->
                 <form class="auth-form" action="verificacionusuario.php" method="POST">
                     <label for="correo">Correo electrónico</label>
                     <div class="auth-campo">
@@ -85,6 +96,15 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
                         >
                     </div>
 
+                    <?php if ($captchaConfigurado) { ?>
+                        <div class="g-recaptcha" data-sitekey="<?= htmlspecialchars($siteKeyCaptcha, ENT_QUOTES, "UTF-8") ?>"></div>
+                    <?php } else { ?>
+                        <div class="auth-error" role="alert">
+                            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                            Google reCAPTCHA todavía no está configurado para este sitio.
+                        </div>
+                    <?php } ?>
+
                     <button class="auth-submit" type="submit">
                         Entrar a mi cuenta
                         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -104,5 +124,8 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
         </section>
     </main>
     <?php include("../includes/chat-widget.php"); ?>
+    <?php if ($captchaConfigurado) { ?>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <?php } ?>
 </body>
 </html>

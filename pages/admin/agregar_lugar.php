@@ -16,6 +16,7 @@ $categorias = $conexion->query(
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Guarda el lugar y vincula su categoría elegida.
     $nombre = $_POST["nombre"];
     $descripcion = $_POST["descripcion"];
     $direccion = $_POST["direccion"];

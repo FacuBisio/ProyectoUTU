@@ -1,8 +1,8 @@
 const API_KEY = "8d0ad8180d7dea9356b595b7f6bd1f62";
 const CIUDAD = "Salto,UY";
 
+// Consulta y muestra el clima; informa si la solicitud no puede completarse.
 async function cargarClima() {
-
     try {
 
         const respuesta = await fetch(
@@ -10,14 +10,13 @@ async function cargarClima() {
         );
 
         const datos = await respuesta.json();
+        const elementoClima = document.getElementById("clima");
 
-        document.getElementById("clima").innerHTML =
-            `🌤 ${Math.round(datos.main.temp)}°C | 💧 ${datos.main.humidity}%`;
+        elementoClima.textContent = `🌤 ${Math.round(datos.main.temp)}°C | 💧 ${datos.main.humidity}%`;
 
     } catch (error) {
 
-        document.getElementById("clima").innerHTML =
-            "Clima no disponible";
+        document.getElementById("clima").textContent = "Clima no disponible";
 
         console.error(error);
 
@@ -25,7 +24,6 @@ async function cargarClima() {
 
 }
 
+// Carga el valor inicial y lo refresca cada diez minutos.
 cargarClima();
-
-// Actualiza cada 10 minutos
 setInterval(cargarClima, 600000);

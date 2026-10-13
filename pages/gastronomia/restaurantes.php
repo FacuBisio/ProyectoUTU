@@ -13,6 +13,8 @@ $sql = "SELECT
         WHERE LUGAR_CATEGORIA.ID_CATEGORIA = 7";
 
 $resultado = $conexion->query($sql);
+// Reuse the same records for the slider and its pagination dots.
+$lugares = $resultado->fetch_all(MYSQLI_ASSOC);
 $mapaCategorias = [7];
 $mapaTitulo = "Ubicación de restaurantes";
 $mapaDescripcion = "Encontrá restaurantes y propuestas para disfrutar la gastronomía de Salto.";
@@ -25,12 +27,12 @@ $mapaDescripcion = "Encontrá restaurantes y propuestas para disfrutar la gastro
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurantes</title>
 
-    <link rel="stylesheet" href="<?php echo '../../assets/css/var.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/styles.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/componentes.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/style-secciones.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/slider.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/comments.css?v=3'; ?>">
+    <link rel="stylesheet" href="../../assets/css/var.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/componentes.css">
+    <link rel="stylesheet" href="../../assets/css/style-secciones.css">
+    <link rel="stylesheet" href="../../assets/css/slider.css">
+    <link rel="stylesheet" href="../../assets/css/comments.css?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -47,13 +49,9 @@ $mapaDescripcion = "Encontrá restaurantes y propuestas para disfrutar la gastro
 
     <button class="slider-btn prev">❮</button>
 
-    <?php
-    $primero = true;
+    <?php foreach ($lugares as $indice => $lugar) { ?>
 
-    while ($lugar = $resultado->fetch_assoc()) {
-    ?>
-
-        <div class="slide <?php echo $primero ? 'active' : ''; ?>">
+        <div class="slide <?php echo $indice === 0 ? 'active' : ''; ?>">
 
             <img 
                 src="../../<?php echo htmlspecialchars($lugar['IMAGEN']); ?>" 
@@ -79,29 +77,15 @@ $mapaDescripcion = "Encontrá restaurantes y propuestas para disfrutar la gastro
 
         </div>
 
-    <?php
-        $primero = false;
-    }
-    ?>
+    <?php } ?>
 
     <button class="slider-btn next">❯</button>
 
     <div class="slider-dots">
 
-        <?php
-        $resultado->data_seek(0);
-
-        $primer_dot = true;
-
-        while ($lugar = $resultado->fetch_assoc()) {
-        ?>
-
-            <span class="dot <?php echo $primer_dot ? 'active' : ''; ?>"></span>
-
-        <?php
-            $primer_dot = false;
-        }
-        ?>
+        <?php foreach ($lugares as $indice => $lugar) { ?>
+            <span class="dot <?php echo $indice === 0 ? 'active' : ''; ?>"></span>
+        <?php } ?>
 
     </div>
 

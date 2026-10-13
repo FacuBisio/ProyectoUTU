@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . "/../conexion.php");
 
+// Acepta categorías o lugares concretos y descarta identificadores no válidos.
 if (!empty($mapaLugarIds) && is_array($mapaLugarIds)) {
     $filtroMapa = array_values(array_unique(array_filter(
         array_map("intval", $mapaLugarIds),
@@ -26,6 +27,7 @@ if (!$filtroMapa) {
 }
 
 $filtroMapaSql = implode(",", $filtroMapa);
+// Los filtros son enteros validados antes de incluirlos en esta consulta.
 $consultaMapa = $conexion->query(
     "SELECT
         l.ID_LUGAR,
@@ -45,6 +47,7 @@ $consultaMapa = $conexion->query(
 );
 
 $ubicacionesMapa = [];
+// Excluye coordenadas inválidas para que no rompan la visualización del mapa.
 while ($lugarMapa = $consultaMapa->fetch_assoc()) {
     if (
         !is_numeric($lugarMapa["LATITUD"])
@@ -79,6 +82,7 @@ $descripcionMapaSegura = htmlspecialchars(
     "UTF-8"
 );
 ?>
+<!-- El mapa muestra únicamente lugares con coordenadas válidas. -->
 <section class="mapa-parques mapa-lugares" aria-labelledby="tituloMapaCategoria">
     <h2 id="tituloMapaCategoria"><?= $tituloMapaSeguro ?></h2>
     <p><?= $descripcionMapaSegura ?></p>
@@ -90,6 +94,7 @@ $descripcionMapaSegura = htmlspecialchars(
     </div>
 </section>
 <script>
+// Construye el mapa, sus marcadores y los enlaces para obtener indicaciones.
 document.addEventListener("DOMContentLoaded", () => {
     const ubicaciones = <?= $ubicacionesJson ?>;
     const elementoMapa = document.getElementById("mapaCategoria");

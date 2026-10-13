@@ -126,6 +126,7 @@ body.auth-page {
     font-family: var(--fuente, "Montserrat"), sans-serif;
 }
 
+/* Split access-page layout: presentation panel beside the form. */
 .auth-layout {
     display: grid;
     width: min(1180px, calc(100% - 48px));
@@ -319,6 +320,7 @@ body.auth-page {
     margin-top: 2px;
 }
 
+/* Access-form fields, validation feedback, and submit controls. */
 .auth-form label {
     display: block;
     margin: 0 0 8px;
@@ -428,6 +430,7 @@ body.auth-page {
     color: #34825e;
 }
 
+/* Stack the access panels on smaller screens. */
 @media (max-width: 860px) {
     .auth-layout {
         width: min(560px, calc(100% - 32px));

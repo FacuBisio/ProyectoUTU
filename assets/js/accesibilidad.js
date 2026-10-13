@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         altoContraste: false,
         escalaTexto: 100
     };
+
+    // Recupera preferencias válidas; si falla el almacenamiento, conserva los valores iniciales.
     let preferencias = { ...valoresIniciales };
 
     try {
@@ -44,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Aplica las preferencias visuales y sincroniza los controles accesibles.
     function actualizarInterfaz() {
         root.dataset.tema = preferencias.temaOscuro ? "oscuro" : "claro";
         root.dataset.altoContraste = String(preferencias.altoContraste);
@@ -56,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         controles.aumentarTexto.disabled = preferencias.escalaTexto >= 130;
     }
 
+    // Gestiona apertura, cierre y navegación por teclado del menú.
     function alternarMenu(abierto) {
         menu.hidden = !abierto;
         menuBoton.setAttribute("aria-expanded", String(abierto));
@@ -112,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Cada control actualiza la preferencia correspondiente y la persiste.
     controles.tema.addEventListener("click", () => {
         preferencias.temaOscuro = !preferencias.temaOscuro;
         actualizarInterfaz();

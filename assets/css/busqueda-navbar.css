@@ -1,3 +1,4 @@
+/* Compact navigation search field and submit control. */
 .nav-extra .buscador {
     position: relative;
     z-index: 2100;
@@ -64,6 +65,7 @@
     background: rgba(255, 255, 255, 0.16);
 }
 
+/* Live result dropdown and its selectable suggestions. */
 .nav-extra .buscador-sugerencias {
     position: absolute;
     top: calc(100% + 10px);
@@ -162,6 +164,7 @@
     outline-offset: 2px;
 }
 
+/* Theme variants and width adjustments for the search dropdown. */
 html[data-tema="oscuro"] .nav-extra .buscador-sugerencias {
     border-color: #34483d;
     background: #202f28;

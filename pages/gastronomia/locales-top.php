@@ -10,11 +10,11 @@ $mapaDescripcion = "Explorá restaurantes, cafeterías, heladerías y opciones a
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Locales Top</title>
     
-    <link rel="stylesheet" href="<?php echo '../../assets/css/var.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/styles.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/componentes.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/style-secciones.css'; ?>">
-    <link rel="stylesheet" href="<?php echo '../../assets/css/slider.css'; ?>"> 
+    <link rel="stylesheet" href="../../assets/css/var.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/componentes.css">
+    <link rel="stylesheet" href="../../assets/css/style-secciones.css">
+    <link rel="stylesheet" href="../../assets/css/slider.css">
     <link rel="stylesheet" href="../../assets/css/comments.css?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">

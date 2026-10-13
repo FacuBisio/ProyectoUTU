@@ -1,10 +1,12 @@
 <?php
+// Evita insertar dos veces el chat cuando varios componentes lo incluyen.
 if (defined("GOSALTO_CHAT_WIDGET_INCLUDED")) {
     return;
 }
 define("GOSALTO_CHAT_WIDGET_INCLUDED", true);
 require_once(__DIR__ . "/../config/config.php");
 ?>
+<!-- Widget común conectado al endpoint del asistente turístico. -->
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/chatbot.css?v=4'), ENT_QUOTES, 'UTF-8') ?>">
 
 <section id="chatbot" data-endpoint="<?= htmlspecialchars(url('api/chatbot.php'), ENT_QUOTES, 'UTF-8') ?>" aria-label="Asistente de GoSalto" aria-hidden="true">
