@@ -44,7 +44,9 @@
 }
 
 .btn-principal {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     background: white;
     color: black;
     text-decoration: none;
@@ -58,6 +60,11 @@
 .btn-principal:hover {
     background: #ddd;
     transform: scale(1.05);
+}
+
+.btn-principal:focus-visible {
+    outline: 3px solid #76d7ae;
+    outline-offset: 4px;
 }
 
 /* =========================

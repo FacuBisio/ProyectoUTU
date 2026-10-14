@@ -24,8 +24,8 @@ require_once(__DIR__ . "/../config/config.php");
         <div class="nav-links">
 
             <!-- Enlaces de navegación agrupados por tipo de contenido. -->
-            <a class="link-btn" href="<?= url('index.php') ?>">
-                Inicio
+            <a class="link-btn" href="<?= htmlspecialchars(url('pages/acerca-de.php'), ENT_QUOTES, 'UTF-8') ?>">
+                Nosotros
             </a>
 
             <div class="dropdown">
@@ -208,7 +208,7 @@ require_once(__DIR__ . "/../config/config.php");
                             <span class="menu-usuario-avatar" aria-hidden="true"><i class="fa-regular fa-user"></i></span>
                             <div>
                                 <strong>Hola, visitante</strong>
-                                <span>Accedé a tu cuenta</span>
+                                <span>Accede a tu cuenta</span>
                             </div>
                         </div>
                         <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/login.php'), ENT_QUOTES, 'UTF-8') ?>">Iniciar sesión</a>

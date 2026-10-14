@@ -40,6 +40,10 @@
             momentos únicos e inolvidables.
         </p>
 
+        <a class="btn-principal" href="pages/salto.php">
+            Ver más <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+
     </div>
 
 </section>

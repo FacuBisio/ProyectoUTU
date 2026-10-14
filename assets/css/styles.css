@@ -61,10 +61,6 @@ main {
 
 @media (max-width: 1024px) {
 
-    .navbar-container {
-        grid-template-columns: 1fr 2fr 1fr;
-    }
-
     .contenido-principal h1 {
         font-size: 46px;
     }
