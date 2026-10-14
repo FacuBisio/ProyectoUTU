@@ -44,7 +44,7 @@ try {
     <!-- El formulario solo está disponible para usuarios autenticados. -->
     <div class="comentarios-contenido">
         <div class="comentario-formulario">
-            <h3>Compartí tu experiencia</h3>
+            <h3>Comparte tu experiencia</h3>
 
             <?php if (isset($_SESSION['id_usuario'])) { ?>
                 <p class="comentario-sesion">
@@ -70,7 +70,7 @@ try {
                     </div>
                 </form>
             <?php } else { ?>
-                <p>Iniciá sesión para compartir tu experiencia con la comunidad.</p>
+                <p>Inicie sesión para compartir su experiencia con la comunidad.</p>
                 <div class="comentario-acceso">
                     <a href="<?= htmlspecialchars(url('pages/login.php'), ENT_QUOTES, 'UTF-8') ?>">Iniciar sesión</a>
                     <a href="<?= htmlspecialchars(url('pages/register.php'), ENT_QUOTES, 'UTF-8') ?>">Crear cuenta</a>

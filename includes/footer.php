@@ -9,7 +9,7 @@
             <h2>SIGTUR</h2>
 
             <p>
-                Descubrí los mejores lugares, experiencias y sabores de Salto.
+                Descubre los mejores lugares, experiencias y sabores de Salto.
             </p>
 
         </div>

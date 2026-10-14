@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Descubrí qué hacer en Salto, Uruguay: termas, paisajes, parques, cultura, eventos y gastronomía local. Planificá tu próxima visita con GoSalto.">
+    <meta name="description" content="Descubre qué hacer en Salto, Uruguay: termas, paisajes, parques, cultura, eventos y gastronomía local. Planifica tu próxima visita con GoSalto.">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_UY">
     <meta property="og:site_name" content="GoSalto">
     <meta property="og:title" content="GoSalto | Turismo, termas y experiencias en Salto, Uruguay">
-    <meta property="og:description" content="Explorá termas, naturaleza, cultura, eventos y gastronomía de Salto, Uruguay.">
+    <meta property="og:description" content="Explora termas, naturaleza, cultura, eventos y gastronomía de Salto, Uruguay.">
     <title>GoSalto | Turismo, termas y experiencias en Salto, Uruguay</title>
 
     <link rel="stylesheet" href="assets/css/componentes.css">
@@ -35,14 +35,10 @@
         <h1>DESCUBRE SALTO</h1>
 
         <p class="texto-salto">
-            Vení a conocer Salto, una ciudad donde la naturaleza,
+            Ven a conocer Salto, una ciudad donde la naturaleza,
             las termas y la tranquilidad te esperan para vivir
             momentos únicos e inolvidables.
         </p>
-
-        <a href="#segunda-seccion" class="empresa-btn">
-            Mostrar más
-        </a>
 
     </div>
 
@@ -57,41 +53,41 @@
 
     <div class="cards-container">
 
-        <a class="card" href="pages/lugares/termas.php">
+        <div class="card" aria-label="Lugares">
 
-            <img src="assets/img/termas.jpeg" alt="Termas">
+            <img src="assets/img/fuente-naturaleza.jpeg" alt="Lugares de Salto">
 
-            <h3>Termas</h3>
-
-            <p>
-                Relajate en las mejores aguas termales y disfrutá momentos únicos.
-            </p>
-
-        </a>
-
-        <a class="card" href="pages/lugares/paisajes.php">
-
-            <img src="assets/img/fuente-naturaleza.jpeg" alt="Naturaleza">
-
-            <h3>Naturaleza</h3>
+            <h3>Lugares</h3>
 
             <p>
-                Descubrí paisajes increíbles, parques y actividades al aire libre.
+                Descubre paisajes, parques, patrimonio y experiencias para recorrer en Salto.
             </p>
 
-        </a>
+        </div>
 
-        <a class="card" href="pages/gastronomia/locales-top.php">
+        <div class="card" aria-label="Eventos">
 
-            <img src="assets/img/trouville.jpeg" alt="Gastronomía">
+            <img src="assets/img/Ocio/porco.jpg" alt="Eventos en Salto">
+
+            <h3>Eventos</h3>
+
+            <p>
+                Mira lo que pasa en la ciudad y encuentra actividades, reuniones y propuestas para vivir.
+            </p>
+
+        </div>
+
+        <div class="card" aria-label="Gastronomía">
+
+            <img src="assets/img/trouville.jpeg" alt="Gastronomía en Salto">
 
             <h3>Gastronomía</h3>
 
             <p>
-                Probá sabores locales y experiencias gastronómicas inolvidables.
+                Prueba sabores locales, cafés, helados y lugares con identidad para disfrutar.
             </p>
 
-        </a>
+        </div>
 
     </div>
 
@@ -112,16 +108,12 @@
             <h2>GoSalto</h2>
 
             <p>
-                GoSalto es una empresa turística ficticia nacida en Salto, impulsada por un equipo apasionado por la hospitalidad y la identidad del litoral. Diseñamos recorridos y experiencias para que cada visitante pueda conocer la ciudad desde su naturaleza, su cultura y su vida cotidiana.
+                GoSalto es una empresa de desarrollo web nacida en Salto, Uruguay, impulsada por un equipo de estudiantes y jóvenes emprendedores con ganas de crear cosas útiles, claras y bien hechas. Diseñamos páginas web y experiencias digitales para que proyectos, negocios y comunidades puedan mostrarse con identidad y presencia en línea.
             </p>
 
             <p>
-                Trabajamos junto a emprendimientos y comunidades locales para promover un turismo cercano, responsable y sostenible, creando oportunidades para que los atractivos y sabores de Salto sean protagonistas durante todo el año.
+                Trabajamos de forma cercana y práctica, combinando diseño, contenido y desarrollo para crear soluciones funcionales, modernas y pensadas para conectar con la gente. En otras palabras: hacemos que la idea de cada emprendimiento se vea bien y funcione en la web.
             </p>
-
-            <a href="#seccion-principal" class="empresa-btn">
-                Descubrir Salto
-            </a>
 
         </div>
 
