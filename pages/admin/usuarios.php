@@ -26,6 +26,7 @@ $sql = "SELECT usuario.id_usuario,
 $resultado = $conexion->query($sql);
 $cantidadUsuarios = (int) $resultado->num_rows;
 $idAdministradorActual = (int) $_SESSION["id_usuario"];
+$errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "") === "rol_no_valido";
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +64,13 @@ $idAdministradorActual = (int) $_SESSION["id_usuario"];
             </div>
         </section>
 
+        <?php if ($errorRol) { ?>
+            <div class="auth-error" role="alert" style="margin: 0 0 1rem;">
+                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                No podés asignar ni quitar el rol de administrador entre cuentas administrativas. Solo podés dejar a los usuarios como Organizador o Usuario.
+            </div>
+        <?php } ?>
+
         <section class="admin-crud-tabla-card" aria-labelledby="titulo-listado">
             <div class="admin-crud-tabla-encabezado">
                 <div>
@@ -90,10 +98,13 @@ $idAdministradorActual = (int) $_SESSION["id_usuario"];
                                 <?php
                                 $idUsuario = (int) $fila["id_usuario"];
                                 $esUsuarioActual = $idUsuario === $idAdministradorActual;
+                                $rolActual = (int) $fila["id_rol"];
+                                $esAdministrador = $rolActual === 1;
+                                $permiteEditarRol = !$esUsuarioActual && !$esAdministrador;
                                 $claseRol = "usuario";
-                                if ((int) $fila["id_rol"] === 1) {
+                                if ($rolActual === 1) {
                                     $claseRol = "administrador";
-                                } elseif ((int) $fila["id_rol"] === 2) {
+                                } elseif ($rolActual === 2) {
                                     $claseRol = "organizador";
                                 }
                                 ?>
@@ -108,17 +119,20 @@ $idAdministradorActual = (int) $_SESSION["id_usuario"];
                                     <td><span class="admin-crud-rol <?= $claseRol ?>"><?= htmlspecialchars($fila["rol"], ENT_QUOTES, "UTF-8") ?></span></td>
                                     <td>
                                         <div class="admin-crud-acciones admin-crud-acciones--usuario">
-                                            <form class="admin-crud-rol-form" action="cambiar_rol.php" method="POST">
-                                                <input type="hidden" name="id_usuario" value="<?= $idUsuario ?>">
-                                                <label class="admin-crud-sr-only" for="rol-<?= $idUsuario ?>">Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?></label>
-                                                <select id="rol-<?= $idUsuario ?>" name="id_rol" aria-label="Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?>">
-                                                    <option value="1" <?= (int) $fila["id_rol"] === 1 ? "selected" : "" ?>>Administrador</option>
-                                                    <option value="2" <?= (int) $fila["id_rol"] === 2 ? "selected" : "" ?>>Organizador</option>
-                                                    <option value="3" <?= (int) $fila["id_rol"] === 3 ? "selected" : "" ?>>Usuario</option>
-                                                </select>
-                                                <button class="admin-crud-accion editar" type="submit">Guardar rol</button>
-                                            </form>
-                                            <?php if (!$esUsuarioActual): ?>
+                                            <?php if ($permiteEditarRol): ?>
+                                                <form class="admin-crud-rol-form" action="cambiar_rol.php" method="POST">
+                                                    <input type="hidden" name="id_usuario" value="<?= $idUsuario ?>">
+                                                    <label class="admin-crud-sr-only" for="rol-<?= $idUsuario ?>">Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?></label>
+                                                    <select id="rol-<?= $idUsuario ?>" name="id_rol" aria-label="Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?>">
+                                                        <option value="2" <?= $rolActual === 2 ? "selected" : "" ?>>Organizador</option>
+                                                        <option value="3" <?= $rolActual === 3 ? "selected" : "" ?>>Usuario</option>
+                                                    </select>
+                                                    <button class="admin-crud-accion editar" type="submit">Guardar rol</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="admin-crud-rol admin-crud-rol--protegido"><?= $esUsuarioActual ? "Tu cuenta" : "Protegido" ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!$esUsuarioActual && !$esAdministrador): ?>
                                                 <a class="admin-crud-accion eliminar" href="eliminar_usuario.php?id=<?= $idUsuario ?>" onclick="return confirm('¿Seguro que quieres eliminar a <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?>?')">Eliminar</a>
                                             <?php endif; ?>
                                         </div>

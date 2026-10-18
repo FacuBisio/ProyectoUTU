@@ -2,18 +2,10 @@
 
 session_start();
 
-require_once("../includes/captcha.php");
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     header("Allow: POST");
     exit("Método no permitido.");
-}
-
-$respuestaCaptcha = $_POST["g-recaptcha-response"] ?? null;
-if (!recaptcha_validar($respuestaCaptcha)) {
-    header("Location: register.php?error=captcha");
-    exit();
 }
 
 require_once("../conexion.php");

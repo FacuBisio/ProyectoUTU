@@ -38,6 +38,15 @@
 
             </div>
 
+            <div>
+
+                <h3>Contacto</h3>
+
+                <a href="tel:091883401">091883401</a>
+                <a href="mailto:sigtur@gmail.com">sigtur@gmail.com</a>
+
+            </div>
+
         </div>
 
     </div>

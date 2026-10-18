@@ -5,23 +5,32 @@ session_start();
 require_once("../../conexion.php");
 
 
-if (!isset($_SESSION["id_usuario"]) || $_SESSION["id_rol"] != 1) {
-
-    die("Acceso denegado");
-
+if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
+    http_response_code(403);
+    exit("Acceso denegado.");
 }
 
+$id_usuario = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
-$id_usuario = $_GET["id"];
-
-
-// Evitar eliminarse a sí mismo
-if ($id_usuario == $_SESSION["id_usuario"]) {
-
-    die("No puedes eliminar tu propio usuario.");
-
+if ($id_usuario === false || $id_usuario === null) {
+    header("Location: usuarios.php?error=usuario_no_valido");
+    exit();
 }
 
+if ((int) $id_usuario === (int) $_SESSION["id_usuario"]) {
+    header("Location: usuarios.php?error=auto_eliminacion");
+    exit();
+}
+
+$consultaRol = $conexion->prepare("SELECT id_rol FROM usuario WHERE id_usuario = ? LIMIT 1");
+$consultaRol->bind_param("i", $id_usuario);
+$consultaRol->execute();
+$resultadoRol = $consultaRol->get_result()->fetch_assoc();
+
+if (!$resultadoRol || (int) $resultadoRol["id_rol"] === 1) {
+    header("Location: usuarios.php?error=rol_protegido");
+    exit();
+}
 
 // Elimina las dependencias antes que la cuenta para conservar la integridad referencial.
 $conexion->begin_transaction();

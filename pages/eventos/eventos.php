@@ -557,9 +557,9 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
 
             <aside class="eventos-lateral eventos-lateral--derecha">
                 <div class="eventos-lateral-tarjeta">
-                    <h2>Una comunidad que se mueve</h2>
-                    <p>Encontrá una idea para hoy, descubrí un nuevo rincón o invitá a otros a tu próximo plan.</p>
-                    <a href="#publicar">Compartir un plan <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    <h2>Información de contacto</h2>
+                    <p>Si querés comunicarte con la comunidad o consultar detalles, podés escribirnos por estos medios.</p>
+                    <a href="contacto-organizadores.php" class="admin-crud-accion editar" style="display:inline-flex; margin-top:0.5rem;">Contactar a los organizadores <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </aside>
         </div>
