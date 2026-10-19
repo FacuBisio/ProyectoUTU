@@ -59,7 +59,7 @@ $resultado = $conexion->query($sql);
             <div>
                 <p class="admin-crud-etiqueta">Contenido de GoSalto</p>
                 <h1>Administrar lugares</h1>
-                <p>Organizá los destinos que la comunidad puede descubrir en Salto.</p>
+                <p>Organiza los destinos que la comunidad puede descubrir en Salto.</p>
             </div>
             <a class="admin-crud-boton-principal" href="agregar_lugar.php"><span aria-hidden="true">＋</span> Agregar lugar</a>
         </section>
@@ -85,7 +85,7 @@ $resultado = $conexion->query($sql);
                     </thead>
                     <tbody>
                         <?php if ($resultado->num_rows === 0): ?>
-                            <tr><td class="admin-crud-vacio" colspan="4">Todavía no hay lugares publicados. Agregá el primero para empezar.</td></tr>
+                            <tr><td class="admin-crud-vacio" colspan="4">Todavía no hay lugares publicados. Añade el primero para empezar.</td></tr>
                         <?php else: ?>
                             <?php while ($lugar = $resultado->fetch_assoc()): ?>
                                 <tr>

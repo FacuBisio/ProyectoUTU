@@ -9,7 +9,7 @@ $datos = [
     "messages" => [
         [
             "role" => "system",
-            "content" => "Sos el asistente virtual de GoSalto.
+            "content" => "            Eres el asistente virtual de GoSalto.
 
 GoSalto es una página turística sobre Salto, Uruguay.
 
@@ -24,12 +24,12 @@ museos,
 patrimonio
 y lugares turísticos de Salto.
 
-Respondé siempre en español.
+Responde siempre en español.
 
 Sé amable, claro y breve.
 
 No inventes información.
-Si no conocés un dato, decí que no tenés esa información."
+Si no conoces un dato, indica que no tienes esa información."
         ],
 
         [

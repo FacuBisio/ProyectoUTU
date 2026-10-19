@@ -16,7 +16,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [6];
 $mapaTitulo = "Ubicación de lugares de ocio";
-$mapaDescripcion = "Encontrá espacios de entretenimiento y vida nocturna en Salto.";
+$mapaDescripcion = "Encuentra espacios de entretenimiento y vida nocturna en Salto.";
 
 ?>
 

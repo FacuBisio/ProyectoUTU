@@ -20,7 +20,7 @@ $resultado = $conexion->query($sql);
 $parques = $resultado->fetch_all(MYSQLI_ASSOC);
 $mapaCategorias = [1];
 $mapaTitulo = "Ubicación de los parques";
-$mapaDescripcion = "Explorá la ubicación de los principales parques turísticos de Salto.";
+$mapaDescripcion = "Explora la ubicación de los principales parques turísticos de Salto.";
 
 ?>
 

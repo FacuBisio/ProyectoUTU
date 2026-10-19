@@ -16,7 +16,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [4];
 $mapaTitulo = "Ubicación de museos y espacios de arte";
-$mapaDescripcion = "Explorá dónde encontrar los museos y espacios de arte de Salto.";
+$mapaDescripcion = "Explora los museos y espacios de arte de Salto.";
 
 ?>
 

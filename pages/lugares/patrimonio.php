@@ -16,7 +16,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [3];
 $mapaTitulo = "Ubicación del patrimonio histórico";
-$mapaDescripcion = "Ubicá los edificios históricos y espacios culturales de Salto.";
+$mapaDescripcion = "Ubica los edificios históricos y los espacios culturales de Salto.";
 
 ?>
 

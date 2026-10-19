@@ -18,7 +18,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [8];
 $mapaTitulo = "Ubicación de locales de comida rápida";
-$mapaDescripcion = "Encontrá opciones de comida rápida y al paso en Salto.";
+$mapaDescripcion = "Encuentra opciones de comida rápida y para llevar en Salto.";
 
 ?>
 

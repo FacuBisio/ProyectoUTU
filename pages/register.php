@@ -20,12 +20,12 @@ session_start();
             <span>GoSalto</span>
         </a>
 
-        <section class="auth-presentacion" aria-label="Descubrí Salto">
+        <section class="auth-presentacion" aria-label="Descubre Salto">
             <div class="auth-presentacion-fondo"></div>
             <div class="auth-presentacion-contenido">
-                <span class="auth-etiqueta"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Viví Salto a tu manera</span>
+                <span class="auth-etiqueta"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Vive Salto a tu manera</span>
                 <h1>Todo lo que te gusta de Salto, en un solo lugar.</h1>
-                <p>Creá tu cuenta y empezá a descubrir lugares, experiencias y sabores para disfrutar la ciudad.</p>
+                <p>Crea tu cuenta y comienza a descubrir lugares, experiencias y sabores de la ciudad.</p>
                 <div class="auth-puntos">
                     <span><i class="fa-solid fa-water" aria-hidden="true"></i> Termas únicas</span>
                     <span><i class="fa-solid fa-leaf" aria-hidden="true"></i> Naturaleza cerca</span>
@@ -45,9 +45,9 @@ session_start();
                     <i class="fa-solid fa-user-plus"></i>
                 </div>
 
-                <span class="auth-saludo">Tu próxima aventura empieza acá</span>
+                <span class="auth-saludo">Tu próxima aventura comienza aquí</span>
                 <h2 id="titulo-registro">Crear cuenta</h2>
-                <p class="auth-descripcion">Completá tus datos para empezar a explorar Salto.</p>
+                <p class="auth-descripcion">Completa tus datos para empezar a explorar Salto.</p>
 
                 <form class="auth-form" action="guardarusuarios.php" method="POST">
                     <label for="nombre">Nombre completo</label>
@@ -110,7 +110,7 @@ session_start();
                 </form>
 
                 <p class="auth-registro">
-                    ¿Ya tenés una cuenta?
+                    ¿Ya tienes una cuenta?
                     <a href="login.php">Iniciar sesión</a>
                 </p>
 

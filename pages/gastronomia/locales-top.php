@@ -1,7 +1,7 @@
 <?php
 $mapaCategorias = [7, 8, 9, 10];
 $mapaTitulo = "Ubicación de locales gastronómicos destacados";
-$mapaDescripcion = "Explorá restaurantes, cafeterías, heladerías y opciones al paso de Salto.";
+$mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones para llevar en Salto.";
 ?>
 <!DOCTYPE html>
 <html lang="es">

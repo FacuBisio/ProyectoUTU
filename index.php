@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es-UY">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,7 +76,7 @@
             <h3>Eventos</h3>
 
             <p>
-                Mira lo que pasa en la ciudad y encuentra actividades, reuniones y propuestas para vivir.
+                Descubre qué sucede en la ciudad y encuentra actividades, encuentros y propuestas para disfrutar.
             </p>
 
         </div>
@@ -88,7 +88,7 @@
             <h3>Gastronomía</h3>
 
             <p>
-                Prueba sabores locales, cafés, helados y lugares con identidad para disfrutar.
+                Prueba sabores locales, café, helados y lugares con identidad propia.
             </p>
 
         </div>

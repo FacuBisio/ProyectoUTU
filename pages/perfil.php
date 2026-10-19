@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         || !is_string($token)
         || !hash_equals($_SESSION["csrf_perfil"], $token)
     ) {
-        $error = "No se pudo validar el formulario. Actualizá la página e intentá nuevamente.";
+        $error = "No se pudo validar el formulario. Actualiza la página e inténtalo de nuevo.";
     } else {
         $nombre = trim($nombre);
         $correo = trim($correo);
@@ -75,13 +75,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             || $telefono === ""
             || mb_strlen($telefono, "UTF-8") > 30
         ) {
-            $error = "Revisá el nombre, el correo electrónico y el teléfono ingresados.";
+            $error = "Revisa el nombre, el correo electrónico y el teléfono.";
         } elseif ($nuevaContrasena !== "" && strlen($nuevaContrasena) < 8) {
             $error = "La nueva contraseña debe tener al menos 8 caracteres.";
         } elseif ($nuevaContrasena !== "" && $nuevaContrasena !== $confirmarContrasena) {
             $error = "La nueva contraseña y su confirmación no coinciden.";
         } elseif ($nuevaContrasena !== "" && $contrasenaActual === "") {
-            $error = "Ingresá tu contraseña actual para poder cambiarla.";
+            $error = "Introduce tu contraseña actual para cambiarla.";
         } else {
             $stmtCorreo = $conexion->prepare(
                 "SELECT ID_USUARIO FROM USUARIO WHERE CORREO = ? AND ID_USUARIO <> ? LIMIT 1"
@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 } catch (mysqli_sql_exception $exception) {
                     $conexion->rollback();
                     error_log("No se pudo actualizar el perfil del usuario: " . $exception->getMessage());
-                    $error = "No se pudieron guardar los cambios. Intentá nuevamente.";
+                    $error = "No se pudieron guardar los cambios. Inténtalo de nuevo.";
                     $perfil["NOMBRE"] = $nombre;
                     $perfil["CORREO"] = $correo;
                     $perfil["TELEFONO"] = $telefono;
@@ -198,7 +198,7 @@ function escaparPerfil($valor)
                 <div>
                     <p class="perfil-etiqueta">Tu cuenta GoSalto</p>
                     <h1 id="titulo-perfil">Configurar perfil</h1>
-                    <p>Actualizá tus datos y mantené tu cuenta al día.</p>
+                    <p>Actualiza tus datos y mantén tu cuenta al día.</p>
                 </div>
             </div>
 
@@ -224,7 +224,7 @@ function escaparPerfil($valor)
 
                 <div class="perfil-separador">
                     <h2>Cambiar contraseña</h2>
-                    <p>Dejá estos campos vacíos si no querés cambiarla.</p>
+                    <p>Deja estos campos vacíos si no quieres cambiarla.</p>
                 </div>
 
                 <label for="contrasena_actual">Contraseña actual</label>

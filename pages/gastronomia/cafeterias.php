@@ -18,7 +18,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [10];
 $mapaTitulo = "Ubicación de cafeterías";
-$mapaDescripcion = "Explorá las cafeterías y lugares para compartir algo rico en Salto.";
+$mapaDescripcion = "Explora las cafeterías y los lugares para compartir algo especial en Salto.";
 
 ?>
 

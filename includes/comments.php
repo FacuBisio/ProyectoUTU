@@ -61,7 +61,7 @@ try {
                         name="comentario"
                         maxlength="2000"
                         rows="5"
-                        placeholder="¿Qué te gustó de Salto? Compartí tu recomendación..."
+                        placeholder="¿Qué te gustó de Salto? Comparte tu recomendación..."
                         required
                     ></textarea>
                     <div class="comentario-formulario-pie">
@@ -70,7 +70,7 @@ try {
                     </div>
                 </form>
             <?php } else { ?>
-                <p>Inicie sesión para compartir su experiencia con la comunidad.</p>
+                <p>Inicia sesión para compartir tu experiencia con la comunidad.</p>
                 <div class="comentario-acceso">
                     <a href="<?= htmlspecialchars(url('pages/login.php'), ENT_QUOTES, 'UTF-8') ?>">Iniciar sesión</a>
                     <a href="<?= htmlspecialchars(url('pages/register.php'), ENT_QUOTES, 'UTF-8') ?>">Crear cuenta</a>
@@ -81,7 +81,7 @@ try {
         <!-- Presenta los resultados o un mensaje claro si no hay datos. -->
         <div class="comentarios-lista">
             <?php if ($resultadoComentarios === false) { ?>
-                <p class="comentarios-vacio">No se pudieron cargar los comentarios en este momento. Intentá nuevamente más tarde.</p>
+                <p class="comentarios-vacio">No se pudieron cargar los comentarios en este momento. Inténtalo de nuevo más tarde.</p>
             <?php } elseif ($resultadoComentarios->num_rows === 0) { ?>
                 <p class="comentarios-vacio">Todavía no hay comentarios. ¡Sé la primera persona en compartir su experiencia!</p>
             <?php } else { ?>

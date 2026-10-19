@@ -25,7 +25,7 @@ function normalizarChat($texto)
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Allow: POST");
-    responderChat(["error" => "Enviá tu consulta desde el chat."], 405);
+    responderChat(["error" => "Envía tu consulta desde el chat."], 405);
 }
 
 // Valida el mensaje antes de consultar la base de datos.
@@ -36,7 +36,7 @@ if (!is_string($mensaje)) {
 
 $mensaje = trim($mensaje);
 if ($mensaje === "" || mb_strlen($mensaje, "UTF-8") > 1000) {
-    responderChat(["error" => "Escribí una consulta de hasta 1000 caracteres."], 400);
+    responderChat(["error" => "Escribe una consulta de hasta 1000 caracteres."], 400);
 }
 
 $consulta = normalizarChat($mensaje);
@@ -64,7 +64,7 @@ try {
     }
 } catch (Throwable $error) {
     error_log("No se pudo cargar la información turística del chatbot: " . $error->getMessage());
-    responderChat(["error" => "Ahora no puedo consultar los lugares. Probá de nuevo en unos minutos."], 503);
+    responderChat(["error" => "Ahora no puedo consultar los lugares. Inténtalo de nuevo en unos minutos."], 503);
 }
 
 $categorias = [
@@ -123,7 +123,7 @@ $responderLista = static function ($seleccionados, $introduccion, $ruta) {
         $respuesta .= "\n" . implode("\n", $lineas);
     }
     if ($ruta !== "") {
-        $respuesta .= "\n\nEncontrás más opciones en: " . url($ruta);
+        $respuesta .= "\n\nEncuentras más opciones en: " . url($ruta);
     }
     return $respuesta;
 };
@@ -138,7 +138,7 @@ foreach ($saludos as $saludo) {
 }
 
 if (preg_match('/\b(gracias|muchas gracias|genial|perfecto)\b/', $consulta)) {
-    responderChat(["respuesta" => "¡De nada! Si querés, también puedo recomendarte lugares para visitar, comer o disfrutar de las termas."]);
+    responderChat(["respuesta" => "¡De nada! Si quieres, también puedo recomendarte lugares para visitar, comer o disfrutar de las termas."]);
 }
 
 $lugarEncontrado = null;
@@ -203,7 +203,7 @@ if ($categoriaDetectada !== null) {
 
     if ($categoriaDetectada === "eventos" && !$coincidencias) {
         responderChat([
-            "respuesta" => "Podés revisar la sección de Eventos para ver lo publicado en la agenda. La información puede cambiar, así que confirmá allí los detalles.",
+            "respuesta" => "Puedes consultar la sección de Eventos para ver las publicaciones de la agenda. La información puede cambiar, así que confirma allí los detalles.",
         ]);
     }
 
@@ -241,10 +241,10 @@ if (preg_match('/\b(que hacer|hacer en salto|recomend|visitar|turismo|lugares|pa
         $recomendados = array_slice($lugares, 0, 4);
     }
     responderChat([
-        "respuesta" => $responderLista($recomendados, "Para empezar a recorrer Salto, podés considerar estas opciones:", "")
+        "respuesta" => $responderLista($recomendados, "Para empezar a recorrer Salto, puedes considerar estas opciones:", "")
     ]);
 }
 
 responderChat([
-    "respuesta" => "Puedo orientarte con información de los lugares cargados en GoSalto. Probá preguntarme por termas, parques, naturaleza, gastronomía, cafeterías, heladerías, museos, patrimonio, ocio o por el nombre de un lugar."
+    "respuesta" => "Puedo orientarte con información de los lugares disponibles en GoSalto. Prueba a preguntarme por termas, parques, naturaleza, gastronomía, cafeterías, heladerías, museos, patrimonio, ocio o por el nombre de un lugar."
 ]);

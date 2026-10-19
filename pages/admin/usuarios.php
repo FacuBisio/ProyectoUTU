@@ -60,14 +60,14 @@ $errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "")
             <div>
                 <p class="admin-crud-etiqueta">Comunidad GoSalto</p>
                 <h1>Administrar usuarios</h1>
-                <p>Gestioná las cuentas y los permisos de quienes forman parte de la comunidad.</p>
+                <p>Gestiona las cuentas y los permisos de quienes forman parte de la comunidad.</p>
             </div>
         </section>
 
         <?php if ($errorRol) { ?>
             <div class="auth-error" role="alert" style="margin: 0 0 1rem;">
                 <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-                No podés asignar ni quitar el rol de administrador entre cuentas administrativas. Solo podés dejar a los usuarios como Organizador o Usuario.
+                No puedes asignar ni quitar el rol de administrador entre cuentas administrativas. Solo puedes asignar los roles de Organizador o Usuario.
             </div>
         <?php } ?>
 
@@ -75,7 +75,7 @@ $errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "")
             <div class="admin-crud-tabla-encabezado">
                 <div>
                     <h2 id="titulo-listado">Cuentas registradas</h2>
-                    <p>Revisá los datos y actualizá el rol de cada cuenta.</p>
+                    <p>Revisa los datos y actualiza el rol de cada cuenta.</p>
                 </div>
                 <span class="admin-crud-total"><?= number_format($cantidadUsuarios, 0, ",", ".") ?> usuarios</span>
             </div>

@@ -201,6 +201,8 @@ require_once(__DIR__ . "/../config/config.php");
                         </a>
                         <?php if (($_SESSION["id_rol"] ?? null) == 1): ?>
                             <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/admin/panel.php'), ENT_QUOTES, 'UTF-8') ?>">Panel de administración</a>
+                        <?php elseif (($_SESSION["id_rol"] ?? null) == 2): ?>
+                            <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/eventos/panel-organizador.php'), ENT_QUOTES, 'UTF-8') ?>">Panel de organizador</a>
                         <?php endif; ?>
                         <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/logout.php'), ENT_QUOTES, 'UTF-8') ?>">Cerrar sesión</a>
                     <?php else: ?>

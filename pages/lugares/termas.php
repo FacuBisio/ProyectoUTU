@@ -16,7 +16,7 @@ $sql = "SELECT
 $lugares = $conexion->query($sql);
 $mapaCategorias = [5];
 $mapaTitulo = "Ubicación de las termas";
-$mapaDescripcion = "Encontrá los complejos termales y parques acuáticos de Salto.";
+$mapaDescripcion = "Encuentra los complejos termales y parques acuáticos de Salto.";
 
 ?>
 

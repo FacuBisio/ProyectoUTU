@@ -11,4 +11,4 @@ Tecnologías utilizadas:
 - JavaScript
 - PHP
 
-"Descubrí los mejores lugares, experiencias y sabores de Salto."
+"Descubre los mejores lugares, experiencias y sabores de Salto."

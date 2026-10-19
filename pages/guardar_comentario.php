@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (!isset($_SESSION['id_usuario'])) {
     $_SESSION['flash_comentario'] = [
         'tipo' => 'error',
-        'mensaje' => 'Iniciá sesión para publicar un comentario.',
+        'mensaje' => 'Inicia sesión para publicar un comentario.',
     ];
     volverAComentarios($destino);
 }
@@ -52,7 +52,7 @@ if (
 ) {
     $_SESSION['flash_comentario'] = [
         'tipo' => 'error',
-        'mensaje' => 'No se pudo validar el envío. Recargá la página e intentá nuevamente.',
+        'mensaje' => 'No se pudo validar el envío. Recarga la página e inténtalo de nuevo.',
     ];
     volverAComentarios($destino);
 }
@@ -102,7 +102,7 @@ try {
     error_log("No se pudo guardar el comentario: " . $error->getMessage());
     $_SESSION['flash_comentario'] = [
         'tipo' => 'error',
-        'mensaje' => 'No se pudo publicar el comentario. Intentá nuevamente más tarde.',
+        'mensaje' => 'No se pudo publicar el comentario. Inténtalo de nuevo más tarde.',
     ];
 }
 

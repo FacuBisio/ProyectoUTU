@@ -3,7 +3,7 @@ session_start();
 require_once("../../conexion.php");
 require_once("../../config/config.php");
 
-// Identifica al usuario y prepara la protección de los formularios del feed.
+// Identifica al usuario y prepara la protección de los formularios de publicaciones.
 $usuarioId = isset($_SESSION["id_usuario"]) ? (int) $_SESSION["id_usuario"] : null;
 $estaAutenticado = $usuarioId !== null;
 
@@ -24,15 +24,15 @@ function volverAEventos($mensaje, $tipo = "error", $eventoId = null)
     exit();
 }
 
-// Procesa las acciones del feed antes de cargar y mostrar las publicaciones.
+// Procesa las acciones antes de cargar y mostrar las publicaciones.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!$estaAutenticado) {
-        volverAEventos("Iniciá sesión para participar de la comunidad.");
+        volverAEventos("Inicia sesión para participar en la comunidad.");
     }
 
     $token = $_POST["csrf_token"] ?? "";
     if (!is_string($token) || !hash_equals($_SESSION["csrf_eventos"], $token)) {
-        volverAEventos("La sesión del formulario venció. Actualizá la página e intentá nuevamente.");
+        volverAEventos("La sesión del formulario venció. Actualiza la página e inténtalo de nuevo.");
     }
 
     $accion = $_POST["accion"] ?? "";
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmtComentario->execute();
         } catch (mysqli_sql_exception $error) {
             error_log("No se pudo guardar el comentario del evento: " . $error->getMessage());
-            volverAEventos("No se pudo publicar el comentario. Intentá nuevamente.");
+            volverAEventos("No se pudo publicar el comentario. Inténtalo de nuevo.");
         }
         $stmtComentario->close();
         volverAEventos("Tu comentario se publicó correctamente.", "exito", $eventoId);
@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             || !is_string($horaInicio)
             || !is_string($horaFin)
         ) {
-            volverAEventos("Revisá los datos de la publicación.");
+            volverAEventos("Revisa los datos de la publicación.");
         }
 
         $nombre = trim($nombre);
@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             || !$horaFinValida
             || $horaFin <= $horaInicio
         ) {
-            volverAEventos("Completá el título, una dirección o ubicación marcada en el mapa, la fecha y un horario válido. La descripción admite hasta 2000 caracteres.");
+            volverAEventos("Completa el título, una dirección o una ubicación marcada en el mapa, la fecha y un horario válido. La descripción admite hasta 2000 caracteres.");
         }
 
         $imagenEvento = null;
@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 volverAEventos("El archivo de portada no es válido.");
             }
             if ($archivoImagen["error"] !== UPLOAD_ERR_OK) {
-                volverAEventos("No se pudo recibir la imagen. Elegí otra e intentá nuevamente.");
+                volverAEventos("No se pudo recibir la imagen. Elige otra e inténtalo de nuevo.");
             }
             if ($archivoImagen["size"] < 1 || $archivoImagen["size"] > 5 * 1024 * 1024) {
                 volverAEventos("La imagen debe pesar como máximo 5 MB.");
@@ -208,12 +208,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $carpetaImagenes = __DIR__ . "/../../assets/img/eventos";
             if (!is_dir($carpetaImagenes) && !mkdir($carpetaImagenes, 0755, true) && !is_dir($carpetaImagenes)) {
                 error_log("No se pudo crear la carpeta de portadas de eventos.");
-                volverAEventos("No se pudo guardar la imagen de portada. Intentá nuevamente.");
+                volverAEventos("No se pudo guardar la imagen de portada. Inténtalo de nuevo.");
             }
             $nombreArchivo = bin2hex(random_bytes(16)) . "." . $mimesPermitidos[$mimeImagen];
             if (!move_uploaded_file($archivoImagen["tmp_name"], $carpetaImagenes . "/" . $nombreArchivo)) {
                 error_log("No se pudo mover una imagen cargada para un evento.");
-                volverAEventos("No se pudo guardar la imagen de portada. Intentá nuevamente.");
+                volverAEventos("No se pudo guardar la imagen de portada. Inténtalo de nuevo.");
             }
             $imagenEvento = "assets/img/eventos/" . $nombreArchivo;
         }
@@ -251,10 +251,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 unlink(__DIR__ . "/../../" . $imagenEvento);
             }
             error_log("No se pudo publicar el evento: " . $error->getMessage());
-            volverAEventos("No se pudo publicar el evento. Intentá nuevamente.");
+            volverAEventos("No se pudo publicar el evento. Inténtalo de nuevo.");
         }
         $stmtPublicacion->close();
-        volverAEventos("¡Tu publicación ya está en el feed!", "exito", $eventoNuevo);
+        volverAEventos("¡Tu publicación ya está en la lista de eventos!", "exito", $eventoNuevo);
     }
 
     volverAEventos("La acción solicitada no es válida.");
@@ -263,7 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $flash = $_SESSION["flash_eventos"] ?? null;
 unset($_SESSION["flash_eventos"]);
 
-// Carga publicaciones y comentarios antes de renderizar el feed.
+// Carga publicaciones y comentarios antes de mostrarlos.
 $usuarioActualSql = $estaAutenticado ? (string) $usuarioId : "0";
 $sqlEventos = "
     SELECT e.ID_EVENTO, e.ID_USUARIO, e.ID_LUGAR, e.NOMBRE, e.DESCRIPCION,
@@ -328,9 +328,9 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
     <main class="eventos-pagina">
         <header class="eventos-portada">
             <div class="eventos-portada-contenido">
-                <span class="eventos-etiqueta"><i class="fa-solid fa-sparkles" aria-hidden="true"></i> La ciudad se encuentra acá</span>
+                <span class="eventos-etiqueta"><i class="fa-solid fa-sparkles" aria-hidden="true"></i> La ciudad te espera</span>
                 <h1>Lo que pasa en Salto, <span>se comparte.</span></h1>
-                <p>Descubrí planes, compartí tus eventos y conectá con quienes también disfrutan la ciudad.</p>
+                <p>Descubre planes, comparte tus eventos y conecta con quienes también disfrutan de la ciudad.</p>
                 <a href="#publicaciones" class="eventos-bajar">Explorar publicaciones <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
             </div>
             <div class="eventos-portada-decoracion" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></div>
@@ -342,7 +342,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                     <span class="eventos-lateral-icono"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></span>
                     <h2>La agenda de Salto</h2>
                     <p>Planes, encuentros y actividades para vivir la ciudad con otros ojos.</p>
-                    <a href="#publicar">Compartí un evento <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                    <a href="#publicar">Comparte un evento <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="eventos-lateral-tarjeta eventos-lateral-tarjeta--suave">
                     <strong><?= count($eventos) ?></strong>
@@ -363,8 +363,8 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <?= $estaAutenticado ? escaparEvento(mb_strtoupper(mb_substr($_SESSION["nombre"], 0, 1, "UTF-8"), "UTF-8")) : '<i class="fa-regular fa-user"></i>' ?>
                         </span>
                         <div>
-                            <h2 id="titulo-publicar"><?= $estaAutenticado ? "¿Qué plan tenés para Salto?" : "Sumate a la comunidad" ?></h2>
-                            <p><?= $estaAutenticado ? "Publicá un evento para que todos puedan descubrirlo." : "Iniciá sesión para publicar, reaccionar y comentar." ?></p>
+                            <h2 id="titulo-publicar"><?= $estaAutenticado ? "¿Qué plan tienes para Salto?" : "Únete a la comunidad" ?></h2>
+                            <p><?= $estaAutenticado ? "Publica un evento para que todos puedan descubrirlo." : "Inicia sesión para publicar, reaccionar y comentar." ?></p>
                         </div>
                     </div>
                     <?php if ($estaAutenticado): ?>
@@ -375,19 +375,19 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <label for="evento-nombre">Título del evento</label>
                             <input id="evento-nombre" type="text" name="nombre" maxlength="150" placeholder="Ej.: Música en la costanera" required>
 
-                            <label for="evento-descripcion">Contale a la comunidad <span>opcional</span></label>
-                            <textarea id="evento-descripcion" name="descripcion" rows="3" maxlength="2000" placeholder="¿Qué va a pasar? ¿Por qué no hay que perdérselo?"></textarea>
+                            <label for="evento-descripcion">Cuéntale a la comunidad <span>opcional</span></label>
+                            <textarea id="evento-descripcion" name="descripcion" rows="3" maxlength="2000" placeholder="¿Qué sucederá? ¿Por qué vale la pena asistir?"></textarea>
 
                             <fieldset class="evento-ubicacion">
-                                <legend>¿Dónde se realiza? <span>Marcá el mapa o escribí la dirección</span></legend>
-                                <label for="evento-direccion">Dirección o referencia <span>opcional si marcás el mapa</span></label>
+                                <legend>¿Dónde se realiza? <span>Marca el mapa o escribe la dirección</span></legend>
+                                <label for="evento-direccion">Dirección o referencia <span>opcional si marcas el mapa</span></label>
                                 <input id="evento-direccion" type="text" name="direccion" maxlength="255" placeholder="Ej.: Plaza Artigas, Salto">
-                                <div class="evento-mapa-ayuda"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Tocá el mapa para marcar el punto exacto del evento.</div>
-                                <div id="mapaEvento" class="evento-mapa" aria-label="Elegí la ubicación del evento en el mapa"></div>
+                                <div class="evento-mapa-ayuda"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> Pulsa el mapa para marcar el punto exacto del evento.</div>
+                                <div id="mapaEvento" class="evento-mapa" aria-label="Elige la ubicación del evento en el mapa"></div>
                                 <input id="evento-latitud" type="hidden" name="latitud">
                                 <input id="evento-longitud" type="hidden" name="longitud">
                                 <div class="evento-mapa-estado">
-                                    <span id="evento-mapa-estado" role="status">Podés marcar el mapa, escribir una dirección o completar ambas opciones.</span>
+                                    <span id="evento-mapa-estado" role="status">Puedes marcar el mapa, escribir una dirección o completar ambas opciones.</span>
                                     <button type="button" id="limpiar-ubicacion-evento" hidden>Quitar marcador</button>
                                 </div>
                             </fieldset>
@@ -432,8 +432,8 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                 <?php if (!$eventos): ?>
                     <div class="eventos-vacio">
                         <span><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i></span>
-                        <h2>El feed está esperando su primer plan</h2>
-                        <p>Cuando alguien comparta un evento, lo vas a encontrar acá.</p>
+                        <h2>La lista espera su primera publicación</h2>
+                        <p>Cuando alguien comparta un evento, lo encontrarás aquí.</p>
                     </div>
                 <?php endif; ?>
 
@@ -543,12 +543,12 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                                     <input type="hidden" name="csrf_token" value="<?= escaparEvento($_SESSION["csrf_eventos"]) ?>">
                                     <input type="hidden" name="accion" value="comentar">
                                     <input type="hidden" name="id_evento" value="<?= $eventoId ?>">
-                                    <label class="sr-only" for="comentario-evento-<?= $eventoId ?>">Escribí un comentario</label>
-                                    <input id="comentario-evento-<?= $eventoId ?>" type="text" name="comentario" maxlength="1000" placeholder="Sumá algo a la conversación..." required>
+                                    <label class="sr-only" for="comentario-evento-<?= $eventoId ?>">Escribe un comentario</label>
+                                    <input id="comentario-evento-<?= $eventoId ?>" type="text" name="comentario" maxlength="1000" placeholder="Añade algo a la conversación..." required>
                                     <button type="submit" aria-label="Publicar comentario"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
                                 </form>
                             <?php else: ?>
-                                <p class="evento-comentario-login"><a href="../login.php">Iniciá sesión</a> para comentar esta publicación.</p>
+                                <p class="evento-comentario-login"><a href="../login.php">Inicia sesión</a> para comentar esta publicación.</p>
                             <?php endif; ?>
                         </section>
                     </article>
@@ -558,7 +558,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
             <aside class="eventos-lateral eventos-lateral--derecha">
                 <div class="eventos-lateral-tarjeta">
                     <h2>Información de contacto</h2>
-                    <p>Si querés comunicarte con la comunidad o consultar detalles, podés escribirnos por estos medios.</p>
+                    <p>Si quieres comunicarte con la comunidad o consultar detalles, puedes escribirnos por estos medios.</p>
                     <a href="contacto-organizadores.php" class="admin-crud-accion editar" style="display:inline-flex; margin-top:0.5rem;">Contactar a los organizadores <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </aside>

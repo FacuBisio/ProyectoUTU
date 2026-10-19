@@ -77,7 +77,7 @@ function formatoEstadistica($valor)
             <div class="salto-lateral-ayuda">
                 <span class="salto-ayuda-icono" aria-hidden="true">✦</span>
                 <strong>Tu ciudad, mejor conectada</strong>
-                <p>Administrá la información que ayuda a descubrir Salto.</p>
+                <p>Administra la información que ayuda a descubrir Salto.</p>
                 <a href="../../index.php">Volver a GoSalto <span aria-hidden="true">→</span></a>
             </div>
 
@@ -103,7 +103,7 @@ function formatoEstadistica($valor)
                 <div class="salto-bienvenida-texto">
                     <span class="salto-etiqueta"><span aria-hidden="true"></span> Centro de administración</span>
                     <h1 id="titulo-panel">¡Hola, <?= $nombreAdministrador ?>!</h1>
-                    <p>Gestioná GoSalto desde un solo lugar y mantené al día la información de la comunidad.</p>
+                    <p>Gestiona GoSalto desde un solo lugar y mantén al día la información de la comunidad.</p>
                     <a class="salto-boton-principal" href="lugares.php">
                         Administrar lugares
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -153,7 +153,7 @@ function formatoEstadistica($valor)
                 <div class="salto-seccion-encabezado">
                     <div>
                         <p class="salto-seccion-etiqueta">Accesos directos</p>
-                        <h2 id="titulo-gestion">¿Qué querés gestionar?</h2>
+                        <h2 id="titulo-gestion">¿Qué quieres gestionar?</h2>
                     </div>
                     <span>Herramientas de administración</span>
                 </div>
@@ -162,35 +162,35 @@ function formatoEstadistica($valor)
                         <span class="salto-accion-icono usuarios" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </span>
-                        <span class="salto-accion-texto"><strong>Administrar usuarios</strong><small>Revisá cuentas y permisos de acceso.</small></span>
+                        <span class="salto-accion-texto"><strong>Administrar usuarios</strong><small>Revisa las cuentas y los permisos de acceso.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                     <a class="salto-accion" href="lugares.php">
                         <span class="salto-accion-icono lugares" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
                         </span>
-                        <span class="salto-accion-texto"><strong>Administrar lugares</strong><small>Actualizá destinos, descripciones e imágenes.</small></span>
+                        <span class="salto-accion-texto"><strong>Administrar lugares</strong><small>Actualiza destinos, descripciones e imágenes.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                     <a class="salto-accion" href="eventos.php">
                         <span class="salto-accion-icono eventos" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
                         </span>
-                        <span class="salto-accion-texto"><strong>Administrar eventos</strong><small>Revisá, editá o eliminá publicaciones de la comunidad.</small></span>
+                        <span class="salto-accion-texto"><strong>Administrar eventos</strong><small>Revisa, edita o elimina publicaciones de la comunidad.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                     <a class="salto-accion" href="agregar_lugar.php">
                         <span class="salto-accion-icono agregar" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                         </span>
-                        <span class="salto-accion-texto"><strong>Agregar un lugar</strong><small>Sumá un nuevo destino a GoSalto.</small></span>
+                        <span class="salto-accion-texto"><strong>Agregar un lugar</strong><small>Añade un nuevo destino a GoSalto.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                     <a class="salto-accion" href="comentarios.php">
                         <span class="salto-accion-icono comentarios" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
                         </span>
-                        <span class="salto-accion-texto"><strong>Administrar comentarios</strong><small>Revisá, editá o eliminá comentarios de la comunidad.</small></span>
+                        <span class="salto-accion-texto"><strong>Administrar comentarios</strong><small>Revisa, edita o elimina comentarios de la comunidad.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                 </div>

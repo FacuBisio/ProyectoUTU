@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nombre !== '' && filter_var($correo, FILTER_VALIDATE_EMAIL) && $mensaje !== '') {
         $mensajeExito = 'Gracias. Tu consulta fue enviada correctamente y se revisará a la brevedad.';
     } else {
-        $mensajeExito = 'Revisá los datos del formulario antes de enviarlo.';
+        $mensajeExito = 'Revisa los datos del formulario antes de enviarlo.';
     }
 }
 ?>
@@ -190,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div>
                         <label for="mensaje">Mensaje</label>
-                        <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribí tu consulta..." required></textarea>
+                        <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribe tu consulta..." required></textarea>
                     </div>
 
                     <button type="submit">Enviar consulta</button>

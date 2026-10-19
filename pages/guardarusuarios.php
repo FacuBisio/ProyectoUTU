@@ -27,7 +27,7 @@ if (
     || $telefono === ""
 ) {
     http_response_code(400);
-    exit("Revisá los datos ingresados. La contraseña debe tener al menos 8 caracteres.");
+    exit("Revisa los datos. La contraseña debe tener al menos 8 caracteres.");
 }
 
 $nombre = trim($nombre);
@@ -36,7 +36,7 @@ $telefono = trim($telefono);
 
 if ($nombre === "" || !filter_var($correo, FILTER_VALIDATE_EMAIL) || $telefono === "") {
     http_response_code(400);
-    exit("Revisá el nombre, el correo y el teléfono ingresados.");
+    exit("Revisa el nombre, el correo y el teléfono.");
 }
 
 $stmt = $conexion->prepare("SELECT ID_USUARIO FROM USUARIO WHERE CORREO = ? LIMIT 1");
@@ -72,7 +72,7 @@ try {
     $conexion->rollback();
     error_log("No se pudo registrar el usuario: " . $error->getMessage());
     http_response_code(500);
-    exit("No se pudo completar el registro. Intentá nuevamente.");
+    exit("No se pudo completar el registro. Inténtalo de nuevo.");
 }
 
 // Inicia la sesión del nuevo usuario solo después de confirmar la transacción.

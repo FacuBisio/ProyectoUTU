@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             agregarMensaje(resultado.respuesta || "No encontré una respuesta para esa consulta.", "bot");
         } catch (error) {
-            agregarMensaje(error.message || "No pude completar la consulta. Intentá nuevamente.", "bot");
+            agregarMensaje(error.message || "No pude completar la consulta. Inténtalo de nuevo.", "bot");
             console.error("No se pudo completar la solicitud al chatbot.", error);
         } finally {
             cargando.remove();

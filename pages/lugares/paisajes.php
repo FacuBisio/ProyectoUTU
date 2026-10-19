@@ -18,7 +18,7 @@ $sql = "SELECT
 $resultado = $conexion->query($sql);
 $mapaCategorias = [2];
 $mapaTitulo = "Ubicación de los paisajes y espacios naturales";
-$mapaDescripcion = "Explorá los paisajes, paseos y espacios naturales de Salto.";
+$mapaDescripcion = "Explora los paisajes, paseos y espacios naturales de Salto.";
 
 ?>
 

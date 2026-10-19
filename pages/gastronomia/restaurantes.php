@@ -17,7 +17,7 @@ $resultado = $conexion->query($sql);
 $lugares = $resultado->fetch_all(MYSQLI_ASSOC);
 $mapaCategorias = [7];
 $mapaTitulo = "Ubicación de restaurantes";
-$mapaDescripcion = "Encontrá restaurantes y propuestas para disfrutar la gastronomía de Salto.";
+$mapaDescripcion = "Encuentra restaurantes y propuestas para disfrutar de la gastronomía de Salto.";
 ?>
 
 <!DOCTYPE html>

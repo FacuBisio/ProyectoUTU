@@ -141,16 +141,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="admin-crud-migas"><a href="panel.php">Panel</a><span>/</span><a href="lugares.php">Lugares</a><span>/</span><span>Editar</span></div>
         <section class="admin-crud-encabezado">
             <div>
-                <p class="admin-crud-etiqueta">Actualizá el catálogo</p>
+                <p class="admin-crud-etiqueta">Actualiza el catálogo</p>
                 <h1>Editar lugar</h1>
-                <p>Modificá los datos de <?= htmlspecialchars($lugar["NOMBRE"], ENT_QUOTES, "UTF-8") ?>.</p>
+                <p>Modifica los datos de <?= htmlspecialchars($lugar["NOMBRE"], ENT_QUOTES, "UTF-8") ?>.</p>
             </div>
         </section>
 
         <section class="admin-crud-form-card" aria-labelledby="titulo-formulario">
             <div class="admin-crud-form-intro">
                 <span class="admin-crud-form-icono" aria-hidden="true">✎</span>
-                <div><h2 id="titulo-formulario">Información del lugar</h2><p>Revisá los datos antes de guardar los cambios.</p></div>
+                <div><h2 id="titulo-formulario">Información del lugar</h2><p>Revisa los datos antes de guardar los cambios.</p></div>
             </div>
             <form class="admin-crud-form" method="POST">
                 <div class="admin-crud-campos">
@@ -177,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="imagen">Ruta de la imagen</label>
                         <input id="imagen" type="text" name="imagen" maxlength="255" value="<?= htmlspecialchars($lugar["IMAGEN"] ?? "", ENT_QUOTES, "UTF-8") ?>" placeholder="assets/img/ejemplo.jpg">
-                        <small>Ingresá una ruta dentro de la carpeta de imágenes del sitio.</small>
+                        <small>Introduce una ruta dentro de la carpeta de imágenes del sitio.</small>
                     </div>
                     <div class="admin-crud-campo">
                         <label for="latitud">Latitud</label>

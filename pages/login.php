@@ -22,12 +22,12 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
             <span>GoSalto</span>
         </a>
 
-        <section class="auth-presentacion" aria-label="Descubrí Salto">
+        <section class="auth-presentacion" aria-label="Descubre Salto">
             <div class="auth-presentacion-fondo"></div>
             <div class="auth-presentacion-contenido">
                 <span class="auth-etiqueta"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Tu próximo destino</span>
                 <h1>Salto se disfruta mejor cuando lo descubrís.</h1>
-                <p>Ingresá a tu cuenta y encontrá lugares, experiencias y sabores para disfrutar la ciudad.</p>
+                <p>Inicia sesión para encontrar lugares, experiencias y sabores de la ciudad.</p>
                 <div class="auth-puntos">
                     <span><i class="fa-solid fa-water" aria-hidden="true"></i> Termas únicas</span>
                     <span><i class="fa-solid fa-leaf" aria-hidden="true"></i> Naturaleza cerca</span>
@@ -49,12 +49,12 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
 
                 <span class="auth-saludo">¡Qué bueno verte!</span>
                 <h2 id="titulo-login">Iniciar sesión</h2>
-                <p class="auth-descripcion">Ingresá tus datos para seguir explorando Salto.</p>
+                <p class="auth-descripcion">Introduce tus datos para seguir explorando Salto.</p>
 
                 <?php if ($errorInicioSesion) { ?>
                     <div class="auth-error" role="alert">
                         <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-                        El correo o la contraseña no son correctos. Revisalos e intentá nuevamente.
+                        El correo o la contraseña no son correctos. Comprueba los datos e inténtalo de nuevo.
                     </div>
                 <?php } ?>
 
@@ -79,7 +79,7 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
                             id="contrasena"
                             type="password"
                             name="contrasena"
-                            placeholder="Ingresá tu contraseña"
+                            placeholder="Introduce tu contraseña"
                             autocomplete="current-password"
                             required
                         >
@@ -92,7 +92,7 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
                 </form>
 
                 <p class="auth-registro">
-                    ¿Todavía no tenés una cuenta?
+                    ¿Todavía no tienes una cuenta?
                     <a href="register.php">Crear cuenta</a>
                 </p>
 

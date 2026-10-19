@@ -1,7 +1,7 @@
 <?php
 $mapaLugarIds = [24, 15, 12];
 $mapaTitulo = "Ubicación de lugares recomendados imperdibles";
-$mapaDescripcion = "Encontrá en el mapa algunos de los atractivos más destacados de Salto.";
+$mapaDescripcion = "Encuentra en el mapa algunos de los atractivos más destacados de Salto.";
 ?>
 <!DOCTYPE html>
 <html lang="es">

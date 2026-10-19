@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $token = $_POST["csrf_token"] ?? "";
     if (!is_string($token) || !hash_equals($_SESSION["csrf_admin_eventos"], $token)) {
         http_response_code(400);
-        exit("La solicitud venció o no es válida. Recargá la página e intentá nuevamente.");
+        exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
     }
 
     $accion = $_POST["accion"] ?? "";
@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         || !is_string($latitudRecibida)
         || !is_string($longitudRecibida)
     ) {
-        redirigirAdminEventos("error", "Revisá los datos enviados.", $eventoId);
+        redirigirAdminEventos("error", "Revisa los datos enviados.", $eventoId);
     }
 
     $nombre = trim($nombre);
@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         || !$horaFinValida
         || $horaFin <= $horaInicio
     ) {
-        redirigirAdminEventos("error", "Revisá el título, la ubicación, la fecha y el horario del evento.", $eventoId);
+        redirigirAdminEventos("error", "Revisa el título, la ubicación, la fecha y el horario del evento.", $eventoId);
     }
 
     $imagenEvento = $eventoExistente["IMAGEN"];
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             redirigirAdminEventos("error", "El archivo de portada no es válido.", $eventoId);
         }
         if ($archivoImagen["error"] !== UPLOAD_ERR_OK) {
-            redirigirAdminEventos("error", "No se pudo recibir la imagen. Elegí otra e intentá nuevamente.", $eventoId);
+            redirigirAdminEventos("error", "No se pudo recibir la imagen. Elige otra e inténtalo de nuevo.", $eventoId);
         }
         if ($archivoImagen["size"] < 1 || $archivoImagen["size"] > 5 * 1024 * 1024) {
             redirigirAdminEventos("error", "La imagen debe pesar como máximo 5 MB.", $eventoId);
@@ -265,7 +265,7 @@ if ($idEditar !== false && $idEditar !== null) {
     $eventoEditar = $stmtEditar->get_result()->fetch_assoc();
     $stmtEditar->close();
     if (!$eventoEditar) {
-        $flash = ["tipo" => "error", "mensaje" => "El evento que querés editar ya no está disponible."];
+        $flash = ["tipo" => "error", "mensaje" => "El evento que quieres editar ya no está disponible."];
     }
 }
 
@@ -323,9 +323,9 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
             <div>
                 <p class="admin-crud-etiqueta">Publicaciones de la comunidad</p>
                 <h1>Administrar eventos</h1>
-                <p>Revisá, editá o quitá eventos creados por las personas de GoSalto.</p>
+                <p>Revisa, edita o elimina eventos creados por la comunidad de GoSalto.</p>
             </div>
-            <a class="admin-crud-boton-principal" href="../eventos/eventos.php"><span aria-hidden="true">↗</span> Ver el feed</a>
+            <a class="admin-crud-boton-principal" href="../eventos/eventos.php"><span aria-hidden="true">↗</span> Ver publicaciones</a>
         </section>
 
         <?php if ($flash): ?>
@@ -340,7 +340,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
                     <span class="admin-crud-form-icono" aria-hidden="true">▤</span>
                     <div>
                         <h2 id="titulo-editar-evento">Editar evento #<?= (int) $eventoEditar["ID_EVENTO"] ?></h2>
-                        <p>Actualizá la información que aparece en el feed.</p>
+                        <p>Actualiza la información que aparece en la lista.</p>
                     </div>
                 </div>
                 <form class="admin-crud-form" method="POST" enctype="multipart/form-data" action="eventos.php">
@@ -359,7 +359,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
                         <div class="admin-crud-campo admin-crud-campo--ancho">
                             <label for="evento-direccion">Dirección o referencia</label>
                             <input id="evento-direccion" type="text" name="direccion" maxlength="255" value="<?= escaparAdminEvento($eventoDireccion) ?>" placeholder="Ej.: Plaza Artigas, Salto">
-                            <small>Podés dejarla vacía si el evento tiene coordenadas o está asociado a un lugar del catálogo.</small>
+                            <small>Puedes dejarla vacía si el evento tiene coordenadas o está asociado a un lugar del catálogo.</small>
                         </div>
                         <div class="admin-crud-campo">
                             <label for="evento-latitud">Latitud</label>
@@ -384,7 +384,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
                         <div class="admin-crud-campo admin-crud-campo--ancho">
                             <label for="evento-imagen">Reemplazar portada</label>
                             <input id="evento-imagen" type="file" name="imagen_portada" accept="image/jpeg,image/png,image/webp">
-                            <small>JPG, PNG o WebP, hasta 5 MB. Dejá el campo vacío para conservar la portada actual.</small>
+                            <small>JPG, PNG o WebP, hasta 5 MB. Deja el campo vacío para conservar la portada actual.</small>
                             <?php if (!empty($eventoEditar["IMAGEN"])): ?>
                                 <label class="admin-evento-quitar-portada">
                                     <input type="checkbox" name="quitar_portada" value="1">
@@ -407,7 +407,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
             <div class="admin-crud-tabla-encabezado">
                 <div>
                     <h2 id="titulo-listado">Eventos publicados</h2>
-                    <p>Administrá los detalles y la actividad de cada publicación.</p>
+                    <p>Administra los detalles y la actividad de cada publicación.</p>
                 </div>
                 <span class="admin-crud-total"><?= number_format($cantidadEventos, 0, ",", ".") ?> eventos</span>
             </div>
@@ -451,7 +451,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
                                         <div class="admin-crud-acciones">
                                             <a class="admin-crud-accion editar" href="eventos.php?editar=<?= $eventoId ?>">Editar</a>
                                             <a class="admin-crud-accion" href="../eventos/eventos.php#evento-<?= $eventoId ?>">Ver</a>
-                                            <form method="POST" action="eventos.php" onsubmit="return confirm('¿Seguro que querés eliminar este evento y sus comentarios y reacciones?')">
+                                            <form method="POST" action="eventos.php" onsubmit="return confirm('¿Seguro que quieres eliminar este evento y sus comentarios y reacciones?')">
                                                 <input type="hidden" name="csrf_token" value="<?= escaparAdminEvento($_SESSION["csrf_admin_eventos"]) ?>">
                                                 <input type="hidden" name="accion" value="eliminar">
                                                 <input type="hidden" name="id_evento" value="<?= $eventoId ?>">

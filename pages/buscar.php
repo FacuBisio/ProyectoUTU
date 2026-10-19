@@ -141,8 +141,8 @@ $rutasCategorias = [
 
             <?php if ($busqueda === ""): ?>
                 <div class="mensaje-inicial">
-                    <h2><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Buscá un lugar turístico</h2>
-                    <p>Escribí un nombre, una categoría, una dirección o una palabra relacionada.</p>
+                    <h2><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Busca un lugar turístico</h2>
+                    <p>Escribe un nombre, una categoría, una dirección o una palabra relacionada.</p>
                     <div class="ejemplos-busqueda">
                         <span>Parque</span>
                         <span>Termas</span>
@@ -210,7 +210,7 @@ $rutasCategorias = [
                         <div class="icono-sin-resultados"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
                         <h3>No encontramos resultados</h3>
                         <p>No encontramos lugares relacionados con “<?= escaparBusqueda($busqueda) ?>”.</p>
-                        <p>Probá con otra palabra, por ejemplo <strong>parque</strong>, <strong>termas</strong> o <strong>museo</strong>.</p>
+                        <p>Prueba con otra palabra, por ejemplo <strong>parque</strong>, <strong>termas</strong> o <strong>museo</strong>.</p>
                     </div>
                 <?php endif; ?>
             <?php endif; ?>

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 marcador = L.marker(punto).addTo(mapa);
             }
-            estadoUbicacion.textContent = `Punto marcado: ${latitud.value}, ${longitud.value}. Si querés, agregá también una dirección.`;
+            estadoUbicacion.textContent = `Punto marcado: ${latitud.value}, ${longitud.value}. Si quieres, añade también una dirección.`;
             botonLimpiarUbicacion.hidden = false;
         });
 
@@ -43,13 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
             botonLimpiarUbicacion.hidden = true;
             estadoUbicacion.textContent = direccion.value.trim()
                 ? "Se usará la dirección que escribiste."
-                : "Podés marcar el mapa, escribir una dirección o completar ambas opciones.";
+                : "Puedes marcar el mapa, escribir una dirección o completar ambas opciones.";
         });
 
         window.setTimeout(() => mapa.invalidateSize(), 200);
     } else if (contenedorMapa) {
         contenedorMapa.hidden = true;
-        estadoUbicacion.textContent = "No se pudo cargar el mapa. Escribí la dirección del evento.";
+        estadoUbicacion.textContent = "No se pudo cargar el mapa. Escribe la dirección del evento.";
         console.error("No se pudo cargar Leaflet para elegir la ubicación del evento.");
     }
 
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!latitud.value && !longitud.value) {
             estadoUbicacion.textContent = direccion.value.trim()
                 ? "Se guardará la dirección que escribiste."
-                : "Podés marcar el mapa, escribir una dirección o completar ambas opciones.";
+                : "Puedes marcar el mapa, escribir una dirección o completar ambas opciones.";
         }
     });
 
@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (puntoParcial || (!direccion.value.trim() && (!latitud.value || !longitud.value))) {
             evento.preventDefault();
             estadoUbicacion.textContent = puntoParcial
-                ? "La ubicación del mapa está incompleta. Marcá nuevamente el punto."
-                : "Escribí una dirección o marcá el mapa antes de publicar.";
+                ? "La ubicación del mapa está incompleta. Marca nuevamente el punto."
+                : "Escribe una dirección o marca el mapa antes de publicar.";
             (direccion.value.trim() ? contenedorMapa : direccion).focus();
             return;
         }
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!["image/jpeg", "image/png", "image/webp"].includes(archivo.type)) {
             inputImagen.value = "";
             preview.hidden = true;
-            window.alert("Elegí una imagen JPG, PNG o WebP.");
+            window.alert("Elige una imagen JPG, PNG o WebP.");
             return;
         }
 

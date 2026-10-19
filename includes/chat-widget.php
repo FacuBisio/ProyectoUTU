@@ -25,8 +25,8 @@ require_once(__DIR__ . "/../config/config.php");
             id="mensaje"
             name="mensaje"
             maxlength="1000"
-            placeholder="Escribí tu pregunta..."
-            aria-label="Escribí tu pregunta"
+            placeholder="Escribe tu pregunta..."
+            aria-label="Escribe tu pregunta"
             autocomplete="off"
             required
         >

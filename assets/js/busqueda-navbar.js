@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             console.error("No se pudieron cargar las sugerencias de búsqueda.", error);
-            mostrarEstado("No se pudieron cargar sugerencias. Podés presionar Enter para buscar.");
+            mostrarEstado("No se pudieron cargar las sugerencias. Puedes pulsar Enter para buscar.");
         }
     }
 

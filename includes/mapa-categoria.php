@@ -77,7 +77,7 @@ $ubicacionesJson = json_encode(
 );
 $tituloMapaSeguro = htmlspecialchars($mapaTitulo ?? "Ubicación de los lugares", ENT_QUOTES, "UTF-8");
 $descripcionMapaSegura = htmlspecialchars(
-    $mapaDescripcion ?? "Explorá los lugares y encontrá cómo llegar.",
+    $mapaDescripcion ?? "Explora los lugares y encuentra cómo llegar.",
     ENT_QUOTES,
     "UTF-8"
 );

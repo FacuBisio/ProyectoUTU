@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $token = $_POST["csrf_token"] ?? "";
     if (!is_string($token) || !hash_equals($_SESSION["csrf_admin_comentarios"], $token)) {
         http_response_code(400);
-        exit("La solicitud venció o no es válida. Recargá la página e intentá nuevamente.");
+        exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
     }
 
     $tipo = $_POST["tipo"] ?? "";
@@ -145,7 +145,7 @@ $cantidadEventos = $cantidadComentarios - $cantidadSalto;
             <div>
                 <p class="admin-crud-etiqueta">Conversaciones de la comunidad</p>
                 <h1>Administrar comentarios</h1>
-                <p>Revisá y mantené al día los comentarios de Salto y las publicaciones de eventos.</p>
+                <p>Revisa y mantén al día los comentarios de Salto y las publicaciones de eventos.</p>
             </div>
         </section>
 
@@ -165,7 +165,7 @@ $cantidadEventos = $cantidadComentarios - $cantidadSalto;
                 <div class="admin-crud-tabla-card admin-crud-comentarios-vacio">
                     <span aria-hidden="true">♡</span>
                     <h2>Todavía no hay comentarios</h2>
-                    <p>Cuando la comunidad comparta sus experiencias, vas a poder gestionarlas desde acá.</p>
+                    <p>Cuando la comunidad comparta sus experiencias, podrás gestionarlas desde aquí.</p>
                 </div>
             <?php else: ?>
                 <?php foreach ($comentarios as $comentario): ?>
@@ -198,7 +198,7 @@ $cantidadEventos = $cantidadComentarios - $cantidadSalto;
                             <div class="admin-crud-comentario-acciones">
                                 <small>Hasta <?= $limite ?> caracteres</small>
                                 <button class="admin-crud-accion editar" type="submit" name="accion" value="editar">Guardar cambios</button>
-                                <button class="admin-crud-accion eliminar" type="submit" name="accion" value="eliminar" onclick="return confirm('¿Seguro que querés eliminar este comentario?')">Eliminar</button>
+                                <button class="admin-crud-accion eliminar" type="submit" name="accion" value="eliminar" onclick="return confirm('¿Seguro que quieres eliminar este comentario?')">Eliminar</button>
                             </div>
                         </form>
                     </article>

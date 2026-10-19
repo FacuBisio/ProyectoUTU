@@ -96,9 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="admin-crud-migas"><a href="panel.php">Panel</a><span>/</span><a href="lugares.php">Lugares</a><span>/</span><span>Agregar</span></div>
         <section class="admin-crud-encabezado">
             <div>
-                <p class="admin-crud-etiqueta">Ampliá el catálogo</p>
+                <p class="admin-crud-etiqueta">Amplía el catálogo</p>
                 <h1>Agregar un lugar</h1>
-                <p>Completá la información para que todos puedan descubrir este destino.</p>
+                <p>Completa la información para que todos puedan descubrir este destino.</p>
             </div>
         </section>
 
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="descripcion">Descripción <span aria-hidden="true">*</span></label>
-                        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Contá qué hace especial a este lugar..." required></textarea>
+                        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Cuenta qué hace especial a este lugar..." required></textarea>
                     </div>
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="direccion">Dirección <span aria-hidden="true">*</span></label>
@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="imagen">Ruta de la imagen</label>
                         <input id="imagen" type="text" name="imagen" maxlength="255" placeholder="assets/img/ejemplo.jpg">
-                        <small>Ingresá una ruta dentro de la carpeta de imágenes del sitio.</small>
+                        <small>Introduce una ruta dentro de la carpeta de imágenes del sitio.</small>
                     </div>
                     <div class="admin-crud-campo">
                         <label for="latitud">Latitud</label>
