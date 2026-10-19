@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN,
             LUGAR.LATITUD,
             LUGAR.LONGITUD
         FROM LUGAR
@@ -67,7 +67,7 @@ $mapaDescripcion = "Descubre las heladerías de Salto.";
     <div class="slide <?php echo $primero ? 'active' : ''; ?>">
 
         <img 
-            src="../../<?php echo $heladeria['IMAGEN']; ?>" 
+            src="<?php echo htmlspecialchars(rutaImagenLugar((int) $heladeria['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
             alt="<?php echo $heladeria['NOMBRE']; ?>"
         >
 

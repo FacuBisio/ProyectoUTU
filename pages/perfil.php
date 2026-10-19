@@ -152,8 +152,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $perfil = cargarPerfil($conexion, $idUsuario);
                 } catch (mysqli_sql_exception $exception) {
                     $conexion->rollback();
-                    error_log("No se pudo actualizar el perfil del usuario: " . $exception->getMessage());
-                    $error = "No se pudieron guardar los cambios. Inténtalo de nuevo.";
+                    if ($exception->getCode() === 1062) {
+                        $error = "Ese correo ya está asociado a otra cuenta.";
+                    } else {
+                        error_log("No se pudo actualizar el perfil del usuario: " . $exception->getMessage());
+                        $error = "No se pudieron guardar los cambios. Inténtalo de nuevo.";
+                    }
                     $perfil["NOMBRE"] = $nombre;
                     $perfil["CORREO"] = $correo;
                     $perfil["TELEFONO"] = $telefono;

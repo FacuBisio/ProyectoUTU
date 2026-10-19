@@ -1,12 +1,12 @@
 <?php
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN
         FROM LUGAR
         INNER JOIN LUGAR_CATEGORIA
             ON LUGAR.ID_LUGAR = LUGAR_CATEGORIA.ID_LUGAR
@@ -54,7 +54,7 @@ $mapaDescripcion = "Encuentra restaurantes y propuestas para disfrutar de la gas
         <div class="slide <?php echo $indice === 0 ? 'active' : ''; ?>">
 
             <img 
-                src="../../<?php echo htmlspecialchars($lugar['IMAGEN']); ?>" 
+                src="<?php echo htmlspecialchars(rutaImagenLugar((int) $lugar['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
                 alt="<?php echo htmlspecialchars($lugar['NOMBRE']); ?>"
             >
 

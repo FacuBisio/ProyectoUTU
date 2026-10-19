@@ -2,13 +2,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN,
             LUGAR.LATITUD,
             LUGAR.LONGITUD
         FROM LUGAR
@@ -68,7 +68,7 @@ $mapaDescripcion = "Explora la ubicación de los principales parques turísticos
         <div class="slide <?php echo $indice === 0 ? 'active' : ''; ?>">
 
             <img 
-                src="../../<?php echo $parque['IMAGEN']; ?>" 
+                src="<?php echo htmlspecialchars(rutaImagenLugar((int) $parque['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
                 alt="<?php echo $parque['NOMBRE']; ?>"
             >
 

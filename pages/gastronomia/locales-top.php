@@ -33,7 +33,7 @@ $mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones pa
     <button class="slider-btn prev">❮</button>
 
     <div class="slide active">
-        <img src="../../assets/img/mdelhombre.jpg" alt="Juan Perez Resto Bar">
+        <img src="../../assets/img/Restaurantes/elrancho.jpeg" alt="Juan Perez Resto Bar">
         <div class="slide-info">
             <h2>Juan Perez Resto Bar</h2>
             <p>
@@ -45,7 +45,7 @@ $mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones pa
     </div>
 
     <div class="slide">
-        <img src="../../assets/img/mbellasartes.jpg" alt="Paddock Bar">
+        <img src="../../assets/img/Restaurantes/trattoria.jpeg" alt="Paddock Bar">
         <div class="slide-info">
             <h2>Paddock Bar</h2>
             <p>
@@ -57,7 +57,7 @@ $mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones pa
     </div>
 
     <div class="slide">
-        <img src="../../assets/img/mhoracioquiroga.jpg" alt="La Trinchera">
+        <img src="../../assets/img/Restaurantes/lacaldera.jpeg" alt="La Trinchera">
         <div class="slide-info">
             <h2>La Trinchera</h2>
             <p>

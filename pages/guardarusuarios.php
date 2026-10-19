@@ -70,6 +70,10 @@ try {
     $conexion->commit();
 } catch (mysqli_sql_exception $error) {
     $conexion->rollback();
+    if ($error->getCode() === 1062) {
+        http_response_code(409);
+        exit("Ese correo ya está registrado.");
+    }
     error_log("No se pudo registrar el usuario: " . $error->getMessage());
     http_response_code(500);
     exit("No se pudo completar el registro. Inténtalo de nuevo.");

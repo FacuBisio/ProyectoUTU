@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN,
             LUGAR.LATITUD,
             LUGAR.LONGITUD
         FROM LUGAR
@@ -65,7 +65,7 @@ $mapaDescripcion = "Encuentra opciones de comida rápida y para llevar en Salto.
     <div class="slide <?php echo $primero ? 'active' : ''; ?>">
 
         <img 
-            src="../../<?php echo $comida['IMAGEN']; ?>" 
+            src="<?php echo htmlspecialchars(rutaImagenLugar((int) $comida['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
             alt="<?php echo $comida['NOMBRE']; ?>"
         >
 

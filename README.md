@@ -12,3 +12,9 @@ Tecnologías utilizadas:
 - PHP
 
 "Descubre los mejores lugares, experiencias y sabores de Salto."
+
+## Base de datos
+
+- Para una instalación nueva, importa `proyectoutu.sql` en MariaDB/MySQL.
+- Para actualizar una instalación existente, realiza primero una copia de seguridad y ejecuta una sola vez `database/migrations/20261019_integridad.sql`.
+- La migración requiere que `usuario.CORREO` no tenga direcciones duplicadas y que las coordenadas de lugares y eventos estén completas y dentro de sus rangos geográficos.

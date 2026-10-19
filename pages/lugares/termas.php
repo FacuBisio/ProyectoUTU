@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN
         FROM LUGAR
         INNER JOIN LUGAR_CATEGORIA
             ON LUGAR.ID_LUGAR = LUGAR_CATEGORIA.ID_LUGAR
@@ -67,7 +67,7 @@ $mapaDescripcion = "Encuentra los complejos termales y parques acuáticos de Sal
         <div class="slide <?= $primer_slide ? 'active' : '' ?>">
 
             <img 
-                src="../../<?= htmlspecialchars($lugar["IMAGEN"]) ?>" 
+                src="<?= htmlspecialchars(rutaImagenLugar((int) $lugar["ID_LUGAR"]), ENT_QUOTES, "UTF-8") ?>" 
                 alt="<?= htmlspecialchars($lugar["NOMBRE"]) ?>"
             >
 

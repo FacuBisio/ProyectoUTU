@@ -6,7 +6,7 @@
 
     <div class="slide active">
 
-        <img src="../../assets/img/parqueharriague.jpg" alt="Parque Harriague">
+        <img src="../../assets/img/Parques/parqueharriague.jpg" alt="Parque Harriague">
 
         <div class="slide-info">
             <h2>Parque Harriague</h2>
@@ -20,7 +20,7 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/parquesolari.png" alt="Parque Solari">
+        <img src="../../assets/img/Parques/parquesolari.png" alt="Parque Solari">
 
         <div class="slide-info">
             <h2>Parque Solari</h2>
@@ -35,7 +35,7 @@
 
     <div class="slide">
 
-        <img src="../../assets/img/parqueindigena.jpg" alt="Parque Indígena">
+        <img src="../../assets/img/Parques/parqueindigena.jpg" alt="Parque Indígena">
 
         <div class="slide-info">
             <h2>Parque Indígena "Vaimaca Pirú"</h2>

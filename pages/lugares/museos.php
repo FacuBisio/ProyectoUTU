@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN
         FROM LUGAR
         INNER JOIN LUGAR_CATEGORIA
             ON LUGAR.ID_LUGAR = LUGAR_CATEGORIA.ID_LUGAR
@@ -62,7 +62,7 @@ $mapaDescripcion = "Explora los museos y espacios de arte de Salto.";
         <div class="slide <?php echo $primero ? 'active' : ''; ?>">
 
             <img 
-                src="../../<?php echo $museo['IMAGEN']; ?>"
+                src="<?php echo htmlspecialchars(rutaImagenLugar((int) $museo['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>"
                 alt="<?php echo $museo['NOMBRE']; ?>"
             >
 

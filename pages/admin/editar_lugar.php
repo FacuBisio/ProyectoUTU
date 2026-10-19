@@ -8,9 +8,12 @@ if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     die("Acceso denegado.");
 }
 
-$id_lugar = $_GET["id"] ?? null;
+$idLugarRecibido = $_GET["id"] ?? null;
+$id_lugar = is_string($idLugarRecibido)
+    ? filter_var($idLugarRecibido, FILTER_VALIDATE_INT)
+    : false;
 
-if (!$id_lugar) {
+if (!$id_lugar || $id_lugar < 1) {
     die("Lugar no encontrado.");
 }
 
@@ -44,65 +47,104 @@ $categorias = $conexion->query(
 );
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST["nombre"] ?? null;
+    $descripcion = $_POST["descripcion"] ?? null;
+    $direccion = $_POST["direccion"] ?? null;
+    $imagen = $_POST["imagen"] ?? null;
+    $latitudRecibida = $_POST["latitud"] ?? null;
+    $longitudRecibida = $_POST["longitud"] ?? null;
+    $idCategoriaRecibido = $_POST["id_categoria"] ?? null;
+    $idCategoria = is_string($idCategoriaRecibido)
+        ? filter_var($idCategoriaRecibido, FILTER_VALIDATE_INT)
+        : false;
 
-    // Actualiza los datos y reemplaza la categoría asociada al lugar.
-    $nombre = $_POST["nombre"];
-    $descripcion = $_POST["descripcion"];
-    $direccion = $_POST["direccion"];
-    $imagen = $_POST["imagen"];
-    $latitud = $_POST["latitud"];
-    $longitud = $_POST["longitud"];
-    $id_categoria = $_POST["id_categoria"];
+    if (
+        !is_string($nombre)
+        || !is_string($descripcion)
+        || !is_string($direccion)
+        || !is_string($imagen)
+        || !is_string($latitudRecibida)
+        || !is_string($longitudRecibida)
+        || !$idCategoria
+    ) {
+        http_response_code(400);
+        exit("Revisa los datos del lugar y selecciona una categoría válida.");
+    }
 
-    $sql = "UPDATE LUGAR
-            SET NOMBRE = ?,
-                DESCRIPCION = ?,
-                DIRECCION = ?,
-                IMAGEN = ?,
-                LATITUD = ?,
-                LONGITUD = ?
-            WHERE ID_LUGAR = ?";
+    $nombre = trim($nombre);
+    $descripcion = trim($descripcion);
+    $direccion = trim($direccion);
+    $imagen = trim($imagen);
+    $latitudRecibida = trim($latitudRecibida);
+    $longitudRecibida = trim($longitudRecibida);
+    $tieneLatitud = $latitudRecibida !== "";
+    $tieneLongitud = $longitudRecibida !== "";
+    $latitud = $tieneLatitud && is_numeric($latitudRecibida) ? (float) $latitudRecibida : null;
+    $longitud = $tieneLongitud && is_numeric($longitudRecibida) ? (float) $longitudRecibida : null;
+    $coordenadasValidas = (!$tieneLatitud && !$tieneLongitud)
+        || ($tieneLatitud
+            && $tieneLongitud
+            && $latitud !== null
+            && $longitud !== null
+            && $latitud >= -90
+            && $latitud <= 90
+            && $longitud >= -180
+            && $longitud <= 180);
 
-    $stmt = $conexion->prepare($sql);
+    if (
+        $nombre === ""
+        || mb_strlen($nombre, "UTF-8") > 150
+        || strlen($descripcion) > 65535
+        || $direccion === ""
+        || mb_strlen($direccion, "UTF-8") > 200
+        || mb_strlen($imagen, "UTF-8") > 255
+        || !$coordenadasValidas
+    ) {
+        http_response_code(400);
+        exit("Revisa el nombre, la dirección, la ruta de imagen y las coordenadas del lugar.");
+    }
 
-    $stmt->bind_param(
-        "ssssddi",
-        $nombre,
-        $descripcion,
-        $direccion,
-        $imagen,
-        $latitud,
-        $longitud,
-        $id_lugar
-    );
+    $descripcion = $descripcion !== "" ? $descripcion : null;
+    $imagen = $imagen !== "" ? $imagen : null;
+    $conexion->begin_transaction();
 
-    $stmt->execute();
+    try {
+        $stmtLugar = $conexion->prepare(
+            "UPDATE LUGAR
+             SET NOMBRE = ?, DESCRIPCION = ?, DIRECCION = ?, IMAGEN = ?,
+                 LATITUD = ?, LONGITUD = ?
+             WHERE ID_LUGAR = ?"
+        );
+        $stmtLugar->bind_param(
+            "ssssddi",
+            $nombre,
+            $descripcion,
+            $direccion,
+            $imagen,
+            $latitud,
+            $longitud,
+            $id_lugar
+        );
+        $stmtLugar->execute();
 
-    $sql = "DELETE FROM LUGAR_CATEGORIA
-            WHERE ID_LUGAR = ?";
+        $stmtEliminarCategoria = $conexion->prepare(
+            "DELETE FROM LUGAR_CATEGORIA WHERE ID_LUGAR = ?"
+        );
+        $stmtEliminarCategoria->bind_param("i", $id_lugar);
+        $stmtEliminarCategoria->execute();
 
-    $stmt = $conexion->prepare($sql);
-
-    $stmt->bind_param(
-        "i",
-        $id_lugar
-    );
-
-    $stmt->execute();
-
-    $sql = "INSERT INTO LUGAR_CATEGORIA
-            (ID_LUGAR, ID_CATEGORIA)
-            VALUES (?, ?)";
-
-    $stmt = $conexion->prepare($sql);
-
-    $stmt->bind_param(
-        "ii",
-        $id_lugar,
-        $id_categoria
-    );
-
-    $stmt->execute();
+        $stmtCategoria = $conexion->prepare(
+            "INSERT INTO LUGAR_CATEGORIA (ID_LUGAR, ID_CATEGORIA) VALUES (?, ?)"
+        );
+        $stmtCategoria->bind_param("ii", $id_lugar, $idCategoria);
+        $stmtCategoria->execute();
+        $conexion->commit();
+    } catch (mysqli_sql_exception $error) {
+        $conexion->rollback();
+        error_log("No se pudo actualizar el lugar y su categoría: " . $error->getMessage());
+        http_response_code(500);
+        exit("No se pudo actualizar el lugar. Verifica la categoría e inténtalo de nuevo.");
+    }
 
     header("Location: lugares.php");
     exit();

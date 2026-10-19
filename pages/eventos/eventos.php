@@ -2,6 +2,7 @@
 session_start();
 require_once("../../conexion.php");
 require_once("../../config/config.php");
+require_once("../../config/imagenes-lugares.php");
 
 // Identifica al usuario y prepara la protección de los formularios de publicaciones.
 $usuarioId = isset($_SESSION["id_usuario"]) ? (int) $_SESSION["id_usuario"] : null;
@@ -271,7 +272,6 @@ $sqlEventos = "
            e.DIRECCION AS EVENTO_DIRECCION, e.LATITUD AS EVENTO_LATITUD,
            e.LONGITUD AS EVENTO_LONGITUD, e.IMAGEN AS EVENTO_IMAGEN,
            u.NOMBRE AS AUTOR, l.NOMBRE AS LUGAR, l.DIRECCION AS LUGAR_DIRECCION,
-           l.IMAGEN AS LUGAR_IMAGEN,
            (SELECT COUNT(*) FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.TIPO = 1) AS ME_GUSTA,
            (SELECT COUNT(*) FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.TIPO = -1) AS NO_ME_GUSTA,
            (SELECT r.TIPO FROM EVENTO_REACCION r WHERE r.ID_EVENTO = e.ID_EVENTO AND r.ID_USUARIO = $usuarioActualSql LIMIT 1) AS MI_REACCION
@@ -452,13 +452,10 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                         ? $direccionEvento
                         : ($tieneCoordenadasEvento ? "Ubicación marcada en el mapa" : ($nombreLugar !== "" ? $nombreLugar : "Ubicación a confirmar"));
                     $imagen = trim((string) ($evento["EVENTO_IMAGEN"] ?? ""));
-                    if ($imagen === "") {
-                        $imagen = trim((string) ($evento["LUGAR_IMAGEN"] ?? ""));
-                    }
                     $rutaImagen = $imagen !== "" ? __DIR__ . "/../../" . ltrim($imagen, "/\\") : "";
                     $imagenSrc = $imagen !== "" && is_file($rutaImagen)
                         ? "../../" . ltrim($imagen, "/\\")
-                        : "../../assets/img/imagen-principal.jpeg";
+                        : rutaImagenLugar((int) ($evento["ID_LUGAR"] ?? 0));
                     $fechaTexto = sprintf(
                         "%02d/%02d%s",
                         (int) $evento["DIA"],

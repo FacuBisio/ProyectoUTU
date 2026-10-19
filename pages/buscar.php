@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . "/../conexion.php");
 require_once(__DIR__ . "/../config/config.php");
+require_once(__DIR__ . "/../config/imagenes-lugares.php");
 
 // Escapa los datos de búsqueda al insertarlos en el HTML.
 function escaparBusqueda($valor)
@@ -18,7 +19,6 @@ function obtenerResultadosBusqueda($conexion, $busqueda, $limite = null)
             l.NOMBRE AS nombre,
             l.DESCRIPCION AS descripcion,
             l.DIRECCION AS direccion,
-            l.IMAGEN AS imagen,
             GROUP_CONCAT(DISTINCT c.NOMBRE ORDER BY c.NOMBRE SEPARATOR ', ') AS categoria
         FROM LUGAR l
         LEFT JOIN LUGAR_CATEGORIA lc ON lc.ID_LUGAR = l.ID_LUGAR
@@ -28,7 +28,7 @@ function obtenerResultadosBusqueda($conexion, $busqueda, $limite = null)
             OR l.DESCRIPCION LIKE ?
             OR l.DIRECCION LIKE ?
             OR c.NOMBRE LIKE ?
-        GROUP BY l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION, l.IMAGEN
+        GROUP BY l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION
         ORDER BY
             CASE WHEN l.NOMBRE LIKE ? THEN 0 ELSE 1 END,
             l.NOMBRE ASC
@@ -50,8 +50,7 @@ function obtenerResultadosBusqueda($conexion, $busqueda, $limite = null)
     $stmt->close();
 
     foreach ($filas as &$fila) {
-        $imagen = trim((string) ($fila["imagen"] ?? ""));
-        $fila["imagen_url"] = $imagen !== "" ? url(ltrim($imagen, "/\\")) : "";
+        $fila["imagen_url"] = rutaImagenLugar((int) $fila["id_lugar"]);
     }
     unset($fila);
 
@@ -170,21 +169,14 @@ $rutasCategorias = [
                                     break;
                                 }
                             }
-                            $imagen = trim((string) $lugar["imagen"]);
-                            $rutaImagen = $imagen !== "" ? __DIR__ . "/../" . ltrim($imagen, "/\\") : "";
-                            $imagenDisponible = $imagen !== "" && is_file($rutaImagen);
                             ?>
                             <article class="resultado-lugar">
                                 <div class="resultado-imagen">
-                                    <?php if ($imagenDisponible): ?>
-                                        <img
-                                            src="<?= escaparBusqueda($lugar["imagen_url"]) ?>"
-                                            alt="<?= escaparBusqueda($lugar["nombre"]) ?>"
-                                            loading="lazy"
-                                        >
-                                    <?php else: ?>
-                                        <div class="imagen-sin-foto"><i class="fa-regular fa-image" aria-hidden="true"></i></div>
-                                    <?php endif; ?>
+                                    <img
+                                        src="<?= escaparBusqueda($lugar["imagen_url"]) ?>"
+                                        alt="<?= escaparBusqueda($lugar["nombre"]) ?>"
+                                        loading="lazy"
+                                    >
                                 </div>
                                 <div class="resultado-info">
                                     <span class="categoria-resultado">

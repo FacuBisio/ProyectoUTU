@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/../conexion.php");
+require_once(__DIR__ . "/../config/imagenes-lugares.php");
 
 // Acepta categorías o lugares concretos y descarta identificadores no válidos.
 if (!empty($mapaLugarIds) && is_array($mapaLugarIds)) {
@@ -34,7 +35,6 @@ $consultaMapa = $conexion->query(
         l.NOMBRE,
         l.DESCRIPCION,
         l.DIRECCION,
-        l.IMAGEN,
         l.LATITUD,
         l.LONGITUD,
         GROUP_CONCAT(DISTINCT c.NOMBRE ORDER BY c.NOMBRE SEPARATOR ', ') AS CATEGORIA
@@ -60,14 +60,13 @@ while ($lugarMapa = $consultaMapa->fetch_assoc()) {
         continue;
     }
 
-    $imagenMapa = trim((string) ($lugarMapa["IMAGEN"] ?? ""));
     $ubicacionesMapa[] = [
         "nombre" => $lugarMapa["NOMBRE"],
         "descripcion" => $lugarMapa["DESCRIPCION"] ?? "",
         "direccion" => $lugarMapa["DIRECCION"] ?? "",
         "categoria" => $lugarMapa["CATEGORIA"] ?? "",
         "coords" => [(float) $lugarMapa["LATITUD"], (float) $lugarMapa["LONGITUD"]],
-        "imagen" => $imagenMapa !== "" ? "../../" . ltrim($imagenMapa, "/\\") : "",
+        "imagen" => rutaImagenLugar((int) $lugarMapa["ID_LUGAR"]),
     ];
 }
 

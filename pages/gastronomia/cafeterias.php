@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN,
             LUGAR.LATITUD,
             LUGAR.LONGITUD
         FROM LUGAR
@@ -64,7 +64,7 @@ $mapaDescripcion = "Explora las cafeterías y los lugares para compartir algo es
     <div class="slide <?php echo $primero ? 'active' : ''; ?>">
 
         <img 
-            src="../../<?php echo $cafeteria['IMAGEN']; ?>" 
+            src="<?php echo htmlspecialchars(rutaImagenLugar((int) $cafeteria['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
             alt="<?php echo $cafeteria['NOMBRE']; ?>"
         >
 

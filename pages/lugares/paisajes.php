@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../conexion.php");
+require_once("../../config/imagenes-lugares.php");
 
 $sql = "SELECT 
             LUGAR.ID_LUGAR,
             LUGAR.NOMBRE,
             LUGAR.DESCRIPCION,
             LUGAR.DIRECCION,
-            LUGAR.IMAGEN,
             LUGAR.LATITUD,
             LUGAR.LONGITUD
         FROM LUGAR
@@ -66,7 +66,7 @@ $mapaDescripcion = "Explora los paisajes, paseos y espacios naturales de Salto."
         <div class="slide <?php echo $primero ? 'active' : ''; ?>">
 
             <img 
-                src="../../<?php echo $paisaje['IMAGEN']; ?>" 
+                src="<?php echo htmlspecialchars(rutaImagenLugar((int) $paisaje['ID_LUGAR']), ENT_QUOTES, 'UTF-8'); ?>" 
                 alt="<?php echo $paisaje['NOMBRE']; ?>"
             >
 
