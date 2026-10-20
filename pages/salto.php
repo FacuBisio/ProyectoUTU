@@ -41,6 +41,19 @@
                 <p>
                     Tanto si buscas descansar como recorrer la ciudad, disfrutar de la naturaleza o conocer su historia, encontrarás distintas formas de vivir Salto y acercarte a su identidad.
                 </p>
+                <div class="turismo-ampliacion" id="turismo-ampliacion">
+                    <p>
+                        La visita también puede combinar paseos por la costanera, recorridos por espacios culturales y una pausa para probar la gastronomía local. Consulta las categorías y los eventos de GoSalto para elegir actividades según tus intereses.
+                    </p>
+                </div>
+                <button
+                    class="turismo-mostrar-mas"
+                    id="turismo-mostrar-mas"
+                    type="button"
+                    aria-controls="turismo-ampliacion"
+                    aria-expanded="true"
+                    hidden
+                >Mostrar menos</button>
             </div>
 
             <div class="turismo-categorias">
@@ -101,5 +114,6 @@
     </main>
 
     <?php include("../includes/footer.php"); ?>
+    <script src="../assets/js/turismo-salto.js"></script>
 </body>
 </html>

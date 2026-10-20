@@ -14,6 +14,33 @@
     gap: 22px;
 }
 
+.turismo-mostrar-mas {
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+    color: #176444;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.turismo-mostrar-mas:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.turismo-mostrar-mas:focus-visible {
+    border-radius: 3px;
+    outline: 3px solid #1c7656;
+    outline-offset: 4px;
+}
+
+.turismo-mostrar-mas[hidden] {
+    display: none;
+}
+
 .turismo-categoria {
     display: flex;
     align-items: flex-start;
