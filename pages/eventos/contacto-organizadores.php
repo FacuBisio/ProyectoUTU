@@ -31,6 +31,9 @@ $stmt->close();
 
 $mensajeExito = '';
 $mensajeError = '';
+$nombreFormulario = '';
+$correoFormulario = '';
+$mensajeFormulario = '';
 if (empty($_SESSION['csrf_contacto'])) {
     $_SESSION['csrf_contacto'] = bin2hex(random_bytes(32));
 }
@@ -56,6 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($nombreRecibido);
     $correo = trim($correoRecibido);
     $mensaje = trim($mensajeRecibido);
+    $nombreFormulario = $nombre;
+    $correoFormulario = $correo;
+    $mensajeFormulario = $mensaje;
     if (
         $nombre === ''
         || mb_strlen($nombre, 'UTF-8') > 100
@@ -235,17 +241,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="hidden" name="csrf_token" value="<?= escaparTexto($_SESSION['csrf_contacto']) ?>">
                     <div>
                         <label for="nombre">Nombre</label>
-                        <input id="nombre" name="nombre" type="text" maxlength="100" placeholder="Tu nombre" required>
+                        <input id="nombre" name="nombre" type="text" maxlength="100" value="<?= escaparTexto($nombreFormulario) ?>" placeholder="Tu nombre" required>
                     </div>
 
                     <div>
                         <label for="correo">Correo electrónico</label>
-                        <input id="correo" name="correo" type="email" maxlength="150" placeholder="tuemail@ejemplo.com" required>
+                        <input id="correo" name="correo" type="email" maxlength="150" value="<?= escaparTexto($correoFormulario) ?>" placeholder="tuemail@ejemplo.com" required>
                     </div>
 
                     <div>
                         <label for="mensaje">Mensaje</label>
-                        <textarea id="mensaje" name="mensaje" rows="6" maxlength="5000" placeholder="Escribe tu consulta..." required></textarea>
+                        <textarea id="mensaje" name="mensaje" rows="6" maxlength="5000" placeholder="Escribe tu consulta..." required><?= escaparTexto($mensajeFormulario) ?></textarea>
                     </div>
 
                     <p class="contacto-privacidad">Tu nombre, correo y mensaje se guardarán para que el equipo pueda responder. No incluyas datos sensibles. <a href="<?= escaparTexto(url('pages/privacidad.php')) ?>">Lee el aviso de privacidad</a>.</p>

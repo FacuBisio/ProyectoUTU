@@ -120,11 +120,21 @@
     box-shadow: 0 8px 24px rgba(20, 60, 38, 0.14);
 }
 
+.mapa-lugares-coordenadas-aviso {
+    margin: 12px 0 0;
+    color: #65736a;
+    font-size: 0.85rem;
+}
+
 /* Theme variants and compact map sizing. */
 html[data-tema="oscuro"] .mapa-lugares h2,
 html[data-tema="oscuro"] .mapa-lugares > p,
 html[data-tema="oscuro"] .mapa-lugares-ubicacion p {
     color: #e7eee9;
+}
+
+html[data-tema="oscuro"] .mapa-lugares-coordenadas-aviso {
+    color: #c4d2c8;
 }
 
 html[data-tema="oscuro"] .mapa-lugares-aviso {
@@ -136,6 +146,10 @@ html[data-tema="oscuro"] .mapa-lugares-aviso {
 html[data-alto-contraste="true"] .mapa-lugares h2,
 html[data-alto-contraste="true"] .mapa-lugares > p,
 html[data-alto-contraste="true"] .mapa-lugares-ubicacion p {
+    color: #fff;
+}
+
+html[data-alto-contraste="true"] .mapa-lugares-coordenadas-aviso {
     color: #fff;
 }
 

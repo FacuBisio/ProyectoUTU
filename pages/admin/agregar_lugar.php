@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../../config/sesion.php");
 iniciarSesionSegura();
 require_once("../../conexion.php");
+require_once("../../config/validacion-lugar.php");
 
 if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     http_response_code(403);
@@ -26,90 +27,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
     }
 
-    $nombre = $_POST["nombre"] ?? null;
-    $descripcion = $_POST["descripcion"] ?? null;
-    $direccion = $_POST["direccion"] ?? null;
-    $imagen = $_POST["imagen"] ?? null;
-    $horario = $_POST["horario"] ?? null;
-    $precio = $_POST["precio"] ?? null;
-    $telefono = $_POST["telefono"] ?? null;
-    $sitioWeb = $_POST["sitio_web"] ?? null;
-    $accesibleRecibido = $_POST["accesible"] ?? "";
-    $latitudRecibida = $_POST["latitud"] ?? null;
-    $longitudRecibida = $_POST["longitud"] ?? null;
-    $idCategoriaRecibido = $_POST["id_categoria"] ?? null;
-    $idCategoria = is_string($idCategoriaRecibido)
-        ? filter_var($idCategoriaRecibido, FILTER_VALIDATE_INT)
-        : false;
-
-    if (
-        !is_string($nombre)
-        || !is_string($descripcion)
-        || !is_string($direccion)
-        || !is_string($imagen)
-        || !is_string($horario)
-        || !is_string($precio)
-        || !is_string($telefono)
-        || !is_string($sitioWeb)
-        || !is_string($accesibleRecibido)
-        || !is_string($latitudRecibida)
-        || !is_string($longitudRecibida)
-        || !$idCategoria
-    ) {
-        http_response_code(400);
-        exit("Revisa los datos del lugar y selecciona una categoría válida.");
-    }
-
-    $nombre = trim($nombre);
-    $descripcion = trim($descripcion);
-    $direccion = trim($direccion);
-    $imagen = trim($imagen);
-    $horario = trim($horario);
-    $precio = trim($precio);
-    $telefono = trim($telefono);
-    $sitioWeb = trim($sitioWeb);
-    $latitudRecibida = trim($latitudRecibida);
-    $longitudRecibida = trim($longitudRecibida);
-    $tieneLatitud = $latitudRecibida !== "";
-    $tieneLongitud = $longitudRecibida !== "";
-    $latitud = $tieneLatitud && is_numeric($latitudRecibida) ? (float) $latitudRecibida : null;
-    $longitud = $tieneLongitud && is_numeric($longitudRecibida) ? (float) $longitudRecibida : null;
-    $coordenadasValidas = (!$tieneLatitud && !$tieneLongitud)
-        || ($tieneLatitud
-            && $tieneLongitud
-            && $latitud !== null
-            && $longitud !== null
-            && $latitud >= -90
-            && $latitud <= 90
-            && $longitud >= -180
-            && $longitud <= 180);
-
-    if (
-        $nombre === ""
-        || mb_strlen($nombre, "UTF-8") > 150
-        || strlen($descripcion) > 65535
-        || $direccion === ""
-        || mb_strlen($direccion, "UTF-8") > 200
-        || mb_strlen($imagen, "UTF-8") > 255
-        || mb_strlen($horario, "UTF-8") > 255
-        || mb_strlen($precio, "UTF-8") > 100
-        || mb_strlen($telefono, "UTF-8") > 30
-        || mb_strlen($sitioWeb, "UTF-8") > 255
-        || ($sitioWeb !== "" && (!filter_var($sitioWeb, FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//i', $sitioWeb)))
-        || !in_array($accesibleRecibido, ["", "0", "1"], true)
-        || !$coordenadasValidas
-    ) {
+    $datosLugar = validarFormularioLugar($_POST);
+    if ($datosLugar === null) {
         http_response_code(400);
         exit("Revisa los datos, el sitio web, la accesibilidad y las coordenadas del lugar.");
     }
 
-    $descripcion = $descripcion !== "" ? $descripcion : null;
-    $imagen = $imagen !== "" ? $imagen : null;
-    $horario = $horario !== "" ? $horario : null;
-    $precio = $precio !== "" ? $precio : null;
-    $telefono = $telefono !== "" ? $telefono : null;
-    $sitioWeb = $sitioWeb !== "" ? $sitioWeb : null;
-    $accesible = $accesibleRecibido === "" ? null : (int) $accesibleRecibido;
+    $nombre = $datosLugar["nombre"];
+    $descripcion = $datosLugar["descripcion"];
+    $direccion = $datosLugar["direccion"];
+    $imagen = $datosLugar["imagen"];
+    $horario = $datosLugar["horario"];
+    $precio = $datosLugar["precio"];
+    $telefono = $datosLugar["telefono"];
+    $sitioWeb = $datosLugar["sitioWeb"];
+    $accesible = $datosLugar["accesible"];
+    $latitud = $datosLugar["latitud"];
+    $longitud = $datosLugar["longitud"];
+    $idCategoria = $datosLugar["idCategoria"];
     $conexion->begin_transaction();
 
     try {

@@ -47,6 +47,8 @@ $consultaMapa = $conexion->query(
 );
 
 $ubicacionesMapa = [];
+$totalLugaresMapa = $consultaMapa->num_rows;
+$lugaresSinCoordenadas = 0;
 // Excluye coordenadas inválidas para que no rompan la visualización del mapa.
 while ($lugarMapa = $consultaMapa->fetch_assoc()) {
     if (
@@ -57,6 +59,7 @@ while ($lugarMapa = $consultaMapa->fetch_assoc()) {
         || (float) $lugarMapa["LONGITUD"] < -180
         || (float) $lugarMapa["LONGITUD"] > 180
     ) {
+        $lugaresSinCoordenadas++;
         continue;
     }
 
@@ -92,9 +95,20 @@ $descripcionMapaSegura = htmlspecialchars(
     <div class="mapa-lugares-contenedor">
         <div id="mapaCategoria" aria-label="Mapa de ubicaciones"></div>
         <?php if (!$ubicacionesMapa): ?>
-            <p class="mapa-lugares-aviso" role="status">Todavía no hay ubicaciones con coordenadas para mostrar en el mapa.</p>
+            <p class="mapa-lugares-aviso" role="status">
+                <?= $totalLugaresMapa > 0
+                    ? $totalLugaresMapa . " lugares de esta categoría no tienen coordenadas verificadas."
+                    : "Todavía no hay lugares publicados en esta categoría." ?>
+            </p>
         <?php endif; ?>
     </div>
+    <?php if ($ubicacionesMapa && $lugaresSinCoordenadas > 0): ?>
+        <p class="mapa-lugares-coordenadas-aviso" role="status">
+            <?= $lugaresSinCoordenadas === 1
+                ? "1 lugar no se muestra en el mapa porque su ubicación exacta aún no fue verificada."
+                : $lugaresSinCoordenadas . " lugares no se muestran en el mapa porque sus ubicaciones exactas aún no fueron verificadas." ?>
+        </p>
+    <?php endif; ?>
 </section>
 <script>
 // Construye el mapa, sus marcadores y los enlaces para obtener indicaciones.

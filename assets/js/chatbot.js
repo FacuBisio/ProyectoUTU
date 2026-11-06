@@ -32,6 +32,61 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajes.scrollTop = mensajes.scrollHeight;
     }
 
+    function agregarEnlaces(enlaces) {
+        if (!Array.isArray(enlaces) || enlaces.length === 0) {
+            return;
+        }
+
+        const lista = document.createElement("div");
+        lista.className = "chat-enlaces";
+        enlaces.forEach(enlace => {
+            if (!enlace || typeof enlace.texto !== "string" || typeof enlace.url !== "string") {
+                return;
+            }
+
+            const destino = new URL(enlace.url, window.location.href);
+            if (destino.origin !== window.location.origin) {
+                return;
+            }
+
+            const vinculo = document.createElement("a");
+            vinculo.href = destino.href;
+            vinculo.textContent = enlace.texto;
+            lista.appendChild(vinculo);
+        });
+
+        if (lista.childElementCount > 0) {
+            mensajes.appendChild(lista);
+            mensajes.scrollTop = mensajes.scrollHeight;
+        }
+    }
+
+    function agregarSugerencias(sugerencias) {
+        if (!Array.isArray(sugerencias) || sugerencias.length === 0) {
+            return;
+        }
+
+        const grupo = document.createElement("div");
+        grupo.className = "chat-sugerencias";
+        grupo.setAttribute("aria-label", "Otras consultas sugeridas");
+        sugerencias.forEach(sugerencia => {
+            if (typeof sugerencia !== "string" || !sugerencia.trim()) {
+                return;
+            }
+            const boton = document.createElement("button");
+            boton.type = "button";
+            boton.className = "chat-sugerencia";
+            boton.dataset.consulta = sugerencia;
+            boton.textContent = sugerencia;
+            grupo.appendChild(boton);
+        });
+
+        if (grupo.childElementCount > 0) {
+            mensajes.appendChild(grupo);
+            mensajes.scrollTop = mensajes.scrollHeight;
+        }
+    }
+
     botonAbrir.addEventListener("click", () => alternarChat(true));
     botonCerrar.addEventListener("click", () => alternarChat(false));
 
@@ -50,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        mensajes.querySelectorAll(".chat-sugerencias").forEach(grupo => grupo.remove());
         agregarMensaje(texto, "usuario");
         input.value = "";
         input.disabled = true;
@@ -60,6 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cargando.textContent = "🤖 Escribiendo...";
         mensajes.appendChild(cargando);
         mensajes.scrollTop = mensajes.scrollHeight;
+        const controlador = new AbortController();
+        const temporizador = window.setTimeout(() => controlador.abort(), 20000);
 
         try {
             const datos = new FormData();
@@ -67,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const respuesta = await fetch(panel.dataset.endpoint, {
                 method: "POST",
                 body: datos,
-                headers: { "Accept": "application/json" }
+                headers: { "Accept": "application/json" },
+                signal: controlador.signal
             });
             const tipoContenido = respuesta.headers.get("content-type") || "";
             if (!tipoContenido.includes("application/json")) {
@@ -80,14 +139,30 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             agregarMensaje(resultado.respuesta || "No encontré una respuesta para esa consulta.", "bot");
+            agregarEnlaces(resultado.enlaces);
+            agregarSugerencias(resultado.sugerencias);
         } catch (error) {
-            agregarMensaje(error.message || "No pude completar la consulta. Inténtalo de nuevo.", "bot");
+            const mensajeError = error.name === "AbortError"
+                ? "La consulta está tardando demasiado. Comprueba tu conexión e inténtalo nuevamente."
+                : (error.message || "No pude completar la consulta. Inténtalo de nuevo.");
+            agregarMensaje(mensajeError, "bot");
+            input.value = texto;
             console.error("No se pudo completar la solicitud al chatbot.", error);
         } finally {
+            window.clearTimeout(temporizador);
             cargando.remove();
             input.disabled = false;
             botonEnviar.disabled = false;
             input.focus();
         }
+    });
+
+    mensajes.addEventListener("click", evento => {
+        const botonSugerencia = evento.target.closest(".chat-sugerencia");
+        if (!botonSugerencia || input.disabled) {
+            return;
+        }
+        input.value = botonSugerencia.dataset.consulta || "";
+        formulario.requestSubmit();
     });
 });

@@ -90,7 +90,7 @@ $mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones pa
 
 <?php include("../../includes/chat-widget.php"); ?>
 
-<script src="../../assets/js/slider.js"></script>
+<script src="../../assets/js/slider.js?v=2"></script>
 
 </body>
 </html>

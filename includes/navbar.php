@@ -8,7 +8,7 @@ require_once(__DIR__ . "/../config/config.php");
 
 <!-- Estilos y navegación principal compartidos por las páginas del sitio. -->
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/accesibilidad.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
-<link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
+<link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=8'), ENT_QUOTES, 'UTF-8') ?>">
 
 <section id="navbar">
 
@@ -258,7 +258,6 @@ require_once(__DIR__ . "/../config/config.php");
 
 </section>
 
-<script src="<?= url('assets/js/ITH.js?v=2') ?>"></script>
 <script src="<?= htmlspecialchars(url('assets/js/clima.js?v=3'), ENT_QUOTES, 'UTF-8') ?>"></script>
 <script src="<?= htmlspecialchars(url('assets/js/accesibilidad.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 <script src="<?= htmlspecialchars(url('assets/js/busqueda-navbar.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>

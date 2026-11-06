@@ -2,249 +2,465 @@
 header("Content-Type: application/json; charset=UTF-8");
 header("Cache-Control: no-store");
 
-// Devuelve una respuesta JSON uniforme y termina el procesamiento.
-function responderChat($payload, $status = 200)
+// Centraliza el formato JSON para que la interfaz siempre reciba una respuesta predecible.
+function responderChat(string $respuesta, array $enlaces = [], array $sugerencias = [], int $estado = 200): void
 {
-    http_response_code($status);
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    http_response_code($estado);
+    if ($estado >= 400) {
+        echo json_encode(["error" => $respuesta], JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        exit();
+    }
+    echo json_encode(
+        ["respuesta" => $respuesta, "enlaces" => $enlaces, "sugerencias" => $sugerencias],
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
+    );
     exit();
 }
 
-// Normaliza acentos y signos para comparar consultas y datos del catálogo.
-function normalizarChat($texto)
+// Uniformiza mayúsculas, tildes y signos para comparar preguntas y datos del catálogo.
+function normalizarChat(string $texto): string
 {
     $texto = mb_strtolower($texto, "UTF-8");
     $normalizado = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $texto);
     if ($normalizado === false) {
-        $normalizado = preg_replace('/[^\p{L}\p{N}\s]/u', '', $texto);
+        $normalizado = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $texto);
     } else {
-        $normalizado = preg_replace('/[^a-z0-9\s]/i', '', $normalizado);
+        $normalizado = str_replace("'", "", $normalizado);
+        $normalizado = preg_replace('/[^a-z0-9\s]/i', ' ', $normalizado);
     }
     return preg_replace('/\s+/', ' ', trim($normalizado));
 }
 
+// Comprueba frases completas para evitar coincidencias accidentales dentro de otras palabras.
+function contieneFrase(string $texto, string $frase): bool
+{
+    $frase = normalizarChat($frase);
+    return $frase !== "" && preg_match('/(^|\s)' . preg_quote($frase, '/') . '($|\s)/', $texto) === 1;
+}
+
+function contieneAlguna(string $texto, array $frases): bool
+{
+    foreach ($frases as $frase) {
+        if (contieneFrase($texto, $frase)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Busca coincidencias por nombre completo o por una palabra distintiva del lugar.
+function buscarLugar(string $consulta, array $lugares): ?array
+{
+    $genericas = [
+        "parque", "parques", "museo", "museos", "terma", "termas", "hotel",
+        "restaurante", "restaurantes", "restaurant", "restaurants",
+        "heladeria", "heladerias", "cafeteria", "cafeterias", "cafe", "cafes",
+        "plaza", "plazas", "cine", "ocio", "comida", "rapida",
+    ];
+    $mejorCoincidencia = null;
+    $mejorPuntaje = 0;
+
+    foreach ($lugares as $lugar) {
+        $nombre = normalizarChat($lugar["NOMBRE"]);
+        if (mb_strlen($nombre, "UTF-8") >= 5 && contieneFrase($consulta, $nombre)) {
+            $puntaje = mb_strlen($nombre, "UTF-8") + 100;
+        } else {
+            $puntaje = 0;
+            foreach (explode(" ", $nombre) as $palabra) {
+                if (mb_strlen($palabra, "UTF-8") >= 6
+                    && !in_array($palabra, $genericas, true)
+                    && contieneFrase($consulta, $palabra)) {
+                    $puntaje = max($puntaje, mb_strlen($palabra, "UTF-8"));
+                }
+            }
+        }
+
+        if ($puntaje > $mejorPuntaje) {
+            $mejorCoincidencia = $lugar;
+            $mejorPuntaje = $puntaje;
+        }
+    }
+
+    return $mejorCoincidencia;
+}
+
+// Interpreta qué información pidió la persona mediante un único mapa de palabras clave.
+function detectarCampos(string $consulta): array
+{
+    $criterios = [
+        "HORARIO" => ["Horario", ["horario", "horarios", "a que hora", "cuando abre", "cuando cierra", "esta abierto", "abren", "cierran"]],
+        "PRECIO" => ["Precio", ["precio", "precios", "cuanto cuesta", "cuanto sale", "entrada", "entradas", "gratis", "gratuito"]],
+        "DIRECCION" => ["Dirección", ["direccion", "donde queda", "ubicacion", "como llegar"]],
+        "TELEFONO" => ["Teléfono", ["telefono", "telefonos", "contacto", "llamar"]],
+        "ACCESIBLE" => ["Accesibilidad", ["accesible", "accesibles", "accesibilidad", "silla de ruedas"]],
+        "SITIO_WEB" => ["Sitio web", ["pagina web", "sitio web", "web oficial"]],
+    ];
+    $campos = [];
+
+    foreach ($criterios as $campo => [$etiqueta, $palabras]) {
+        if (contieneAlguna($consulta, $palabras)) {
+            $campos[$campo] = $etiqueta;
+        }
+    }
+
+    return $campos;
+}
+
+// Selecciona la categoría cuyo término coincidente sea más específico.
+function detectarTema(string $consulta, array $temas): ?string
+{
+    $mejorTema = null;
+    $mejorPuntaje = 0;
+    foreach ($temas as $clave => $tema) {
+        foreach ($tema["palabras"] as $palabra) {
+            $puntaje = mb_strlen(normalizarChat($palabra), "UTF-8");
+            if ($puntaje > $mejorPuntaje && contieneFrase($consulta, $palabra)) {
+                $mejorTema = $clave;
+                $mejorPuntaje = $puntaje;
+            }
+        }
+    }
+
+    return $mejorTema;
+}
+
+// Verifica que el catálogo tenga todos los datos solicitados para un lugar.
+function tieneDatosSolicitados(array $lugar, array $campos): bool
+{
+    foreach ($campos as $campo => $etiqueta) {
+        if ($campo === "ACCESIBLE") {
+            if ($lugar[$campo] === null || (int) $lugar[$campo] !== 1) {
+                return false;
+            }
+        } elseif (trim((string) ($lugar[$campo] ?? "")) === "") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Mantiene palabras genéricas de categorías fuera de la búsqueda parcial por nombre.
+function esLugarDeTema(array $lugar, array $tema): bool
+{
+    $categorias = normalizarChat($lugar["CATEGORIAS"] ?? "");
+    $descripcion = normalizarChat($lugar["NOMBRE"] . " " . ($lugar["DESCRIPCION"] ?? ""));
+    return contieneFrase($categorias, $tema["categoria"])
+        || contieneAlguna($descripcion, $tema["palabras"]);
+}
+
+// Devuelve un enlace a una página interna usando la configuración común de rutas.
+function enlaceInterno(string $texto, string $ruta): array
+{
+    require_once(__DIR__ . "/../config/config.php");
+    return ["texto" => $texto, "url" => url($ruta)];
+}
+
+// Acepta únicamente consultas POST con un mensaje válido y de longitud limitada.
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Allow: POST");
-    responderChat(["error" => "Envía tu consulta desde el chat."], 405);
+    http_response_code(405);
+    echo json_encode(["error" => "Envía tu consulta desde el chat."], JSON_UNESCAPED_UNICODE);
+    exit();
 }
 
-// Valida el mensaje antes de consultar la base de datos.
 $mensaje = $_POST["mensaje"] ?? "";
 if (!is_string($mensaje)) {
-    responderChat(["error" => "El mensaje no tiene un formato válido."], 400);
+    responderChat("El mensaje no tiene un formato válido.", [], [], 400);
 }
-
 $mensaje = trim($mensaje);
 if ($mensaje === "" || mb_strlen($mensaje, "UTF-8") > 1000) {
-    responderChat(["error" => "Escribe una consulta de hasta 1000 caracteres."], 400);
+    responderChat("Escribe una consulta de hasta 1000 caracteres.", [], [], 400);
 }
-
 $consulta = normalizarChat($mensaje);
 
+// Carga los lugares y eventos próximos desde la base; el asistente no inventa contenido.
 try {
-    // Carga lugares y categorías para responder con datos publicados en el sitio.
     require_once(__DIR__ . "/../conexion.php");
 
-    $sql = "SELECT l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION,
-                   GROUP_CONCAT(DISTINCT c.NOMBRE ORDER BY c.NOMBRE SEPARATOR ', ') AS CATEGORIAS
-            FROM LUGAR l
-            LEFT JOIN LUGAR_CATEGORIA lc ON lc.ID_LUGAR = l.ID_LUGAR
-            LEFT JOIN CATEGORIA c ON c.ID_CATEGORIA = lc.ID_CATEGORIA
-            GROUP BY l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION
-            ORDER BY l.NOMBRE";
-    $resultado = $conexion->query($sql);
-} catch (mysqli_sql_exception $error) {
-    error_log("No se pudo cargar la información turística del chatbot: " . $error->getMessage());
-    responderChat(["error" => "Ahora no puedo consultar los lugares. Inténtalo de nuevo en unos minutos."], 503);
-}
-
-$lugares = [];
-while ($fila = $resultado->fetch_assoc()) {
-    $fila["BUSQUEDA"] = normalizarChat(
-        $fila["NOMBRE"] . " " . $fila["CATEGORIAS"] . " "
-        . $fila["DESCRIPCION"] . " " . $fila["DIRECCION"]
+    $resultadoLugares = $conexion->query(
+        "SELECT l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION, l.HORARIO,
+                l.PRECIO, l.TELEFONO, l.SITIO_WEB, l.ACCESIBLE,
+                GROUP_CONCAT(DISTINCT c.NOMBRE ORDER BY c.NOMBRE SEPARATOR ', ') AS CATEGORIAS
+         FROM LUGAR l
+         LEFT JOIN LUGAR_CATEGORIA lc ON lc.ID_LUGAR = l.ID_LUGAR
+         LEFT JOIN CATEGORIA c ON c.ID_CATEGORIA = lc.ID_CATEGORIA
+         GROUP BY l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION, l.HORARIO,
+                  l.PRECIO, l.TELEFONO, l.SITIO_WEB, l.ACCESIBLE
+         ORDER BY l.NOMBRE"
     );
-    $lugares[] = $fila;
+
+    $fechaEvento = "STR_TO_DATE(CONCAT(e.ANIO, '-', LPAD(e.MES, 2, '0'), '-', LPAD(e.DIA, 2, '0')), '%Y-%m-%d')";
+    $resultadoEventos = $conexion->query(
+        "SELECT e.ID_EVENTO, e.NOMBRE, e.DIRECCION, e.DIA, e.MES, e.ANIO,
+                e.HORA_INI, l.NOMBRE AS LUGAR
+         FROM EVENTO e
+         LEFT JOIN LUGAR l ON l.ID_LUGAR = e.ID_LUGAR
+         WHERE e.ANIO IS NOT NULL AND {$fechaEvento} >= CURDATE()
+         ORDER BY {$fechaEvento} ASC, e.HORA_INI ASC
+         LIMIT 20"
+    );
+} catch (mysqli_sql_exception $error) {
+    error_log("No se pudo cargar la información del chatbot: " . $error->getMessage());
+    responderChat("Ahora no puedo consultar la información del sitio. Inténtalo de nuevo en unos minutos.", [], [], 503);
 }
 
-$categorias = [
-    "termas" => ["terma", "aguas termales", "dayman", "arapey", "relajar", "relax", "banos termales"],
-    "parques" => ["parque", "plaza", "verde", "aire libre", "picnic"],
-    "naturaleza" => ["naturaleza", "paisaje", "sendero", "cueva", "costanera", "rio", "aire libre"],
-    "gastronomia" => ["gastronomia", "comer", "comida", "restaurant", "restaurante", "hamburguesa", "almorzar", "cenar"],
-    "cafeterias" => ["cafe", "cafeteria", "merienda", "desayuno"],
-    "heladerias" => ["helado", "heladeria", "postre"],
-    "museos" => ["museo", "arte", "exposicion"],
-    "cultura" => ["historia", "historico", "patrimonio", "catedral", "teatro", "cultura"],
-    "ocio" => ["ocio", "noche", "nocturna", "cine", "diversion"],
-    "eventos" => ["evento", "eventos", "agenda", "actividad"],
+$lugares = $resultadoLugares->fetch_all(MYSQLI_ASSOC);
+$eventos = $resultadoEventos->fetch_all(MYSQLI_ASSOC);
+
+$temas = [
+    "termas" => [
+        "nombre" => "termas y bienestar", "categoria" => "termas y bienestar",
+        "ruta" => "pages/lugares/termas.php",
+        "palabras" => ["terma", "termas", "dayman", "daymán", "arapey", "aguas termales", "baños termales", "relajar"],
+    ],
+    "cafeterias" => [
+        "nombre" => "cafeterías", "categoria" => "cafeterias",
+        "ruta" => "pages/gastronomia/cafeterias.php",
+        "palabras" => ["cafeteria", "cafeterias", "cafe", "cafes", "desayuno", "desayunos", "merienda", "meriendas"],
+    ],
+    "heladerias" => [
+        "nombre" => "heladerías", "categoria" => "heladerias",
+        "ruta" => "pages/gastronomia/heladerias.php",
+        "palabras" => ["heladeria", "heladerias", "helado", "helados"],
+    ],
+    "comida_rapida" => [
+        "nombre" => "comida rápida", "categoria" => "comida rapida",
+        "ruta" => "pages/gastronomia/comida-rapida.php",
+        "palabras" => ["comida rapida", "comidas rapidas", "hamburguesa", "hamburguesas", "pizza", "pizzas", "fast food"],
+    ],
+    "restaurantes" => [
+        "nombre" => "restaurantes", "categoria" => "restaurantes",
+        "ruta" => "pages/gastronomia/restaurantes.php",
+        "palabras" => ["restaurante", "restaurantes", "restaurant", "restaurants", "almorzar", "cenar"],
+    ],
+    "parques" => [
+        "nombre" => "parques", "categoria" => "parques",
+        "ruta" => "pages/lugares/parques.php",
+        "palabras" => ["parque", "parques", "plaza", "plazas", "picnic"],
+    ],
+    "naturaleza" => [
+        "nombre" => "lugares de naturaleza", "categoria" => "paisajes y espacios naturales",
+        "ruta" => "pages/lugares/paisajes.php",
+        "palabras" => ["naturaleza", "paisaje", "paisajes", "sendero", "senderos", "costanera", "rio", "rios", "aire libre"],
+    ],
+    "museos" => [
+        "nombre" => "museos y arte", "categoria" => "museos y arte",
+        "ruta" => "pages/lugares/museos.php",
+        "palabras" => ["museo", "museos", "arte", "exposicion", "exposiciones"],
+    ],
+    "cultura" => [
+        "nombre" => "sitios de historia y patrimonio", "categoria" => "patrimonio historico",
+        "ruta" => "pages/lugares/patrimonio.php",
+        "palabras" => ["historia", "historico", "patrimonio", "catedral", "teatro", "cultura"],
+    ],
+    "ocio" => [
+        "nombre" => "ocio y vida nocturna", "categoria" => "ocio y vida nocturna",
+        "ruta" => "pages/lugares/ocio.php",
+        "palabras" => ["ocio", "noche", "nocturna", "cine", "diversion"],
+    ],
 ];
 
-// Mantiene juntas las palabras clave, rutas y categorías consultables por tema.
-$rutas = [
-    "termas" => "pages/lugares/termas.php",
-    "parques" => "pages/lugares/parques.php",
-    "naturaleza" => "pages/lugares/paisajes.php",
-    "gastronomia" => "pages/gastronomia/locales-top.php",
-    "cafeterias" => "pages/gastronomia/cafeterias.php",
-    "heladerias" => "pages/gastronomia/heladerias.php",
-    "museos" => "pages/lugares/museos.php",
-    "cultura" => "pages/lugares/patrimonio.php",
-    "ocio" => "pages/lugares/ocio.php",
-    "eventos" => "pages/eventos/eventos.php",
-];
+// Atiende saludos y preguntas de ayuda antes de buscar datos específicos.
+$esEvento = contieneAlguna($consulta, ["evento", "eventos", "agenda", "que hay para hacer", "que se puede hacer", "actividades", "planes"]);
+$esSaludo = in_array($consulta, ["hola", "buenas", "buen dia", "buenas tardes", "buenas noches", "que tal"], true);
+$esAgradecimiento = in_array($consulta, ["gracias", "muchas gracias", "genial", "perfecto", "muchisimas gracias"], true);
 
-$categoriasEsperadas = [
-    "termas" => ["termas y bienestar"],
-    "parques" => ["parques"],
-    "naturaleza" => ["paisajes y espacios naturales"],
-    "gastronomia" => ["restaurantes", "comida rapida", "locales top", "recomendados"],
-    "cafeterias" => ["cafeterias"],
-    "heladerias" => ["heladerias"],
-    "museos" => ["museos y arte"],
-    "cultura" => ["patrimonio historico"],
-    "ocio" => ["ocio y vida nocturna"],
-    "eventos" => [],
-];
+if ($esSaludo && mb_strlen($consulta, "UTF-8") < 45) {
+    responderChat(
+        "¡Hola! Soy el asistente de GoSalto. Puedo ayudarte a encontrar lugares, consultar sus horarios y precios publicados, revisar eventos próximos o explorar opciones según tus intereses.",
+        [],
+        ["¿Qué puedo visitar?", "Busco termas", "¿Qué eventos hay?", "Lugares accesibles"]
+    );
+}
+if ($esAgradecimiento) {
+    responderChat("¡De nada! ¿Quieres que te recomiende algún lugar o que busque eventos próximos?", [], ["Recomiéndame lugares", "Ver eventos"]);
+}
+if (contieneAlguna($consulta, ["quien eres", "que puedes hacer", "como funciona"]) || $consulta === "ayuda") {
+    responderChat(
+        "Soy el asistente turístico de GoSalto. Respondo usando la información publicada en el catálogo del sitio; no confirmo disponibilidad en tiempo real. Puedo recomendar categorías, dar los datos registrados de un lugar y mostrar eventos próximos.",
+        [],
+        ["Recomiéndame lugares", "Consultar horarios", "Ver eventos", "Buscar cafeterías"]
+    );
+}
 
-$responderLista = static function ($seleccionados, $introduccion, $ruta) {
-    require_once(__DIR__ . "/../config/config.php");
+// Detecta lugar y datos solicitados antes de decidir el tipo de respuesta.
+$lugarEncontrado = buscarLugar($consulta, $lugares);
+$camposConsultados = detectarCampos($consulta);
+
+// Si se identificó un sitio, prioriza su ficha sobre las recomendaciones generales.
+if ($lugarEncontrado !== null) {
+    $nombre = $lugarEncontrado["NOMBRE"];
+    $respuesta = [];
+    if ($camposConsultados) {
+        foreach ($camposConsultados as $campo => $etiqueta) {
+            $valor = $lugarEncontrado[$campo] ?? null;
+            if ($campo === "ACCESIBLE") {
+                $valor = $valor === null ? null : ((int) $valor === 1 ? "Sí" : "No");
+            }
+            $respuesta[] = $etiqueta . ": " . (trim((string) $valor) !== "" ? $valor : "el sitio no tiene ese dato registrado");
+        }
+        $textoRespuesta = $nombre . "\n" . implode("\n", $respuesta);
+    } else {
+        $textoRespuesta = $nombre . ".";
+        if (!empty($lugarEncontrado["DESCRIPCION"])) {
+            $textoRespuesta .= " " . trim($lugarEncontrado["DESCRIPCION"]);
+        }
+        if (!empty($lugarEncontrado["DIRECCION"])) {
+            $textoRespuesta .= "\nDirección: " . $lugarEncontrado["DIRECCION"];
+        }
+        if (!empty($lugarEncontrado["HORARIO"])) {
+            $textoRespuesta .= "\nHorario publicado: " . $lugarEncontrado["HORARIO"];
+        }
+        if (!empty($lugarEncontrado["PRECIO"])) {
+            $textoRespuesta .= "\nPrecio publicado: " . $lugarEncontrado["PRECIO"];
+        }
+    }
+    responderChat($textoRespuesta, [
+        enlaceInterno("Ver ficha completa de " . $nombre, "pages/lugar.php?id=" . (int) $lugarEncontrado["ID_LUGAR"]),
+    ], ["Ver lugares similares", "Consultar eventos"]);
+}
+
+// Presenta únicamente eventos futuros con fecha, hora y ubicación disponibles.
+if ($esEvento) {
+    if (!$eventos) {
+        responderChat("No hay eventos próximos publicados en este momento. Puedes revisar la agenda por si se agregan nuevas actividades.", [
+            enlaceInterno("Abrir agenda de eventos", "pages/eventos/eventos.php"),
+        ], ["¿Qué puedo visitar?", "Buscar termas"]);
+    }
     $lineas = [];
-    foreach (array_slice($seleccionados, 0, 4) as $lugar) {
-        $linea = $lugar["NOMBRE"];
-        if (!empty($lugar["DIRECCION"])) {
-            $linea .= " (" . $lugar["DIRECCION"] . ")";
+    $enlaces = [];
+    foreach (array_slice($eventos, 0, 5) as $evento) {
+        $fecha = sprintf("%02d/%02d/%04d", (int) $evento["DIA"], (int) $evento["MES"], (int) $evento["ANIO"]);
+        $linea = $evento["NOMBRE"] . " — " . $fecha . ", " . substr((string) $evento["HORA_INI"], 0, 5);
+        $ubicacion = $evento["DIRECCION"] ?: $evento["LUGAR"];
+        if ($ubicacion) {
+            $linea .= ", " . $ubicacion;
         }
         $lineas[] = $linea;
+        $enlaces[] = enlaceInterno("Añadir " . $evento["NOMBRE"] . " al calendario", "pages/eventos/calendario.php?id=" . (int) $evento["ID_EVENTO"]);
     }
-
-    $respuesta = $introduccion;
-    if ($lineas) {
-        $respuesta .= "\n" . implode("\n", $lineas);
-    }
-    if ($ruta !== "") {
-        $respuesta .= "\n\nEncuentras más opciones en: " . url($ruta);
-    }
-    return $respuesta;
-};
-
-$saludos = ["hola", "buenas", "buen dia", "buenas tardes", "buenas noches", "que tal"];
-foreach ($saludos as $saludo) {
-    if (preg_match('/(^|\s)' . preg_quote($saludo, '/') . '($|[!,.?\s])/', $consulta)) {
-        responderChat([
-            "respuesta" => "¡Hola! Soy el asistente de GoSalto. Puedo recomendarte termas, parques, lugares para comer, museos y otros sitios de la ciudad. ¿Qué te gustaría conocer?"
-        ]);
-    }
+    responderChat("Estos son algunos eventos próximos publicados:\n" . implode("\n", $lineas), $enlaces, ["Buscar lugares", "¿Qué puedo visitar?"]);
 }
 
-if (preg_match('/\b(gracias|muchas gracias|genial|perfecto)\b/', $consulta)) {
-    responderChat(["respuesta" => "¡De nada! Si quieres, también puedo recomendarte lugares para visitar, comer o disfrutar de las termas."]);
-}
+// Identifica el tema y las solicitudes generales de eventos, gastronomía o recomendaciones.
+$temaDetectado = detectarTema($consulta, $temas);
+$esGastronomiaGeneral = contieneAlguna($consulta, ["gastronomia", "comer", "comida", "donde comer"]);
+$esRecomendacion = contieneAlguna($consulta, ["que hacer", "hacer en salto", "visitar", "turismo", "lugares", "pasear", "sugerencias"])
+    || preg_match('/(^|\s)(recomend\w*|recomiend\w*|suger\w*)(\s|$)/', $consulta) === 1;
+// Filtra el catálogo según la categoría, el dato consultado o la solicitud de recomendaciones.
+$soloAccesibles = isset($camposConsultados["ACCESIBLE"])
+    && $lugarEncontrado === null
+    && $temaDetectado === null
+    && !$esGastronomiaGeneral;
 
-$lugarEncontrado = null;
-foreach ($lugares as $lugar) {
-    $nombre = normalizarChat($lugar["NOMBRE"]);
-    if (mb_strlen($nombre, "UTF-8") >= 4 && str_contains($consulta, $nombre)) {
-        $lugarEncontrado = $lugar;
-        break;
+$seleccionados = [];
+$ruta = "";
+$nombreTema = "";
+if ($soloAccesibles) {
+    $seleccionados = array_values(array_filter($lugares, static function ($lugar) {
+        return (int) ($lugar["ACCESIBLE"] ?? 0) === 1;
+    }));
+    $nombreTema = "lugares que figuran como accesibles";
+} elseif ($temaDetectado !== null) {
+    $tema = $temas[$temaDetectado];
+    $nombreTema = $tema["nombre"];
+    $ruta = $tema["ruta"];
+    $seleccionados = array_values(array_filter(
+        $lugares,
+        static fn($lugar) => esLugarDeTema($lugar, $tema)
+    ));
+} elseif ($esGastronomiaGeneral) {
+    $nombreTema = "gastronomía";
+    $ruta = "pages/gastronomia/locales-top.php";
+    $categoriasGastronomia = ["restaurantes", "comida rapida", "cafeterias", "heladerias", "locales top", "recomendados"];
+    $palabrasGastronomia = ["restaurante", "comida", "hamburguesa", "pizza", "cafeteria", "cafe", "heladeria", "helado", "gastronomia"];
+    $seleccionados = array_values(array_filter($lugares, static function ($lugar) use ($categoriasGastronomia, $palabrasGastronomia) {
+        $categorias = normalizarChat($lugar["CATEGORIAS"] ?? "");
+        $descripcion = normalizarChat($lugar["NOMBRE"] . " " . ($lugar["DESCRIPCION"] ?? ""));
+        return contieneAlguna($categorias, $categoriasGastronomia)
+            || contieneAlguna($descripcion, $palabrasGastronomia);
+    }));
+} elseif ($esRecomendacion) {
+    $nombreTema = "lugares para conocer en Salto";
+    $destacados = ["Termas del Dayman", "Parque Harriague", "Museo del Hombre y la Tecnologia", "Costanera Norte", "Teatro Larranaga"];
+    $lugaresPorNombre = [];
+    foreach ($lugares as $lugar) {
+        $lugaresPorNombre[normalizarChat($lugar["NOMBRE"])] = $lugar;
     }
-}
 
-if ($lugarEncontrado !== null) {
-    require_once(__DIR__ . "/../config/config.php");
-    $respuesta = $lugarEncontrado["NOMBRE"] . ".";
-    if (!empty($lugarEncontrado["DESCRIPCION"])) {
-        $respuesta .= " " . trim($lugarEncontrado["DESCRIPCION"]);
-    }
-    if (!empty($lugarEncontrado["DIRECCION"])) {
-        $respuesta .= " Dirección: " . $lugarEncontrado["DIRECCION"] . ".";
-    }
-
-    $categoria = normalizarChat($lugarEncontrado["CATEGORIAS"] ?? "");
-    $ruta = "";
-    foreach ($categorias as $tipo => $palabras) {
-        foreach ($palabras as $palabra) {
-            if (str_contains($categoria, normalizarChat($palabra))) {
-                $ruta = $rutas[$tipo];
-                break 2;
-            }
+    foreach ($destacados as $destacado) {
+        $nombreNormalizado = normalizarChat($destacado);
+        if (isset($lugaresPorNombre[$nombreNormalizado])) {
+            $seleccionados[] = $lugaresPorNombre[$nombreNormalizado];
         }
     }
-    if ($ruta !== "") {
-        $respuesta .= " Más información: " . url($ruta);
-    }
-    responderChat(["respuesta" => $respuesta]);
-}
 
-$categoriaDetectada = null;
-$coincidencias = [];
-foreach ($categorias as $tipo => $palabras) {
-    foreach ($palabras as $palabra) {
-        if (str_contains($consulta, normalizarChat($palabra))) {
-            $categoriaDetectada = $tipo;
+    $idsSeleccionados = array_fill_keys(array_column($seleccionados, "ID_LUGAR"), true);
+    foreach ($lugares as $lugar) {
+        if (count($seleccionados) >= 5) {
             break;
         }
-    }
-    if ($categoriaDetectada !== null) {
-        break;
-    }
-}
-
-if ($categoriaDetectada !== null) {
-    foreach ($lugares as $lugar) {
-        $categoriasLugar = normalizarChat($lugar["CATEGORIAS"] ?? "");
-        foreach ($categoriasEsperadas[$categoriaDetectada] as $categoriaEsperada) {
-            if (str_contains($categoriasLugar, normalizarChat($categoriaEsperada))) {
-                $coincidencias[] = $lugar;
-                break;
-            }
+        if (!isset($idsSeleccionados[$lugar["ID_LUGAR"]])) {
+            $seleccionados[] = $lugar;
+            $idsSeleccionados[$lugar["ID_LUGAR"]] = true;
         }
     }
-
-    if ($categoriaDetectada === "eventos" && !$coincidencias) {
-        responderChat([
-            "respuesta" => "Puedes consultar la sección de Eventos para ver las publicaciones de la agenda. La información puede cambiar, así que confirma allí los detalles.",
-        ]);
-    }
-
-    $nombres = [
-        "termas" => "termas y bienestar",
-        "parques" => "parques y espacios verdes",
-        "naturaleza" => "lugares de naturaleza",
-        "gastronomia" => "lugares para comer",
-        "cafeterias" => "cafeterías",
-        "heladerias" => "heladerías",
-        "museos" => "museos y arte",
-        "cultura" => "sitios de historia y patrimonio",
-        "ocio" => "opciones de ocio",
-        "eventos" => "lugares y actividades",
-    ];
-    $respuesta = $responderLista(
-        $coincidencias,
-        "Estas son algunas opciones de " . $nombres[$categoriaDetectada] . " en Salto:",
-        $rutas[$categoriaDetectada]
+} elseif ($camposConsultados) {
+    $campo = array_key_first($camposConsultados);
+    $nombreTema = "lugares con " . mb_strtolower($camposConsultados[$campo], "UTF-8") . " publicado";
+    $seleccionados = $lugares;
+} else {
+    responderChat(
+        "No estoy seguro de haber entendido la consulta. Puedo buscar un lugar por su nombre, mostrar categorías del catálogo, consultar datos publicados o listar eventos próximos.",
+        [],
+        ["Buscar termas", "Ver parques", "Buscar dónde comer", "Consultar eventos"]
     );
-    responderChat(["respuesta" => $respuesta]);
 }
 
-if (preg_match('/\b(que hacer|hacer en salto|recomend|visitar|turismo|lugares|pasear)\b/', $consulta)) {
-    $recomendados = [];
-    foreach (["Termas del Daymán", "Parque Harriague", "Museo del Hombre y la Tecnología", "Costanera Norte"] as $destacado) {
-        foreach ($lugares as $lugar) {
-            if (normalizarChat($lugar["NOMBRE"]) === normalizarChat($destacado)) {
-                $recomendados[] = $lugar;
-                break;
-            }
+// Los campos sin datos se omiten de las listas; su ausencia no se interpreta como una respuesta negativa.
+if ($camposConsultados) {
+    $seleccionados = array_values(array_filter(
+        $seleccionados,
+        static fn($lugar) => tieneDatosSolicitados($lugar, $camposConsultados)
+    ));
+}
+
+// Devuelve resultados con enlaces a las fichas para que la persona pueda ampliar la información.
+if (!$seleccionados) {
+    $respuesta = $soloAccesibles
+        ? "No hay lugares marcados como accesibles en el catálogo. La falta de esa marca no significa necesariamente que un lugar no sea accesible; consulta directamente con el establecimiento."
+        : ($camposConsultados
+            ? "No encontré lugares con ese dato publicado en el catálogo. La ausencia de información no confirma que el servicio no esté disponible."
+            : "No encontré opciones publicadas en la categoría de " . $nombreTema . ". Puedes revisar la sección por si hay información adicional.");
+    responderChat($respuesta, $ruta !== "" ? [enlaceInterno("Explorar " . $nombreTema, $ruta)] : [], ["¿Qué puedo visitar?", "Consultar eventos"]);
+}
+
+$lineas = [];
+$enlaces = [];
+foreach (array_slice($seleccionados, 0, 5) as $lugar) {
+    $linea = $lugar["NOMBRE"];
+    if (!empty($lugar["DIRECCION"]) && $lugar["DIRECCION"] !== "Salto") {
+        $linea .= " — " . $lugar["DIRECCION"];
+    }
+    foreach ($camposConsultados as $campo => $etiqueta) {
+        $valor = $campo === "ACCESIBLE"
+            ? ((int) ($lugar[$campo] ?? 0) === 1 ? "Sí" : "No")
+            : trim((string) ($lugar[$campo] ?? ""));
+        if ($valor !== "") {
+            $linea .= " · " . $etiqueta . ": " . $valor;
         }
     }
-    if (!$recomendados) {
-        $recomendados = array_slice($lugares, 0, 4);
-    }
-    responderChat([
-        "respuesta" => $responderLista($recomendados, "Para empezar a recorrer Salto, puedes considerar estas opciones:", "")
-    ]);
+    $lineas[] = $linea;
+    $enlaces[] = enlaceInterno("Ver " . $lugar["NOMBRE"], "pages/lugar.php?id=" . (int) $lugar["ID_LUGAR"]);
+}
+if ($ruta !== "") {
+    $enlaces[] = enlaceInterno("Ver todas las opciones de " . $nombreTema, $ruta);
 }
 
-responderChat([
-    "respuesta" => "Puedo orientarte con información de los lugares disponibles en GoSalto. Prueba a preguntarme por termas, parques, naturaleza, gastronomía, cafeterías, heladerías, museos, patrimonio, ocio o por el nombre de un lugar."
-]);
+$introduccion = $soloAccesibles
+    ? "Según la información registrada en GoSalto, estos lugares figuran como accesibles:"
+    : ($esRecomendacion && $temaDetectado === null && !$esGastronomiaGeneral
+        ? "Para empezar a recorrer Salto, puedes explorar estos lugares:"
+        : "Estas son algunas opciones de " . $nombreTema . " en GoSalto:");
+responderChat($introduccion . "\n" . implode("\n", $lineas), $enlaces, ["Consultar horarios", "¿Qué eventos hay?", "Buscar otra categoría"]);

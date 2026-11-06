@@ -31,6 +31,16 @@ function volverAEventos($mensaje, $tipo = "error", $eventoId = null)
     exit();
 }
 
+function normalizarFechaEvento($fecha): string
+{
+    if (!is_string($fecha)) {
+        return "";
+    }
+
+    $fechaValidada = DateTime::createFromFormat("!Y-m-d", $fecha);
+    return $fechaValidada && $fechaValidada->format("Y-m-d") === $fecha ? $fecha : "";
+}
+
 // Procesa las acciones antes de cargar y mostrar las publicaciones.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!$estaAutenticado) {
@@ -282,17 +292,8 @@ if (!is_string($estadoEventos) || !in_array($estadoEventos, ["proximos", "todos"
     $estadoEventos = "todos";
 }
 
-$fechaDesde = $_GET["desde"] ?? "";
-$fechaHasta = $_GET["hasta"] ?? "";
-foreach (["fechaDesde", "fechaHasta"] as $nombreFecha) {
-    $fechaRecibida = $$nombreFecha;
-    $fechaValidada = is_string($fechaRecibida)
-        ? DateTime::createFromFormat("!Y-m-d", $fechaRecibida)
-        : false;
-    if (!$fechaValidada || $fechaValidada->format("Y-m-d") !== $fechaRecibida) {
-        $$nombreFecha = "";
-    }
-}
+$fechaDesde = normalizarFechaEvento($_GET["desde"] ?? "");
+$fechaHasta = normalizarFechaEvento($_GET["hasta"] ?? "");
 if ($fechaDesde !== "" && $fechaHasta !== "" && $fechaDesde > $fechaHasta) {
     $fechaHasta = "";
 }

@@ -4,23 +4,107 @@
     right: 25px;
     bottom: 25px;
     z-index: 9999;
-    display: grid;
-    width: 60px;
-    height: 60px;
-    place-items: center;
-    border: 0;
+    display: flex;
+    width: 64px;
+    height: 64px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.72);
     border-radius: 50%;
-    background: #19734e;
+    background: linear-gradient(145deg, #32a875 0%, #168052 54%, #0d6341 100%);
     color: #fff;
-    font-size: 24px;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(20, 60, 45, 0.28);
-    transition: transform 160ms ease, background-color 160ms ease;
+    box-shadow: 0 9px 24px rgba(12, 72, 47, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    isolation: isolate;
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+#boton-chat::before {
+    position: absolute;
+    inset: -5px;
+    z-index: -1;
+    border: 1px solid rgba(38, 156, 100, 0.3);
+    border-radius: inherit;
+    content: "";
+    animation: chat-launcher-pulse 2.8s ease-out infinite;
+}
+
+#boton-chat .chat-launcher-icon {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+#boton-chat .chat-launcher-icon svg {
+    width: 27px;
+    height: 27px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+#boton-chat .chat-launcher-icon circle {
+    fill: currentColor;
+    stroke: none;
+}
+
+#boton-chat .chat-launcher-pin {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    display: grid;
+    width: 23px;
+    height: 23px;
+    place-items: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #f2c66d;
+    color: #176345;
+    box-shadow: 0 2px 6px rgba(15, 55, 37, 0.22);
+}
+
+#boton-chat .chat-launcher-pin svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
 }
 
 #boton-chat:hover {
-    transform: scale(1.05);
-    background: #125c3d;
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 13px 28px rgba(12, 72, 47, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    filter: brightness(1.06);
+}
+
+#boton-chat[aria-expanded="true"]::before {
+    animation: none;
+    opacity: 0;
+}
+
+#boton-chat:active {
+    transform: scale(0.97);
+}
+
+@keyframes chat-launcher-pulse {
+    0% {
+        transform: scale(0.94);
+        opacity: 0.75;
+    }
+
+    75%,
+    100% {
+        transform: scale(1.18);
+        opacity: 0;
+    }
 }
 
 #chatbot {
@@ -57,6 +141,17 @@
     background: #19734e;
     color: #fff;
     font-weight: 700;
+}
+
+#chat-header > div {
+    display: grid;
+    gap: 2px;
+}
+
+#chat-header small {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 11px;
+    font-weight: 400;
 }
 
 #chat-header button {
@@ -99,6 +194,36 @@
     color: #fff;
 }
 
+#chat-mensajes .chat-enlaces,
+#chat-mensajes .chat-sugerencias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: -2px 0 12px;
+}
+
+#chat-mensajes .chat-enlaces a,
+#chat-mensajes .chat-sugerencia {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 10px;
+    border: 1px solid #cfe2d7;
+    border-radius: 999px;
+    background: #fff;
+    color: #176341;
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.35;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#chat-mensajes .chat-enlaces a:hover,
+#chat-mensajes .chat-sugerencia:hover {
+    border-color: #19734e;
+    background: #edf7f1;
+}
+
 /* Message composer, disabled state, and keyboard focus. */
 #chat-input {
     display: flex;
@@ -136,6 +261,7 @@
 
 #boton-chat:focus-visible,
 #chatbot button:focus-visible,
+#chatbot a:focus-visible,
 #chatbot input:focus-visible {
     outline: 3px solid #a9e5bb;
     outline-offset: 3px;
@@ -154,9 +280,25 @@
     }
 }
 
+@media (max-width: 480px) {
+    #chatbot .chat-sugerencias,
+    #chatbot .chat-enlaces {
+        gap: 6px;
+    }
+
+    #chatbot .chat-sugerencia,
+    #chatbot .chat-enlaces a {
+        font-size: 11px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     #boton-chat,
     #chatbot {
         transition: none;
+    }
+
+    #boton-chat::before {
+        animation: none;
     }
 }

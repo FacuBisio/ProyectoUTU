@@ -26,6 +26,8 @@
                 <a href="<?= url('pages/gastronomia/locales-top.php') ?>">Gastronomía</a>
                 <a href="<?= url('pages/favoritos.php') ?>">Mi ruta</a>
                 <a href="<?= url('pages/privacidad.php') ?>">Privacidad</a>
+                <a href="<?= url('pages/terminos.php') ?>">Términos y condiciones</a>
+                <a href="<?= url('pages/cookies.php') ?>">Política de cookies</a>
 
             </div>
 
@@ -46,6 +48,7 @@
 
                 <a href="tel:+59897352873">(+598) 97 352 873</a>
                 <a href="mailto:gosaltouy@gmail.com">gosaltouy@gmail.com</a>
+                <a href="mailto:itssalto@gmail.com">Consultas legales y privacidad</a>
 
             </div>
 

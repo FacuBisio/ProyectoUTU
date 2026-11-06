@@ -1,3 +1,38 @@
+/* Keep navigation links and dropdown triggers on the same baseline. */
+#navbar .nav-links {
+    align-items: center;
+}
+
+#navbar .nav-links > .link-btn,
+#navbar .nav-links > .dropdown {
+    display: flex;
+    align-items: center;
+}
+
+#navbar .nav-links .link-btn {
+    height: 40px;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+#navbar .logo a,
+#navbar .nav-links .link-btn,
+#navbar .ith-navbar,
+#navbar .buscador,
+#navbar .menu-usuario-boton {
+    transition: transform 180ms ease;
+}
+
+#navbar .logo a:hover,
+#navbar .nav-links .link-btn:hover,
+#navbar .ith-navbar:hover,
+#navbar .buscador:hover,
+#navbar .menu-usuario-boton:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
 /* Compact navigation search field and submit control. */
 .nav-extra .buscador {
     position: relative;
@@ -157,11 +192,43 @@
     line-height: 1.5;
 }
 
-.nav-extra .buscador input:focus-visible,
 .nav-extra .buscador > button:focus-visible,
 .nav-extra .buscador-sugerencia:focus-visible {
     outline: 3px solid #a9e5bb;
     outline-offset: 2px;
+}
+
+#navbar .buscador > button {
+    transition: transform 180ms ease, background-color 180ms ease;
+}
+
+#navbar .buscador > button:hover {
+    transform: scale(1.12);
+}
+
+.nav-extra .buscador input:focus-visible {
+    outline: none;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #navbar .logo a,
+    #navbar .nav-links .link-btn,
+    #navbar .ith-navbar,
+    #navbar .buscador,
+    #navbar .menu-usuario-boton,
+    #navbar .buscador > button {
+        transition: none;
+    }
+
+    #navbar .logo a:hover,
+    #navbar .nav-links .link-btn:hover,
+    #navbar .ith-navbar:hover,
+    #navbar .buscador:hover,
+    #navbar .menu-usuario-boton:hover,
+    #navbar .buscador > button:hover {
+        transform: none;
+    }
 }
 
 /* Theme variants and width adjustments for the search dropdown. */
@@ -202,6 +269,12 @@ html[data-alto-contraste="true"] .nav-extra .buscador-sugerencias :is(strong, sm
 }
 
 @media (max-width: 768px) {
+    #navbar .nav-links .link-btn {
+        height: 36px;
+        padding: 6px 8px;
+        font-size: 15px;
+    }
+
     #navbar {
         position: fixed;
         height: auto;
