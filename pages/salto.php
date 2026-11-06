@@ -1,3 +1,7 @@
+<?php
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

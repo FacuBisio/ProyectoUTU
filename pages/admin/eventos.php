@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: ../login.php");
@@ -313,6 +314,7 @@ $imagenActual = $eventoEditar && !empty($eventoEditar["IMAGEN"])
             <a href="lugares.php">Lugares</a>
             <a href="eventos.php" aria-current="page">Eventos</a>
             <a href="comentarios.php">Comentarios</a>
+            <a href="consultas.php">Consultas</a>
         </nav>
         <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
     </header>

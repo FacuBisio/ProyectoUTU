@@ -67,11 +67,6 @@ CREATE TABLE `comentario` (
 -- Volcado de datos para la tabla `comentario`
 --
 
-INSERT INTO `comentario` (`ID_COMENTARIO`, `ID_USUARIO`, `COMENTARIO`, `FECHA`) VALUES
-(1, 10, 'Salto es una ciudad muy linda para visitar, especialmente por sus termas.', '2026-09-14 23:49:12'),
-(2, 12, 'Me encantaron los parques y los espacios verdes de la ciudad.', '2026-09-14 23:49:12'),
-(3, 13, 'Hay muchos lugares interesantes para conocer y disfrutar en familia.', '2026-09-14 23:49:12');
-
 -- --------------------------------------------------------
 
 --
@@ -83,6 +78,7 @@ CREATE TABLE `evento` (
   `ID_USUARIO` int(11) NOT NULL,
   `ID_LUGAR` int(11) DEFAULT NULL,
   `NOMBRE` varchar(150) NOT NULL,
+  `TIPO` varchar(50) NOT NULL DEFAULT 'Otro',
   `DESCRIPCION` text DEFAULT NULL,
   `HORA_INI` time NOT NULL,
   `HORA_FIN` time NOT NULL,
@@ -107,12 +103,6 @@ CREATE TABLE `evento` (
 -- Volcado de datos para la tabla `evento`
 --
 
-INSERT INTO `evento` (`ID_EVENTO`, `ID_USUARIO`, `ID_LUGAR`, `NOMBRE`, `HORA_INI`, `HORA_FIN`, `DIA`, `MES`) VALUES
-(13, 10, 5, 'Evento 1', '18:00:00', '21:00:00', 15, 9),
-(14, 10, 6, 'Evento 2', '19:00:00', '22:00:00', 18, 9),
-(15, 10, 7, 'Evento 3', '20:00:00', '23:00:00', 20, 9),
-(16, 10, 8, 'Evento 4', '17:00:00', '20:00:00', 25, 9);
-
 -- --------------------------------------------------------
 
 --
@@ -125,8 +115,14 @@ CREATE TABLE `lugar` (
   `DESCRIPCION` text DEFAULT NULL,
   `DIRECCION` varchar(200) NOT NULL,
   `IMAGEN` varchar(255) DEFAULT NULL,
+  `HORARIO` varchar(255) DEFAULT NULL,
+  `PRECIO` varchar(100) DEFAULT NULL,
+  `TELEFONO` varchar(30) DEFAULT NULL,
+  `SITIO_WEB` varchar(255) DEFAULT NULL,
+  `ACCESIBLE` tinyint(1) DEFAULT NULL,
   `LATITUD` decimal(10,7) DEFAULT NULL,
   `LONGITUD` decimal(10,7) DEFAULT NULL,
+  `ACTUALIZADO_EN` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   CONSTRAINT `CHK_LUGAR_COORDENADAS` CHECK (
     (`LATITUD` IS NULL AND `LONGITUD` IS NULL)
     OR (
@@ -142,10 +138,6 @@ CREATE TABLE `lugar` (
 --
 
 INSERT INTO `lugar` (`ID_LUGAR`, `NOMBRE`, `DESCRIPCION`, `DIRECCION`, `IMAGEN`, `LATITUD`, `LONGITUD`) VALUES
-(5, 'Trouville', 'Lugar gastronómico para eventos.', 'Artigas 123', 'assets/img/trouville.jpg', NULL, NULL),
-(6, 'Café Central', 'Cafetería para eventos.', 'Uruguay 456', 'assets/img/cafe.jpg', NULL, NULL),
-(7, 'Heladería del Centro', 'Heladería para eventos.', 'Brasil 789', 'assets/img/heladeria.jpg', NULL, NULL),
-(8, 'La Terraza', 'Espacio gastronómico para eventos.', 'Rivera 321', 'assets/img/terraza.jpg', NULL, NULL),
 (9, 'Parque Harriague', 'Un espacio verde ideal para relajarse, hacer ejercicio y disfrutar de la naturaleza. El parque cuenta con áreas de picnic, senderos para caminar y zonas de juegos para niños.', 'Salto', 'assets/img/Parques/parqueharriague.jpg', -31.3977508, -57.9623953),
 (10, 'Parque Solari', 'Este parque es perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parquesolari.png', -31.3791252, -57.9446967),
 (11, 'Parque Indígena Vaimaca Pirú', 'Un espacio verde y acogedor, perfecto para familias y personas que buscan disfrutar de la naturaleza. El parque ofrece instalaciones para deportes y áreas de descanso.', 'Salto', 'assets/img/Parques/parqueindigena.jpg', -31.3720848, -57.9797180),
@@ -268,13 +260,6 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`ID_USUARIO`, `ID_ROL`, `NOMBRE`, `CONTRASENA`, `CORREO`) VALUES
-(10, 1, 'Facundo', 'Pollibisio2006', 'facubisio410@gmail.com'),
-(11, 3, 'dasd', '231312', 'dasdas@fdasdas'),
-(12, 3, 'Usuario1', '123', 'usuario1@gmail.com'),
-(13, 3, 'Usuario2', '123', 'usuario2@gmal.com'),
-(14, 3, 'juan', '12345678', 'juan@gmail.com');
-
 -- --------------------------------------------------------
 
 --
@@ -286,16 +271,20 @@ CREATE TABLE `usuario_telefono` (
   `TELEFONO` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `contacto_consulta` (
+  `ID_CONSULTA` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(100) NOT NULL,
+  `CORREO` varchar(150) NOT NULL,
+  `MENSAJE` text NOT NULL,
+  `FECHA` datetime NOT NULL DEFAULT current_timestamp(),
+  `ESTADO` enum('Pendiente','En seguimiento','Respondida') NOT NULL DEFAULT 'Pendiente',
+  PRIMARY KEY (`ID_CONSULTA`),
+  KEY `IDX_CONTACTO_CONSULTA_FECHA` (`FECHA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Volcado de datos para la tabla `usuario_telefono`
 --
-
-INSERT INTO `usuario_telefono` (`ID_USUARIO`, `TELEFONO`) VALUES
-(10, '092902842'),
-(11, '3213312'),
-(12, '091091091'),
-(13, '092092092'),
-(14, '091352873');
 
 --
 -- Estructura de tablas para reacciones y comentarios de eventos
@@ -319,6 +308,14 @@ CREATE TABLE `evento_comentario` (
   PRIMARY KEY (`ID_COMENTARIO`),
   KEY `FK_COMENTARIO_EVENTO` (`ID_EVENTO`),
   KEY `FK_EVENTO_COMENTARIO_USUARIO` (`ID_USUARIO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `usuario_lugar_guardado` (
+  `ID_USUARIO` int(11) NOT NULL,
+  `ID_LUGAR` int(11) NOT NULL,
+  `FECHA_AGREGADO` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID_USUARIO`, `ID_LUGAR`),
+  KEY `IDX_GUARDADO_LUGAR` (`ID_LUGAR`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -393,13 +390,13 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `comentario`
 --
 ALTER TABLE `comentario`
-  MODIFY `ID_COMENTARIO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID_COMENTARIO` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `evento`
 --
 ALTER TABLE `evento`
-  MODIFY `ID_EVENTO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ID_EVENTO` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `lugar`
@@ -417,7 +414,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `ID_USUARIO` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `ID_USUARIO` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -466,6 +463,10 @@ ALTER TABLE `evento_reaccion`
 ALTER TABLE `evento_comentario`
   ADD CONSTRAINT `FK_COMENTARIO_EVENTO` FOREIGN KEY (`ID_EVENTO`) REFERENCES `evento` (`ID_EVENTO`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_EVENTO_COMENTARIO_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuario` (`ID_USUARIO`) ON DELETE CASCADE;
+
+ALTER TABLE `usuario_lugar_guardado`
+  ADD CONSTRAINT `FK_GUARDADO_USUARIO` FOREIGN KEY (`ID_USUARIO`) REFERENCES `usuario` (`ID_USUARIO`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_GUARDADO_LUGAR` FOREIGN KEY (`ID_LUGAR`) REFERENCES `lugar` (`ID_LUGAR`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

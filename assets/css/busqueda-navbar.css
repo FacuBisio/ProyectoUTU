@@ -202,14 +202,59 @@ html[data-alto-contraste="true"] .nav-extra .buscador-sugerencias :is(strong, sm
 }
 
 @media (max-width: 768px) {
+    #navbar {
+        position: fixed;
+        height: auto;
+        min-height: 100px;
+    }
+
+    .navbar-container {
+        box-sizing: border-box;
+        display: flex;
+        min-height: 100px;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+
+    .nav-links {
+        order: 2;
+        width: 100%;
+        flex: 1 0 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 12px;
+        white-space: normal;
+    }
+
+    .nav-extra {
+        width: auto;
+        flex: 0 1 auto;
+        gap: 8px;
+    }
+
     .nav-extra .buscador {
-        width: min(220px, calc(100vw - 100px));
+        width: min(220px, calc(100vw - 160px));
         min-width: 0;
         flex: 0 1 220px;
     }
 
     .nav-extra .buscador-sugerencias {
         right: auto;
+    }
+
+    .dropdown .menu-desplegable {
+        box-sizing: border-box;
+        left: 50%;
+        width: min(300px, calc(100vw - 32px));
+        transform: translateX(-50%);
+    }
+
+    .dropdown:hover .menu-desplegable,
+    .menu-desplegable:hover {
+        transform: translateX(-50%);
     }
 }
 

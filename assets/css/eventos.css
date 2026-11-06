@@ -171,6 +171,58 @@
     scroll-margin-top: 116px;
 }
 
+.eventos-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #e1e9e3;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.eventos-filtros label {
+    display: grid;
+    gap: 5px;
+    color: #526b5c;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.eventos-filtros input,
+.eventos-filtros select {
+    min-height: 40px;
+    padding: 7px 10px;
+    border: 1px solid #d5e0d8;
+    border-radius: 8px;
+    background: #fff;
+    color: #17382d;
+    font: inherit;
+}
+
+.eventos-filtros button,
+.eventos-filtros > a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 13px;
+    border: 0;
+    border-radius: 8px;
+    background: #176849;
+    color: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.eventos-filtros > a {
+    background: #eaf4ed;
+    color: #176849;
+}
+
 .evento-compositor,
 .evento-post,
 .eventos-vacio {
@@ -544,6 +596,17 @@
     padding: 17px 19px 12px;
 }
 
+.evento-tipo {
+    display: inline-flex;
+    margin: 0 0 8px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #eaf4ed;
+    color: #176849;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
 .evento-post-contenido h2 {
     margin: 0;
     color: #1f392c;
@@ -590,6 +653,24 @@
     gap: 8px;
     padding: 12px 18px;
     border-top: 1px solid #eef2ef;
+}
+
+.evento-calendario {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #176849;
+    font-size: 0.8rem;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.evento-calendario:hover {
+    text-decoration: underline;
+}
+
+.evento-fecha-publicacion--pasado {
+    color: #7a625d;
 }
 
 .evento-reacciones form {

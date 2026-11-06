@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: ../login.php");

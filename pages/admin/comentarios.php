@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: ../login.php");
@@ -135,6 +136,7 @@ $cantidadEventos = $cantidadComentarios - $cantidadSalto;
             <a href="lugares.php">Lugares</a>
             <a href="eventos.php">Eventos</a>
             <a href="comentarios.php" aria-current="page">Comentarios</a>
+            <a href="consultas.php">Consultas</a>
         </nav>
         <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
     </header>

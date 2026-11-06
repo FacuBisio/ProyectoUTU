@@ -1,11 +1,16 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 require_once("../../conexion.php");
 
 if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     http_response_code(403);
     die("Acceso denegado.");
+}
+
+if (empty($_SESSION["csrf_admin_lugares"])) {
+    $_SESSION["csrf_admin_lugares"] = bin2hex(random_bytes(32));
 }
 
 $sql = "SELECT 
@@ -49,6 +54,7 @@ $resultado = $conexion->query($sql);
             <a href="lugares.php" aria-current="page">Lugares</a>
             <a href="eventos.php">Eventos</a>
             <a href="comentarios.php">Comentarios</a>
+            <a href="consultas.php">Consultas</a>
         </nav>
         <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
     </header>
@@ -104,7 +110,11 @@ $resultado = $conexion->query($sql);
                                     <td>
                                         <div class="admin-crud-acciones">
                                             <a class="admin-crud-accion editar" href="editar_lugar.php?id=<?= (int) $lugar["ID_LUGAR"] ?>">Editar</a>
-                                            <a class="admin-crud-accion eliminar" href="eliminar_lugar.php?id=<?= (int) $lugar["ID_LUGAR"] ?>" onclick="return confirm('¿Seguro que quieres eliminar este lugar?')">Eliminar</a>
+                                            <form action="eliminar_lugar.php" method="POST" onsubmit="return confirm('¿Seguro que quieres eliminar este lugar?')">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_admin_lugares"], ENT_QUOTES, "UTF-8") ?>">
+                                                <input type="hidden" name="id_lugar" value="<?= (int) $lugar["ID_LUGAR"] ?>">
+                                                <button class="admin-crud-accion eliminar" type="submit">Eliminar</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

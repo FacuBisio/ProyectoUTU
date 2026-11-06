@@ -1,11 +1,22 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     header("Allow: POST");
     exit("Método no permitido.");
+}
+
+$token = $_POST["csrf_token"] ?? "";
+if (
+    !is_string($token)
+    || empty($_SESSION["csrf_registro"])
+    || !hash_equals($_SESSION["csrf_registro"], $token)
+) {
+    http_response_code(400);
+    exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
 }
 
 require_once("../conexion.php");
@@ -21,22 +32,27 @@ if (
     || !is_string($correo)
     || !is_string($contrasena)
     || !is_string($telefono)
-    || $nombre === ""
-    || !filter_var($correo, FILTER_VALIDATE_EMAIL)
-    || strlen($contrasena) < 8
-    || $telefono === ""
 ) {
     http_response_code(400);
-    exit("Revisa los datos. La contraseña debe tener al menos 8 caracteres.");
+    exit("Revisa los datos enviados.");
 }
 
 $nombre = trim($nombre);
 $correo = trim($correo);
 $telefono = trim($telefono);
 
-if ($nombre === "" || !filter_var($correo, FILTER_VALIDATE_EMAIL) || $telefono === "") {
+if (
+    $nombre === ""
+    || mb_strlen($nombre, "UTF-8") > 100
+    || !filter_var($correo, FILTER_VALIDATE_EMAIL)
+    || mb_strlen($correo, "UTF-8") > 150
+    || strlen($contrasena) < 8
+    || strlen($contrasena) > 72
+    || $telefono === ""
+    || mb_strlen($telefono, "UTF-8") > 30
+) {
     http_response_code(400);
-    exit("Revisa el nombre, el correo y el teléfono.");
+    exit("Revisa el nombre, correo y teléfono; la contraseña debe tener entre 8 y 72 bytes.");
 }
 
 $stmt = $conexion->prepare("SELECT ID_USUARIO FROM USUARIO WHERE CORREO = ? LIMIT 1");
@@ -81,6 +97,7 @@ try {
 
 // Inicia la sesión del nuevo usuario solo después de confirmar la transacción.
 session_regenerate_id(true);
+unset($_SESSION["csrf_registro"]);
 $_SESSION["id_usuario"] = $idUsuario;
 $_SESSION["nombre"] = $nombre;
 $_SESSION["correo"] = $correo;

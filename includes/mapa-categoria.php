@@ -85,6 +85,10 @@ $descripcionMapaSegura = htmlspecialchars(
 <section class="mapa-parques mapa-lugares" aria-labelledby="tituloMapaCategoria">
     <h2 id="tituloMapaCategoria"><?= $tituloMapaSeguro ?></h2>
     <p><?= $descripcionMapaSegura ?></p>
+    <div class="mapa-lugares-ubicacion">
+        <button id="mostrar-mi-ubicacion" type="button">Mostrar mi ubicación</button>
+        <p id="estado-ubicacion" role="status" aria-live="polite">La ubicación solo se solicita si presionas el botón.</p>
+    </div>
     <div class="mapa-lugares-contenedor">
         <div id="mapaCategoria" aria-label="Mapa de ubicaciones"></div>
         <?php if (!$ubicacionesMapa): ?>
@@ -97,12 +101,18 @@ $descripcionMapaSegura = htmlspecialchars(
 document.addEventListener("DOMContentLoaded", () => {
     const ubicaciones = <?= $ubicacionesJson ?>;
     const elementoMapa = document.getElementById("mapaCategoria");
+    const botonUbicacion = document.getElementById("mostrar-mi-ubicacion");
+    const estadoUbicacion = document.getElementById("estado-ubicacion");
     if (!elementoMapa) {
         console.error("No se encontró el contenedor del mapa de lugares.");
         return;
     }
     if (!window.L) {
         console.error("No se pudo cargar Leaflet para mostrar el mapa.");
+        if (botonUbicacion && estadoUbicacion) {
+            botonUbicacion.disabled = true;
+            estadoUbicacion.textContent = "No se pudo cargar el mapa para mostrar tu ubicación.";
+        }
         return;
     }
 
@@ -111,6 +121,58 @@ document.addEventListener("DOMContentLoaded", () => {
         attribution: "&copy; OpenStreetMap contributors",
         maxZoom: 19
     }).addTo(mapa);
+
+    let marcadorUsuario = null;
+    botonUbicacion.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+            estadoUbicacion.textContent = "Este navegador no permite consultar la ubicación.";
+            return;
+        }
+
+        botonUbicacion.disabled = true;
+        estadoUbicacion.textContent = "Solicitando permiso para consultar la ubicación…";
+        navigator.geolocation.getCurrentPosition(
+            posicion => {
+                const punto = [posicion.coords.latitude, posicion.coords.longitude];
+                if (
+                    !Number.isFinite(punto[0])
+                    || !Number.isFinite(punto[1])
+                    || punto[0] < -90
+                    || punto[0] > 90
+                    || punto[1] < -180
+                    || punto[1] > 180
+                ) {
+                    estadoUbicacion.textContent = "El navegador devolvió una ubicación no válida.";
+                    botonUbicacion.disabled = false;
+                    return;
+                }
+
+                if (marcadorUsuario) {
+                    mapa.removeLayer(marcadorUsuario);
+                }
+                marcadorUsuario = L.circleMarker(punto, {
+                    radius: 9,
+                    color: "#fff",
+                    weight: 3,
+                    fillColor: "#176b55",
+                    fillOpacity: 1
+                }).addTo(mapa).bindPopup("Tu ubicación");
+                mapa.setView(punto, 15);
+                marcadorUsuario.openPopup();
+                estadoUbicacion.textContent = "Tu ubicación se muestra en este mapa y no se guarda en el sitio.";
+                botonUbicacion.disabled = false;
+            },
+            error => {
+                estadoUbicacion.textContent = error.code === error.PERMISSION_DENIED
+                    ? "No se autorizó el acceso a la ubicación."
+                    : error.code === error.TIMEOUT
+                        ? "La consulta de ubicación tardó demasiado. Inténtalo otra vez."
+                        : "No se pudo determinar tu ubicación.";
+                botonUbicacion.disabled = false;
+            },
+            { enableHighAccuracy: false, maximumAge: 60000, timeout: 10000 }
+        );
+    });
 
     const marcadores = [];
     ubicaciones.forEach(lugar => {

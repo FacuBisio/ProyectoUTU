@@ -1,4 +1,7 @@
 <?php
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
+
 require_once("../../conexion.php");
 require_once("../../config/imagenes-lugares.php");
 

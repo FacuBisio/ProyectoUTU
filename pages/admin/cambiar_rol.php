@@ -1,12 +1,27 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 require_once("../../conexion.php");
 
 if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     http_response_code(403);
     exit("Acceso denegado.");
+}
+
+$token = $_POST["csrf_token"] ?? "";
+if (
+    $_SERVER["REQUEST_METHOD"] !== "POST"
+    || !is_string($token)
+    || empty($_SESSION["csrf_admin_usuarios"])
+    || !hash_equals($_SESSION["csrf_admin_usuarios"], $token)
+) {
+    http_response_code($_SERVER["REQUEST_METHOD"] === "POST" ? 400 : 405);
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        header("Allow: POST");
+    }
+    exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
 }
 
 $idUsuario = filter_input(INPUT_POST, "id_usuario", FILTER_VALIDATE_INT);

@@ -1,6 +1,7 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 require_once("../../conexion.php");
 
@@ -10,7 +11,21 @@ if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     exit("Acceso denegado.");
 }
 
-$id_usuario = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+$token = $_POST["csrf_token"] ?? "";
+if (
+    $_SERVER["REQUEST_METHOD"] !== "POST"
+    || !is_string($token)
+    || empty($_SESSION["csrf_admin_usuarios"])
+    || !hash_equals($_SESSION["csrf_admin_usuarios"], $token)
+) {
+    http_response_code($_SERVER["REQUEST_METHOD"] === "POST" ? 400 : 405);
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        header("Allow: POST");
+    }
+    exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
+}
+
+$id_usuario = filter_input(INPUT_POST, "id_usuario", FILTER_VALIDATE_INT);
 
 if ($id_usuario === false || $id_usuario === null) {
     header("Location: usuarios.php?error=usuario_no_valido");
@@ -63,8 +78,9 @@ try {
 } catch (mysqli_sql_exception $e) {
 
     $conexion->rollback();
-
-    echo "No se pudo eliminar el usuario.";
+    error_log("No se pudo eliminar el usuario {$id_usuario}: " . $e->getMessage());
+    http_response_code(500);
+    exit("No se pudo eliminar el usuario. Inténtalo de nuevo.");
 }
 
 exit();

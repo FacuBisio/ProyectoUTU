@@ -1,29 +1,39 @@
-const API_KEY = "8d0ad8180d7dea9356b595b7f6bd1f62";
-const CIUDAD = "Salto,UY";
+const ENDPOINT_CLIMA = "https://api.open-meteo.com/v1/forecast?latitude=-31.3833&longitude=-57.9667&current=temperature_2m%2Crelative_humidity_2m&timezone=America%2FMontevideo";
 
-// Consulta y muestra el clima; informa si la solicitud no puede completarse.
 async function cargarClima() {
-    try {
-
-        const respuesta = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${CIUDAD}&units=metric&lang=es&appid=${API_KEY}`
-        );
-
-        const datos = await respuesta.json();
-        const elementoClima = document.getElementById("clima");
-
-        elementoClima.textContent = `🌤 ${Math.round(datos.main.temp)}°C | 💧 ${datos.main.humidity}%`;
-
-    } catch (error) {
-
-        document.getElementById("clima").textContent = "Clima no disponible";
-
-        console.error(error);
-
+    const elementoClima = document.getElementById("clima");
+    if (!elementoClima) {
+        return;
     }
 
+    try {
+        const controlador = new AbortController();
+        const timeout = window.setTimeout(() => controlador.abort(), 15000);
+        let respuesta;
+        try {
+            respuesta = await fetch(ENDPOINT_CLIMA, {
+                signal: controlador.signal,
+                headers: { "Accept": "application/json" }
+            });
+        } finally {
+            window.clearTimeout(timeout);
+        }
+        const tipoContenido = respuesta.headers.get("content-type") || "";
+        if (!tipoContenido.includes("application/json")) {
+            throw new Error("El servicio del clima devolvió una respuesta inesperada.");
+        }
+        const datos = await respuesta.json();
+        const temperatura = datos.current && datos.current.temperature_2m;
+        const humedad = datos.current && datos.current.relative_humidity_2m;
+        if (!respuesta.ok || !Number.isFinite(temperatura) || !Number.isFinite(humedad)) {
+            throw new Error(`El servicio del clima respondió con HTTP ${respuesta.status} o datos incompletos.`);
+        }
+        elementoClima.textContent = `🌤 ${Math.round(temperatura)}°C | 💧 ${humedad}%`;
+    } catch (error) {
+        elementoClima.textContent = "Clima no disponible";
+        console.error("No se pudo cargar el clima de Salto.", error);
+    }
 }
 
-// Carga el valor inicial y lo refresca cada diez minutos.
 cargarClima();
 setInterval(cargarClima, 600000);

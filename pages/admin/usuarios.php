@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: ../login.php");
@@ -12,6 +13,10 @@ if ((int) ($_SESSION["id_rol"] ?? 0) !== 1) {
 }
 
 require_once("../../conexion.php");
+
+if (empty($_SESSION["csrf_admin_usuarios"])) {
+    $_SESSION["csrf_admin_usuarios"] = bin2hex(random_bytes(32));
+}
 
 $sql = "SELECT usuario.id_usuario,
                usuario.id_rol,
@@ -50,6 +55,7 @@ $errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "")
             <a href="lugares.php">Lugares</a>
             <a href="eventos.php">Eventos</a>
             <a href="comentarios.php">Comentarios</a>
+            <a href="consultas.php">Consultas</a>
         </nav>
         <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
     </header>
@@ -121,6 +127,7 @@ $errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "")
                                         <div class="admin-crud-acciones admin-crud-acciones--usuario">
                                             <?php if ($permiteEditarRol): ?>
                                                 <form class="admin-crud-rol-form" action="cambiar_rol.php" method="POST">
+                                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_admin_usuarios"], ENT_QUOTES, "UTF-8") ?>">
                                                     <input type="hidden" name="id_usuario" value="<?= $idUsuario ?>">
                                                     <label class="admin-crud-sr-only" for="rol-<?= $idUsuario ?>">Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?></label>
                                                     <select id="rol-<?= $idUsuario ?>" name="id_rol" aria-label="Rol para <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?>">
@@ -133,7 +140,11 @@ $errorRol = ($_GET["error"] ?? "") === "rol_protegido" || ($_GET["error"] ?? "")
                                                 <span class="admin-crud-rol admin-crud-rol--protegido"><?= $esUsuarioActual ? "Tu cuenta" : "Protegido" ?></span>
                                             <?php endif; ?>
                                             <?php if (!$esUsuarioActual && !$esAdministrador): ?>
-                                                <a class="admin-crud-accion eliminar" href="eliminar_usuario.php?id=<?= $idUsuario ?>" onclick="return confirm('¿Seguro que quieres eliminar a <?= htmlspecialchars($fila["nombre"], ENT_QUOTES, "UTF-8") ?>?')">Eliminar</a>
+                                                <form action="eliminar_usuario.php" method="POST" onsubmit="return confirm('¿Seguro que quieres eliminar esta cuenta?')">
+                                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_admin_usuarios"], ENT_QUOTES, "UTF-8") ?>">
+                                                    <input type="hidden" name="id_usuario" value="<?= $idUsuario ?>">
+                                                    <button class="admin-crud-accion eliminar" type="submit">Eliminar</button>
+                                                </form>
                                             <?php endif; ?>
                                         </div>
                                     </td>

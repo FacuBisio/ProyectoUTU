@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
+
+if (empty($_SESSION["csrf_registro"])) {
+    $_SESSION["csrf_registro"] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -50,6 +55,7 @@ session_start();
                 <p class="auth-descripcion">Completa tus datos para empezar a explorar Salto.</p>
 
                 <form class="auth-form" action="guardarusuarios.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_registro"], ENT_QUOTES, "UTF-8") ?>">
                     <label for="nombre">Nombre completo</label>
                     <div class="auth-campo">
                         <i class="fa-regular fa-user" aria-hidden="true"></i>
@@ -59,6 +65,7 @@ session_start();
                             name="nombre"
                             placeholder="Tu nombre"
                             autocomplete="name"
+                            maxlength="100"
                             required
                         >
                     </div>
@@ -72,6 +79,7 @@ session_start();
                             name="correo"
                             placeholder="nombre@ejemplo.com"
                             autocomplete="email"
+                            maxlength="150"
                             required
                         >
                     </div>
@@ -86,6 +94,7 @@ session_start();
                             placeholder="Al menos 8 caracteres"
                             autocomplete="new-password"
                             minlength="8"
+                            maxlength="72"
                             required
                         >
                     </div>
@@ -99,6 +108,7 @@ session_start();
                             name="telefono"
                             placeholder="Tu número de teléfono"
                             autocomplete="tel"
+                            maxlength="30"
                             required
                         >
                     </div>

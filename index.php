@@ -1,3 +1,7 @@
+<?php
+require_once(__DIR__ . "/config/sesion.php");
+iniciarSesionSegura();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -57,7 +61,7 @@
 
     <div class="cards-container">
 
-        <div class="card" aria-label="Lugares">
+        <a class="card" href="pages/buscar.php" aria-label="Explorar lugares de Salto">
 
             <img src="assets/img/fuente-naturaleza.jpeg" alt="Lugares de Salto">
 
@@ -67,9 +71,10 @@
                 Descubre paisajes, parques, patrimonio y experiencias para recorrer en Salto.
             </p>
 
-        </div>
+            <span class="card-enlace">Explorar lugares <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
 
-        <div class="card" aria-label="Eventos">
+        <a class="card" href="pages/eventos/eventos.php" aria-label="Explorar eventos de Salto">
 
             <img src="assets/img/Ocio/porco.jpg" alt="Eventos en Salto">
 
@@ -79,9 +84,10 @@
                 Descubre qué sucede en la ciudad y encuentra actividades, encuentros y propuestas para disfrutar.
             </p>
 
-        </div>
+            <span class="card-enlace">Ver eventos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
 
-        <div class="card" aria-label="Gastronomía">
+        <a class="card" href="pages/gastronomia/locales-top.php" aria-label="Explorar gastronomía de Salto">
 
             <img src="assets/img/trouville.jpeg" alt="Gastronomía en Salto">
 
@@ -91,7 +97,8 @@
                 Prueba sabores locales, café, helados y lugares con identidad propia.
             </p>
 
-        </div>
+            <span class="card-enlace">Descubrir sabores <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
 
     </div>
 

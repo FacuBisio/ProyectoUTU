@@ -515,6 +515,36 @@
     gap: 10px;
 }
 
+.admin-consulta-estado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 10px;
+}
+
+.admin-consulta-estado label {
+    color: #526258;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.admin-consulta-estado select {
+    min-height: 31px;
+    padding: 0 9px;
+    border: 1px solid #dfe7e1;
+    border-radius: 7px;
+    background: #fff;
+    color: #354b3e;
+    font: inherit;
+    font-size: 0.67rem;
+}
+
+.admin-consulta-estado select:focus-visible {
+    outline: 3px solid rgba(49, 131, 89, 0.2);
+    outline-offset: 1px;
+}
+
 .admin-crud-comentario-autor {
     display: grid;
     min-width: 0;

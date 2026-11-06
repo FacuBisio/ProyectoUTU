@@ -16,6 +16,40 @@
     color: #555;
 }
 
+.mapa-lugares-ubicacion {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
+}
+
+.mapa-lugares-ubicacion button {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: #176b55;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mapa-lugares-ubicacion button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.mapa-lugares-ubicacion button:focus-visible {
+    outline: 3px solid #efb946;
+    outline-offset: 3px;
+}
+
+.mapa-lugares-ubicacion p {
+    margin: 0;
+    color: #555;
+    font-size: 0.85rem;
+}
+
 .mapa-lugares-contenedor {
     position: relative;
 }
@@ -88,7 +122,8 @@
 
 /* Theme variants and compact map sizing. */
 html[data-tema="oscuro"] .mapa-lugares h2,
-html[data-tema="oscuro"] .mapa-lugares > p {
+html[data-tema="oscuro"] .mapa-lugares > p,
+html[data-tema="oscuro"] .mapa-lugares-ubicacion p {
     color: #e7eee9;
 }
 
@@ -99,7 +134,8 @@ html[data-tema="oscuro"] .mapa-lugares-aviso {
 }
 
 html[data-alto-contraste="true"] .mapa-lugares h2,
-html[data-alto-contraste="true"] .mapa-lugares > p {
+html[data-alto-contraste="true"] .mapa-lugares > p,
+html[data-alto-contraste="true"] .mapa-lugares-ubicacion p {
     color: #fff;
 }
 

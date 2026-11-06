@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 require_once("../../conexion.php");
 
 function escaparTexto($valor): string
@@ -29,15 +30,57 @@ while ($fila = $resultado->fetch_assoc()) {
 $stmt->close();
 
 $mensajeExito = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = trim((string) ($_POST['nombre'] ?? ''));
-    $correo = trim((string) ($_POST['correo'] ?? ''));
-    $mensaje = trim((string) ($_POST['mensaje'] ?? ''));
+$mensajeError = '';
+if (empty($_SESSION['csrf_contacto'])) {
+    $_SESSION['csrf_contacto'] = bin2hex(random_bytes(32));
+}
 
-    if ($nombre !== '' && filter_var($correo, FILTER_VALIDATE_EMAIL) && $mensaje !== '') {
-        $mensajeExito = 'Gracias. Tu consulta fue enviada correctamente y se revisará a la brevedad.';
+$mensajeExito = $_SESSION['flash_contacto'] ?? '';
+unset($_SESSION['flash_contacto']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!is_string($token) || !hash_equals($_SESSION['csrf_contacto'], $token)) {
+        http_response_code(400);
+        exit('La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.');
+    }
+
+    $nombreRecibido = $_POST['nombre'] ?? null;
+    $correoRecibido = $_POST['correo'] ?? null;
+    $mensajeRecibido = $_POST['mensaje'] ?? null;
+    if (!is_string($nombreRecibido) || !is_string($correoRecibido) || !is_string($mensajeRecibido)) {
+        http_response_code(400);
+        exit('Revisa los datos del formulario antes de enviarlo.');
+    }
+
+    $nombre = trim($nombreRecibido);
+    $correo = trim($correoRecibido);
+    $mensaje = trim($mensajeRecibido);
+    if (
+        $nombre === ''
+        || mb_strlen($nombre, 'UTF-8') > 100
+        || !filter_var($correo, FILTER_VALIDATE_EMAIL)
+        || mb_strlen($correo, 'UTF-8') > 150
+        || $mensaje === ''
+        || mb_strlen($mensaje, 'UTF-8') > 5000
+    ) {
+        $mensajeError = 'Revisa el nombre, el correo y el mensaje. El mensaje admite hasta 5000 caracteres.';
     } else {
-        $mensajeExito = 'Revisa los datos del formulario antes de enviarlo.';
+        try {
+            $stmtConsulta = $conexion->prepare(
+                'INSERT INTO CONTACTO_CONSULTA (NOMBRE, CORREO, MENSAJE) VALUES (?, ?, ?)'
+            );
+            $stmtConsulta->bind_param('sss', $nombre, $correo, $mensaje);
+            $stmtConsulta->execute();
+        } catch (mysqli_sql_exception $error) {
+            error_log('No se pudo guardar una consulta de contacto: ' . $error->getMessage());
+            http_response_code(500);
+            exit('No se pudo guardar la consulta. Inténtalo de nuevo más tarde.');
+        }
+
+        $_SESSION['flash_contacto'] = 'Tu consulta quedó guardada y será revisada por el equipo.';
+        header('Location: contacto-organizadores.php');
+        exit();
     }
 }
 ?>
@@ -132,6 +175,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 700;
             cursor: pointer;
         }
+        .contacto-privacidad {
+            margin: 0;
+            color: #53665e;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
         .contacto-exito {
             margin-top: 1rem;
             padding: 0.8rem 1rem;
@@ -140,6 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #1d613e;
             border-radius: 12px;
             font-weight: 600;
+        }
+        .contacto-exito--error {
+            background: #fff1f0;
+            border-color: #f0c3bf;
+            color: #8d2921;
         }
         @media (max-width: 780px) {
             .contacto-organizadores-grid {
@@ -178,26 +232,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <section class="contacto-card">
                 <h2>Formulario de contacto</h2>
                 <form class="contacto-form" method="POST" action="contacto-organizadores.php">
+                    <input type="hidden" name="csrf_token" value="<?= escaparTexto($_SESSION['csrf_contacto']) ?>">
                     <div>
                         <label for="nombre">Nombre</label>
-                        <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required>
+                        <input id="nombre" name="nombre" type="text" maxlength="100" placeholder="Tu nombre" required>
                     </div>
 
                     <div>
                         <label for="correo">Correo electrónico</label>
-                        <input id="correo" name="correo" type="email" placeholder="tuemail@ejemplo.com" required>
+                        <input id="correo" name="correo" type="email" maxlength="150" placeholder="tuemail@ejemplo.com" required>
                     </div>
 
                     <div>
                         <label for="mensaje">Mensaje</label>
-                        <textarea id="mensaje" name="mensaje" rows="6" placeholder="Escribe tu consulta..." required></textarea>
+                        <textarea id="mensaje" name="mensaje" rows="6" maxlength="5000" placeholder="Escribe tu consulta..." required></textarea>
                     </div>
 
+                    <p class="contacto-privacidad">Tu nombre, correo y mensaje se guardarán para que el equipo pueda responder. No incluyas datos sensibles. <a href="<?= escaparTexto(url('pages/privacidad.php')) ?>">Lee el aviso de privacidad</a>.</p>
                     <button type="submit">Enviar consulta</button>
                 </form>
 
+                <?php if ($mensajeError !== ''): ?>
+                    <div class="contacto-exito contacto-exito--error" role="alert"><?= escaparTexto($mensajeError) ?></div>
+                <?php endif; ?>
                 <?php if ($mensajeExito !== ''): ?>
-                    <div class="contacto-exito"><?= escaparTexto($mensajeExito) ?></div>
+                    <div class="contacto-exito" role="status"><?= escaparTexto($mensajeExito) ?></div>
                 <?php endif; ?>
             </section>
         </div>

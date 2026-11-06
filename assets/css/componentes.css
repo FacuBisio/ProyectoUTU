@@ -631,6 +631,12 @@ html[data-alto-contraste="true"] .buscador-sugerencias :is(strong, small, .busca
     font-size: 14px;
 }
 
+.footer-copy .footer-atribucion-clima {
+    margin-top: 8px;
+    color: #9ca3af;
+    font-size: 11px;
+}
+
 .footer-copy a {
     color: #d4eadb;
     text-underline-offset: 3px;

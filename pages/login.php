@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
+
+if (empty($_SESSION["csrf_login"])) {
+    $_SESSION["csrf_login"] = bin2hex(random_bytes(32));
+}
 
 $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
 ?>
@@ -59,6 +64,7 @@ $errorInicioSesion = ($_GET['error'] ?? '') === 'invalid';
                 <?php } ?>
 
                 <form class="auth-form" action="verificacionusuario.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_login"], ENT_QUOTES, "UTF-8") ?>">
                     <label for="correo">Correo electrónico</label>
                     <div class="auth-campo">
                         <i class="fa-regular fa-envelope" aria-hidden="true"></i>

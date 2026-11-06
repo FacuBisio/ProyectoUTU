@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 $mapaCategorias = [7, 8, 9, 10];
 $mapaTitulo = "Ubicación de locales gastronómicos destacados";
 $mapaDescripcion = "Explora restaurantes, cafeterías, heladerías y opciones para llevar en Salto.";

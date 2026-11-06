@@ -116,6 +116,15 @@
     color: #666;
 }
 
+.card-enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 20px 0;
+    color: #18744f;
+    font-weight: 700;
+}
+
 .card {
     display: block;
     background: white;
@@ -135,6 +144,15 @@
 .card:focus-visible {
     outline: 3px solid #21845c;
     outline-offset: 4px;
+}
+
+html[data-tema="oscuro"] .card-enlace {
+    color: #a9e5bb;
+}
+
+html[data-alto-contraste="true"] .card-enlace {
+    color: #111;
+    text-decoration: underline;
 }
 
 .card img {

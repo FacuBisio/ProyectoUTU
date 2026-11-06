@@ -1,7 +1,8 @@
 <?php
 
 // Invalida la sesión actual antes de volver al inicio de sesión.
-session_start();
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
 session_destroy();
 
 header("Location: login.php");

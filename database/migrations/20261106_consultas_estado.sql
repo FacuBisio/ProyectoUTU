@@ -1,0 +1,3 @@
+ALTER TABLE CONTACTO_CONSULTA
+  ADD COLUMN ESTADO ENUM('Pendiente', 'En seguimiento', 'Respondida') NOT NULL DEFAULT 'Pendiente'
+  AFTER FECHA;

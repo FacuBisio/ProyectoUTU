@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 $mapaLugarIds = [24, 15, 12];
 $mapaTitulo = "Ubicación de lugares recomendados imperdibles";
 $mapaDescripcion = "Encuentra en el mapa algunos de los atractivos más destacados de Salto.";

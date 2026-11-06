@@ -53,18 +53,18 @@ try {
             GROUP BY l.ID_LUGAR, l.NOMBRE, l.DESCRIPCION, l.DIRECCION
             ORDER BY l.NOMBRE";
     $resultado = $conexion->query($sql);
-    $lugares = [];
-
-    while ($fila = $resultado->fetch_assoc()) {
-        $fila["BUSQUEDA"] = normalizarChat(
-            $fila["NOMBRE"] . " " . $fila["CATEGORIAS"] . " "
-            . $fila["DESCRIPCION"] . " " . $fila["DIRECCION"]
-        );
-        $lugares[] = $fila;
-    }
-} catch (Throwable $error) {
+} catch (mysqli_sql_exception $error) {
     error_log("No se pudo cargar la información turística del chatbot: " . $error->getMessage());
     responderChat(["error" => "Ahora no puedo consultar los lugares. Inténtalo de nuevo en unos minutos."], 503);
+}
+
+$lugares = [];
+while ($fila = $resultado->fetch_assoc()) {
+    $fila["BUSQUEDA"] = normalizarChat(
+        $fila["NOMBRE"] . " " . $fila["CATEGORIAS"] . " "
+        . $fila["DESCRIPCION"] . " " . $fila["DIRECCION"]
+    );
+    $lugares[] = $fila;
 }
 
 $categorias = [

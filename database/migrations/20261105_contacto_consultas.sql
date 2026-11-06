@@ -1,0 +1,9 @@
+CREATE TABLE `contacto_consulta` (
+  `ID_CONSULTA` int(11) NOT NULL AUTO_INCREMENT,
+  `NOMBRE` varchar(100) NOT NULL,
+  `CORREO` varchar(150) NOT NULL,
+  `MENSAJE` text NOT NULL,
+  `FECHA` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID_CONSULTA`),
+  KEY `IDX_CONTACTO_CONSULTA_FECHA` (`FECHA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

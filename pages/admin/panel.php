@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: ../login.php");
@@ -71,6 +72,10 @@ function formatoEstadistica($valor)
                 <a class="salto-menu-enlace" href="comentarios.php">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
                     <span>Comentarios</span>
+                </a>
+                <a class="salto-menu-enlace" href="consultas.php">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                    <span>Consultas</span>
                 </a>
             </nav>
 
@@ -191,6 +196,11 @@ function formatoEstadistica($valor)
                             <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.7 7.4L3 21l2.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg>
                         </span>
                         <span class="salto-accion-texto"><strong>Administrar comentarios</strong><small>Revisa, edita o elimina comentarios de la comunidad.</small></span>
+                        <span class="salto-accion-flecha" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="salto-accion" href="consultas.php">
+                        <span class="salto-accion-icono comentarios" aria-hidden="true">✉</span>
+                        <span class="salto-accion-texto"><strong>Revisar consultas</strong><small>Lee y gestiona los mensajes recibidos desde el sitio.</small></span>
                         <span class="salto-accion-flecha" aria-hidden="true">↗</span>
                     </a>
                 </div>

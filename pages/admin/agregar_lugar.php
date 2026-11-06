@@ -1,11 +1,16 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 require_once("../../conexion.php");
 
 if (!isset($_SESSION["id_usuario"]) || (int) ($_SESSION["id_rol"] ?? 0) !== 1) {
     http_response_code(403);
     die("Acceso denegado.");
+}
+
+if (empty($_SESSION["csrf_admin_lugares"])) {
+    $_SESSION["csrf_admin_lugares"] = bin2hex(random_bytes(32));
 }
 
 $categorias = $conexion->query(
@@ -15,10 +20,21 @@ $categorias = $conexion->query(
 );
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $token = $_POST["csrf_token"] ?? "";
+    if (!is_string($token) || !hash_equals($_SESSION["csrf_admin_lugares"], $token)) {
+        http_response_code(400);
+        exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
+    }
+
     $nombre = $_POST["nombre"] ?? null;
     $descripcion = $_POST["descripcion"] ?? null;
     $direccion = $_POST["direccion"] ?? null;
     $imagen = $_POST["imagen"] ?? null;
+    $horario = $_POST["horario"] ?? null;
+    $precio = $_POST["precio"] ?? null;
+    $telefono = $_POST["telefono"] ?? null;
+    $sitioWeb = $_POST["sitio_web"] ?? null;
+    $accesibleRecibido = $_POST["accesible"] ?? "";
     $latitudRecibida = $_POST["latitud"] ?? null;
     $longitudRecibida = $_POST["longitud"] ?? null;
     $idCategoriaRecibido = $_POST["id_categoria"] ?? null;
@@ -31,6 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         || !is_string($descripcion)
         || !is_string($direccion)
         || !is_string($imagen)
+        || !is_string($horario)
+        || !is_string($precio)
+        || !is_string($telefono)
+        || !is_string($sitioWeb)
+        || !is_string($accesibleRecibido)
         || !is_string($latitudRecibida)
         || !is_string($longitudRecibida)
         || !$idCategoria
@@ -43,6 +64,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $descripcion = trim($descripcion);
     $direccion = trim($direccion);
     $imagen = trim($imagen);
+    $horario = trim($horario);
+    $precio = trim($precio);
+    $telefono = trim($telefono);
+    $sitioWeb = trim($sitioWeb);
     $latitudRecibida = trim($latitudRecibida);
     $longitudRecibida = trim($longitudRecibida);
     $tieneLatitud = $latitudRecibida !== "";
@@ -66,22 +91,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         || $direccion === ""
         || mb_strlen($direccion, "UTF-8") > 200
         || mb_strlen($imagen, "UTF-8") > 255
+        || mb_strlen($horario, "UTF-8") > 255
+        || mb_strlen($precio, "UTF-8") > 100
+        || mb_strlen($telefono, "UTF-8") > 30
+        || mb_strlen($sitioWeb, "UTF-8") > 255
+        || ($sitioWeb !== "" && (!filter_var($sitioWeb, FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//i', $sitioWeb)))
+        || !in_array($accesibleRecibido, ["", "0", "1"], true)
         || !$coordenadasValidas
     ) {
         http_response_code(400);
-        exit("Revisa el nombre, la dirección, la ruta de imagen y las coordenadas del lugar.");
+        exit("Revisa los datos, el sitio web, la accesibilidad y las coordenadas del lugar.");
     }
 
     $descripcion = $descripcion !== "" ? $descripcion : null;
     $imagen = $imagen !== "" ? $imagen : null;
+    $horario = $horario !== "" ? $horario : null;
+    $precio = $precio !== "" ? $precio : null;
+    $telefono = $telefono !== "" ? $telefono : null;
+    $sitioWeb = $sitioWeb !== "" ? $sitioWeb : null;
+    $accesible = $accesibleRecibido === "" ? null : (int) $accesibleRecibido;
     $conexion->begin_transaction();
 
     try {
         $stmtLugar = $conexion->prepare(
-            "INSERT INTO LUGAR (NOMBRE, DESCRIPCION, DIRECCION, IMAGEN, LATITUD, LONGITUD)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO LUGAR
+                (NOMBRE, DESCRIPCION, DIRECCION, IMAGEN, HORARIO, PRECIO, TELEFONO, SITIO_WEB, ACCESIBLE, LATITUD, LONGITUD, ACTUALIZADO_EN)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)"
         );
-        $stmtLugar->bind_param("ssssdd", $nombre, $descripcion, $direccion, $imagen, $latitud, $longitud);
+        $stmtLugar->bind_param(
+            "ssssssssidd",
+            $nombre,
+            $descripcion,
+            $direccion,
+            $imagen,
+            $horario,
+            $precio,
+            $telefono,
+            $sitioWeb,
+            $accesible,
+            $latitud,
+            $longitud
+        );
         $stmtLugar->execute();
         $idLugar = $conexion->insert_id;
 
@@ -127,6 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="lugares.php" aria-current="page">Lugares</a>
             <a href="eventos.php">Eventos</a>
             <a href="comentarios.php">Comentarios</a>
+            <a href="consultas.php">Consultas</a>
         </nav>
         <a class="admin-crud-salir" href="../logout.php">Cerrar sesión</a>
     </header>
@@ -147,6 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div><h2 id="titulo-formulario">Información del lugar</h2><p>Los campos marcados con <span aria-hidden="true">*</span> son obligatorios.</p></div>
             </div>
             <form class="admin-crud-form" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_admin_lugares"], ENT_QUOTES, "UTF-8") ?>">
                 <div class="admin-crud-campos">
                     <div class="admin-crud-campo">
                         <label for="id_categoria">Categoría <span aria-hidden="true">*</span></label>
@@ -167,6 +219,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="direccion">Dirección <span aria-hidden="true">*</span></label>
                         <input id="direccion" type="text" name="direccion" maxlength="200" placeholder="Calle, zona o referencia" required>
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="horario">Horario</label>
+                        <input id="horario" type="text" name="horario" maxlength="255" placeholder="Ej.: Mar-Dom, 10:00 a 18:00">
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="precio">Precio o costo</label>
+                        <input id="precio" type="text" name="precio" maxlength="100" placeholder="Ej.: Entrada gratuita">
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="telefono">Teléfono</label>
+                        <input id="telefono" type="tel" name="telefono" maxlength="30" placeholder="Número de contacto">
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="sitio_web">Sitio web</label>
+                        <input id="sitio_web" type="url" name="sitio_web" maxlength="255" placeholder="https://...">
+                    </div>
+                    <div class="admin-crud-campo">
+                        <label for="accesible">Accesibilidad física</label>
+                        <select id="accesible" name="accesible">
+                            <option value="">Sin información</option>
+                            <option value="1">Accesible</option>
+                            <option value="0">No accesible</option>
+                        </select>
                     </div>
                     <div class="admin-crud-campo admin-crud-campo--ancho">
                         <label for="imagen">Ruta de la imagen</label>

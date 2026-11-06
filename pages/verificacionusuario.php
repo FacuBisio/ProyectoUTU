@@ -1,11 +1,22 @@
 <?php
 
-session_start();
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     header("Allow: POST");
     exit("Método no permitido.");
+}
+
+$token = $_POST["csrf_token"] ?? "";
+if (
+    !is_string($token)
+    || empty($_SESSION["csrf_login"])
+    || !hash_equals($_SESSION["csrf_login"], $token)
+) {
+    http_response_code(400);
+    exit("La solicitud venció o no es válida. Recarga la página e inténtalo de nuevo.");
 }
 
 require_once("../conexion.php");
@@ -57,6 +68,7 @@ if (!$esHash) {
 }
 
 session_regenerate_id(true);
+unset($_SESSION["csrf_login"]);
 $_SESSION["id_usuario"] = $usuario["ID_USUARIO"];
 $_SESSION["id_rol"] = $usuario["ID_ROL"];
 $_SESSION["nombre"] = $usuario["NOMBRE"];

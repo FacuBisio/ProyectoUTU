@@ -3,6 +3,11 @@
 // Endpoint de diagnóstico local para comprobar la conexión con Ollama.
 header("Content-Type: application/json; charset=UTF-8");
 
+if (!in_array($_SERVER["REMOTE_ADDR"] ?? "", ["127.0.0.1", "::1"], true)) {
+    http_response_code(404);
+    exit(json_encode(["error" => "Recurso no disponible."]));
+}
+
 $datos = [
     "model" => "llama3.2:1b",
 

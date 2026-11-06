@@ -1,15 +1,14 @@
 <?php
 // La barra muestra opciones distintas según la sesión activa.
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once(__DIR__ . "/../config/sesion.php");
+iniciarSesionSegura();
 
 require_once(__DIR__ . "/../config/config.php");
 ?>
 
 <!-- Estilos y navegación principal compartidos por las páginas del sitio. -->
 <link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/accesibilidad.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
-<link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=3'), ENT_QUOTES, 'UTF-8') ?>">
+<link rel="stylesheet" href="<?= htmlspecialchars(url('assets/css/busqueda-navbar.css?v=5'), ENT_QUOTES, 'UTF-8') ?>">
 
 <section id="navbar">
 
@@ -151,12 +150,12 @@ require_once(__DIR__ . "/../config/config.php");
              </span>
             </div>
 <form class="buscador" action="<?= htmlspecialchars(url('pages/buscar.php'), ENT_QUOTES, 'UTF-8') ?>" method="GET" role="search">
-    <label class="buscador-sr-only" for="busquedaNavbar">Buscar lugares</label>
+    <label class="buscador-sr-only" for="busquedaNavbar">Buscar lugares o eventos</label>
     <input
         id="busquedaNavbar"
         type="search"
         name="q"
-        placeholder="Buscar..."
+        placeholder="Buscar lugares o eventos..."
         autocomplete="off"
         role="combobox"
         aria-autocomplete="list"
@@ -198,6 +197,10 @@ require_once(__DIR__ . "/../config/config.php");
                         <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/perfil.php'), ENT_QUOTES, 'UTF-8') ?>">
                             <i class="fa-regular fa-id-card" aria-hidden="true"></i>
                             Configurar perfil
+                        </a>
+                        <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/favoritos.php'), ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-route" aria-hidden="true"></i>
+                            Mi ruta por Salto
                         </a>
                         <?php if (($_SESSION["id_rol"] ?? null) == 1): ?>
                             <a class="menu-usuario-enlace" href="<?= htmlspecialchars(url('pages/admin/panel.php'), ENT_QUOTES, 'UTF-8') ?>">Panel de administración</a>
@@ -256,7 +259,7 @@ require_once(__DIR__ . "/../config/config.php");
 </section>
 
 <script src="<?= url('assets/js/ITH.js?v=2') ?>"></script>
-<script src="<?= url('assets/js/clima.js') ?>"></script>
+<script src="<?= htmlspecialchars(url('assets/js/clima.js?v=3'), ENT_QUOTES, 'UTF-8') ?>"></script>
 <script src="<?= htmlspecialchars(url('assets/js/accesibilidad.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 <script src="<?= htmlspecialchars(url('assets/js/busqueda-navbar.js?v=3'), ENT_QUOTES, 'UTF-8') ?>" defer></script>
 <?php include(__DIR__ . "/chat-widget.php"); ?>

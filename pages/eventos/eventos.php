@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once(__DIR__ . "/../../config/sesion.php");
+iniciarSesionSegura();
 require_once("../../conexion.php");
 require_once("../../config/config.php");
 require_once("../../config/imagenes-lugares.php");
@@ -7,9 +8,14 @@ require_once("../../config/imagenes-lugares.php");
 // Identifica al usuario y prepara la protección de los formularios de publicaciones.
 $usuarioId = isset($_SESSION["id_usuario"]) ? (int) $_SESSION["id_usuario"] : null;
 $estaAutenticado = $usuarioId !== null;
+$tiposEventos = ["Cultura y espectáculos", "Música", "Deportes", "Gastronomía", "Ferias", "Naturaleza y recreación", "Otro"];
 
 if (empty($_SESSION["csrf_eventos"])) {
     $_SESSION["csrf_eventos"] = bin2hex(random_bytes(32));
+}
+$tipoFiltrado = $_GET["tipo"] ?? "";
+if (!is_string($tipoFiltrado) || ($tipoFiltrado !== "" && !in_array($tipoFiltrado, $tiposEventos, true))) {
+    $tipoFiltrado = "";
 }
 
 function escaparEvento($valor)
@@ -110,6 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Valida los datos, la ubicación y la portada antes de crear un evento.
     if ($accion === "publicar") {
         $nombre = $_POST["nombre"] ?? "";
+        $tipo = $_POST["tipo"] ?? "";
         $descripcion = $_POST["descripcion"] ?? "";
         $direccion = $_POST["direccion"] ?? "";
         $latitudRecibida = $_POST["latitud"] ?? "";
@@ -120,6 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (
             !is_string($nombre)
+            || !is_string($tipo)
             || !is_string($descripcion)
             || !is_string($direccion)
             || !is_string($latitudRecibida)
@@ -132,6 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         $nombre = trim($nombre);
+        $tipo = trim($tipo);
         $descripcion = trim($descripcion);
         $direccion = trim($direccion);
         $fechaEvento = DateTime::createFromFormat("!Y-m-d", $fecha);
@@ -156,6 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (
             $nombre === ""
+            || !in_array($tipo, $tiposEventos, true)
             || mb_strlen($nombre, "UTF-8") > 150
             || mb_strlen($descripcion, "UTF-8") > 2000
             || mb_strlen($direccion, "UTF-8") > 255
@@ -225,13 +235,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $anio = (int) $fechaEvento->format("Y");
         $stmtPublicacion = $conexion->prepare(
             "INSERT INTO EVENTO
-                (ID_USUARIO, ID_LUGAR, NOMBRE, DESCRIPCION, HORA_INI, HORA_FIN, DIA, MES, ANIO, DIRECCION, LATITUD, LONGITUD, IMAGEN)
-             VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                (ID_USUARIO, ID_LUGAR, NOMBRE, TIPO, DESCRIPCION, HORA_INI, HORA_FIN, DIA, MES, ANIO, DIRECCION, LATITUD, LONGITUD, IMAGEN)
+             VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmtPublicacion->bind_param(
-            "issssiiisdds",
+            "isssssiiisdds",
             $usuarioId,
             $nombre,
+            $tipo,
             $descripcion,
             $horaInicio,
             $horaFin,
@@ -266,9 +277,57 @@ unset($_SESSION["flash_eventos"]);
 
 // Carga publicaciones y comentarios antes de mostrarlos.
 $usuarioActualSql = $estaAutenticado ? (string) $usuarioId : "0";
+$estadoEventos = $_GET["estado"] ?? "todos";
+if (!is_string($estadoEventos) || !in_array($estadoEventos, ["proximos", "todos", "pasados"], true)) {
+    $estadoEventos = "todos";
+}
+
+$fechaDesde = $_GET["desde"] ?? "";
+$fechaHasta = $_GET["hasta"] ?? "";
+foreach (["fechaDesde", "fechaHasta"] as $nombreFecha) {
+    $fechaRecibida = $$nombreFecha;
+    $fechaValidada = is_string($fechaRecibida)
+        ? DateTime::createFromFormat("!Y-m-d", $fechaRecibida)
+        : false;
+    if (!$fechaValidada || $fechaValidada->format("Y-m-d") !== $fechaRecibida) {
+        $$nombreFecha = "";
+    }
+}
+if ($fechaDesde !== "" && $fechaHasta !== "" && $fechaDesde > $fechaHasta) {
+    $fechaHasta = "";
+}
+
+$fechaEventoSql = "STR_TO_DATE(CONCAT(e.ANIO, '-', LPAD(e.MES, 2, '0'), '-', LPAD(e.DIA, 2, '0')), '%Y-%m-%d')";
+$filtrosEventos = [];
+$parametrosFecha = [];
+if ($tipoFiltrado !== "") {
+    $filtrosEventos[] = "e.TIPO = ?";
+    $parametrosFecha[] = $tipoFiltrado;
+}
+if ($estadoEventos === "proximos") {
+    $filtrosEventos[] = "e.ANIO IS NOT NULL AND {$fechaEventoSql} >= CURDATE()";
+} elseif ($estadoEventos === "pasados") {
+    $filtrosEventos[] = "e.ANIO IS NOT NULL AND {$fechaEventoSql} < CURDATE()";
+}
+if ($fechaDesde !== "") {
+    $filtrosEventos[] = "{$fechaEventoSql} >= ?";
+    $parametrosFecha[] = $fechaDesde;
+}
+if ($fechaHasta !== "") {
+    $filtrosEventos[] = "{$fechaEventoSql} <= ?";
+    $parametrosFecha[] = $fechaHasta;
+}
+$whereEventos = $filtrosEventos ? "WHERE " . implode(" AND ", $filtrosEventos) : "";
+$ordenEventos = $estadoEventos === "todos"
+    ? "ORDER BY CASE WHEN {$fechaEventoSql} >= CURDATE() THEN 0 ELSE 1 END,
+               CASE WHEN {$fechaEventoSql} >= CURDATE() THEN {$fechaEventoSql} END ASC,
+               {$fechaEventoSql} DESC, e.ID_EVENTO DESC"
+    : "ORDER BY {$fechaEventoSql} " . ($estadoEventos === "pasados" ? "DESC" : "ASC") . ", e.ID_EVENTO DESC";
+
 $sqlEventos = "
-    SELECT e.ID_EVENTO, e.ID_USUARIO, e.ID_LUGAR, e.NOMBRE, e.DESCRIPCION,
+    SELECT e.ID_EVENTO, e.ID_USUARIO, e.ID_LUGAR, e.NOMBRE, e.TIPO, e.DESCRIPCION,
            e.HORA_INI, e.HORA_FIN, e.DIA, e.MES, e.ANIO,
+           {$fechaEventoSql} AS FECHA_EVENTO,
            e.DIRECCION AS EVENTO_DIRECCION, e.LATITUD AS EVENTO_LATITUD,
            e.LONGITUD AS EVENTO_LONGITUD, e.IMAGEN AS EVENTO_IMAGEN,
            u.NOMBRE AS AUTOR, l.NOMBRE AS LUGAR, l.DIRECCION AS LUGAR_DIRECCION,
@@ -278,8 +337,20 @@ $sqlEventos = "
     FROM EVENTO e
     INNER JOIN USUARIO u ON u.ID_USUARIO = e.ID_USUARIO
     LEFT JOIN LUGAR l ON l.ID_LUGAR = e.ID_LUGAR
-    ORDER BY e.ID_EVENTO DESC";
-$resultadoEventos = $conexion->query($sqlEventos);
+    {$whereEventos}
+    {$ordenEventos}";
+$stmtEventos = $conexion->prepare($sqlEventos);
+if ($parametrosFecha) {
+    $tiposParametros = str_repeat("s", count($parametrosFecha));
+    $referenciasParametros = [$tiposParametros];
+    foreach ($parametrosFecha as $indice => &$parametroFecha) {
+        $referenciasParametros[] = &$parametrosFecha[$indice];
+    }
+    unset($parametroFecha);
+    call_user_func_array([$stmtEventos, "bind_param"], $referenciasParametros);
+}
+$stmtEventos->execute();
+$resultadoEventos = $stmtEventos->get_result();
 $eventos = [];
 $idsEventos = [];
 while ($evento = $resultadoEventos->fetch_assoc()) {
@@ -316,7 +387,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/componentes.css">
     <link rel="stylesheet" href="../../assets/css/accesibilidad.css?v=5">
-    <link rel="stylesheet" href="../../assets/css/eventos.css?v=5">
+    <link rel="stylesheet" href="../../assets/css/eventos.css?v=6">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -375,6 +446,13 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                             <label for="evento-nombre">Título del evento</label>
                             <input id="evento-nombre" type="text" name="nombre" maxlength="150" placeholder="Ej.: Música en la costanera" required>
 
+                            <label for="evento-tipo">Tipo de evento</label>
+                            <select id="evento-tipo" name="tipo" required>
+                                <?php foreach ($tiposEventos as $tipoEvento): ?>
+                                    <option value="<?= escaparEvento($tipoEvento) ?>"><?= escaparEvento($tipoEvento) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
                             <label for="evento-descripcion">Cuéntale a la comunidad <span>opcional</span></label>
                             <textarea id="evento-descripcion" name="descripcion" rows="3" maxlength="2000" placeholder="¿Qué sucederá? ¿Por qué vale la pena asistir?"></textarea>
 
@@ -429,11 +507,43 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                     <?php endif; ?>
                 </section>
 
+                <form class="eventos-filtros" method="GET" action="eventos.php" aria-label="Filtrar eventos">
+                    <label>
+                        <span>Mostrar</span>
+                        <select name="estado">
+                            <option value="proximos" <?= $estadoEventos === "proximos" ? "selected" : "" ?>>Próximos</option>
+                            <option value="todos" <?= $estadoEventos === "todos" ? "selected" : "" ?>>Todos</option>
+                            <option value="pasados" <?= $estadoEventos === "pasados" ? "selected" : "" ?>>Pasados</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Tipo</span>
+                        <select name="tipo">
+                            <option value="">Todos los tipos</option>
+                            <?php foreach ($tiposEventos as $tipoEvento): ?>
+                                <option value="<?= escaparEvento($tipoEvento) ?>" <?= $tipoFiltrado === $tipoEvento ? "selected" : "" ?>>
+                                    <?= escaparEvento($tipoEvento) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Desde</span>
+                        <input type="date" name="desde" value="<?= escaparEvento($fechaDesde) ?>">
+                    </label>
+                    <label>
+                        <span>Hasta</span>
+                        <input type="date" name="hasta" value="<?= escaparEvento($fechaHasta) ?>">
+                    </label>
+                    <button type="submit">Aplicar filtros</button>
+                    <a href="eventos.php">Limpiar</a>
+                </form>
+
                 <?php if (!$eventos): ?>
                     <div class="eventos-vacio">
                         <span><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i></span>
-                        <h2>La lista espera su primera publicación</h2>
-                        <p>Cuando alguien comparta un evento, lo encontrarás aquí.</p>
+                        <h2>No hay eventos para estos filtros</h2>
+                        <p>Prueba con otro período o comparte una actividad para la comunidad.</p>
                     </div>
                 <?php endif; ?>
 
@@ -462,6 +572,8 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                         (int) $evento["MES"],
                         $evento["ANIO"] ? "/" . (int) $evento["ANIO"] : ""
                     );
+                    $fechaEventoIso = $evento["FECHA_EVENTO"] ? date("Y-m-d", strtotime($evento["FECHA_EVENTO"])) : "";
+                    $eventoPasado = $fechaEventoIso !== "" && $fechaEventoIso < date("Y-m-d");
                     $miReaccion = $evento["MI_REACCION"] === null ? 0 : (int) $evento["MI_REACCION"];
                     ?>
                     <article class="evento-post" id="evento-<?= $eventoId ?>">
@@ -471,7 +583,10 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                                 <strong><?= escaparEvento($evento["AUTOR"]) ?></strong>
                                 <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?= escaparEvento($textoUbicacionEvento) ?></span>
                             </div>
-                            <span class="evento-fecha-publicacion"><i class="fa-regular fa-calendar" aria-hidden="true"></i> <?= escaparEvento($fechaTexto) ?></span>
+                            <span class="evento-fecha-publicacion <?= $eventoPasado ? "evento-fecha-publicacion--pasado" : "" ?>">
+                                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                                <?= escaparEvento($fechaTexto) ?><?= $eventoPasado ? " · Finalizado" : "" ?>
+                            </span>
                         </header>
 
                         <?php if ($imagenSrc !== ""): ?>
@@ -482,6 +597,7 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                         <?php endif; ?>
 
                         <div class="evento-post-contenido">
+                            <p class="evento-tipo"><?= escaparEvento($evento["TIPO"]) ?></p>
                             <h2><?= escaparEvento($evento["NOMBRE"]) ?></h2>
                             <?php if (!empty($evento["DESCRIPCION"])): ?>
                                 <p class="evento-post-descripcion"><?= nl2br(escaparEvento($evento["DESCRIPCION"])) ?></p>
@@ -504,6 +620,11 @@ $fechaPredeterminada = date("Y-m-d", strtotime("+1 day"));
                         </div>
 
                         <div class="evento-reacciones">
+                            <?php if ($fechaEventoIso !== ""): ?>
+                                <a class="evento-calendario" href="calendario.php?id=<?= $eventoId ?>">
+                                    <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Añadir al calendario
+                                </a>
+                            <?php endif; ?>
                             <?php if ($estaAutenticado): ?>
                                 <form method="POST" action="eventos.php#evento-<?= $eventoId ?>">
                                     <input type="hidden" name="csrf_token" value="<?= escaparEvento($_SESSION["csrf_eventos"]) ?>">
